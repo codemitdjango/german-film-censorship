@@ -1,0 +1,75 @@
+{
+  "prüf-nr": 9346,
+  "Gesetz": "Reichs-Strafgesetzbuch",
+  "Ursprungs-Firma": "Solar-Film G. m. b. H.",
+  "Titel des Bildes": "Lady Florence... Ressel era",
+  "Text unter Titel des Bildes (Kurzbeschreibung des Filmes)": "Sensationsschauspiel in 5 Akten von Jos. Delmont.",
+  "Spielleitung / Personen der Handlung:": "Rolf Brunner, August Brückner, Alfred Columbu",
+  "Photographie": "August Brückner",
+  "Archiketur": "Alfred Columbu",
+  "Personenverzeichnis": [
+    {
+      "name": "Lady Florence",
+      "rolle": "Ressel Orla"
+    },
+    {
+      "name": "Lord William",
+      "rolle": "Heinrich Peer"
+    },
+    {
+      "name": "Lord Henry",
+      "rolle": "Fred Selva-Goebels"
+    },
+    {
+      "name": "Dr. Munson",
+      "rolle": "Heinz Burkart"
+    }
+  ],
+  "Text": [
+    {
+      "akt": 1,
+      "text": "Der Jrre. Lord Henry (Fred Selva-Goebel). [...] Ende des 1. Aktes."
+    },
+    {
+      "akt": 2,
+      "text": "Dr. Munson ist auf Schloß Reedcliffe eingetroffen. [...]. Ende des 2. Aktes."
+    },
+    {
+      "akt": 3,
+      "text": "Du Bestie in Menschengestalt, Du Wölfin [...] Ende. i,"
+    },
+    {
+      "akt": 4,
+      "text": "Thurston (Walter Formes). [...]. Ende des 2. Aktes."
+    },
+    {
+      "akt": 5,
+      "text": "Sprich die Wahrheit, wer hat mich ins Irrenhaus gebracht [...] Ende des 2. Aktes."
+    }
+  ],
+  "Auschnitte": "Aus Akt 3: Titel; Länge Akt 1: 366 m; Akt 2: 290 m; Akt 3: 270 m; Akt 4: 320 m; Akt 5: 239 m nach Kürzung 234,00 m. Gesamtlänge: 1485 m nach Kürzung 1480,00 m."
+  , "Länge": [
+    {
+      "akt": 1,
+      "meter": 366
+    },
+    {
+      "akt": 2,
+      "meter": 290
+    },
+    {
+      "akt": 3,
+      "meter": 270
+    },
+    {
+      "akt": 4,
+      "meter": 320
+    },
+    {
+      "akt": 5,
+      "meter": 239
+    }
+  ]
+  , "Entscheidung": "Der Bildstreifen wird zur öffentlichen Vorführung im Deutschen Reiche zugelassen, darf jedoch vor Jugendlichen nicht gezeigt werden."
+  , "Filmprüfstelle": "Berlin, den 24. Juni 1920"
+}
