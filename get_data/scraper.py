@@ -72,6 +72,7 @@ async def download_collection_pages(page, download_dir, total_pages, collection_
 
             except Exception as error:
                 print(f"Error downloading document {index + 1} on page {current_page}: {error}")
+
                 # close popup
                 if 'popup' in locals() and not popup.is_closed():
                     await popup.close()
@@ -117,9 +118,7 @@ async def run():
         
         # process each collection in an isolated browser context
         for collection in collections_to_scrape:
-            print(f"\n=======================================================")
             print(f"Starting isolated session for collection: {collection['name']}")
-            print(f"=======================================================")
 
             # open fresh context 
             context = await browser.new_context(accept_downloads=True)
