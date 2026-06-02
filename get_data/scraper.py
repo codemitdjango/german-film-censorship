@@ -1,6 +1,7 @@
 import asyncio
 import os
 from playwright.async_api import async_playwright
+from pathlib import Path
 
 # Handles login and navigates to the root film node
 async def login_and_base_navigation(page):
@@ -80,7 +81,8 @@ async def download_collection_pages(page, download_dir, total_pages, collection_
 # main & session management
 async def run():
     # setup base directory for alle downloads
-    base_download_dir = os.path.join(os.getcwd(), "downloads")
+    base_download_dir = str(Path(__file__).parent.parent / "data" / "01_raw")
+    #base_download_dir = os.path.join(os.getcwd(), "downloads")
     os.makedirs(base_download_dir, exist_ok=True)
 
     # configurations of target collections
