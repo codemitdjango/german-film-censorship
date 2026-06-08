@@ -1,5 +1,6 @@
 import asyncio
 import os
+import json
 from datetime import datetime
 from playwright.async_api import async_playwright
 from pathlib import Path
@@ -33,15 +34,47 @@ async def download_collection_pages(page, download_dir, total_pages, collection_
             # wait
             await page.wait_for_timeout(4000)
 
+
+        document_items = await page.get_by_role("listitem").filter(has=page.get_by_label("Anzeige in neuem Fenster:")).all()
+        print(f"Found {len(document_items)} documents on page {current_page}.")
+
+
         # collect all Document buttons on the current page
-        document_buttons = await page.get_by_label("Anzeige in neuem Fenster:").all()
-        print(f"Found {len(document_buttons)} documents on page {current_page}.")
+        #document_buttons = await page.get_by_label("Anzeige in neuem Fenster:").all()
+        #print(f"Found {len(document_buttons)} documents on page {current_page}.")
 
         # iteratre over documents
-        for index, button in enumerate(document_buttons):
-            print(f"Downloading document {index + 1}/{len(document_buttons)} (Page {current_page})...")
+        for index, item in enumerate(document_items):
+            print(f"Downloading document {index + 1}/{len(document_items)} (Page {current_page})...")
 
             try:
+                # get Meta Data
+                title_element = item.locator("xpath=preceding-sibling::*[1]")
+                title_text = await title_element.inner_text()
+                meta_text = await item.inner_text()
+                meta_lines = [line.strip() for line in meta_text.splitlines() if line.strip()]
+
+                document_data = {
+                    "Titel_und_Signatur": title_text.strip()
+                }
+                
+                # form JSON
+                for i in range(0, len(meta_lines) -1, 2):
+                    key = meta_lines[i]
+
+                    # skip unnescessary data
+                    if key in ["Link kopieren", "Digitalisat anzeigen"]:
+                        continue
+
+                    value = meta_lines[i + 1]
+                    document_data[key] = value
+
+                #full_raw_text = f"{title_text}\n{meta_text}"
+                #cleaned_metadata = "\n".join([line.strip() for line in full_raw_text.splitlines() if line.strip()])
+
+                # all Buttons 
+                button = item.get_by_label("Anzeige in neuem Fenster:")
+
                 # Intercept popup window
                 async with page.expect_popup() as popup_info:
                     await button.click()
@@ -68,6 +101,13 @@ async def download_collection_pages(page, download_dir, total_pages, collection_
                 await download.save_as(file_path)
                 print(f"Saved: {file_path}")
 
+                base_name = os.path.splitext(file_name)[0]
+                json_file_path = os.path.join(collection_dir, f"{base_name}.json")
+                
+                with open (json_file_path, "w", encoding="utf-8") as json_file:
+                    json.dump(document_data, json_file, ensure_ascii=False, indent=4)
+                print(f"Saved Metadata: {json_file_path}")
+
                 # close popup
                 await popup.close()
 
@@ -77,7 +117,7 @@ async def download_collection_pages(page, download_dir, total_pages, collection_
                 # log failed downloads
                 timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 error_message = f"[{timestamp}] ERROR: Collection '{collection_name}', Page {current_page}, Document Index {index + 1}. Details: {error}\n"
-                with open (log_file_path, "a", encoding="uft-8") as log_file:
+                with open (log_file_path, "a", encoding="utf-8") as log_file:
                     log_file.write(error_message)
 
                 # close popup
