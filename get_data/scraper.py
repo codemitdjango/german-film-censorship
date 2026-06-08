@@ -123,7 +123,7 @@ async def run():
     log_file_path = os.path.join(base_download_dir, "error_log.txt")
 
     with open(log_file_path, "a", encoding="utf-8") as log_file:
-        log_file.write(f"\n--- Start new Scraping-Job at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ---\n")
+        log_file.write(f"--- Start new Scraping-Job at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ---\n")
 
     # define collections to scrape
     collections_to_scrape = [
