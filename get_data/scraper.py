@@ -1,5 +1,6 @@
 import asyncio
 import os
+from datetime import datetime
 from playwright.async_api import async_playwright
 from pathlib import Path
 
@@ -13,7 +14,7 @@ async def login_and_base_navigation(page):
     await page.get_by_text("Film und Filmbegleitmaterial").click()
 
 # Iterates through all pages of a specific collection and downloads documents
-async def download_collection_pages(page, download_dir, total_pages, collection_name):
+async def download_collection_pages(page, download_dir, total_pages, collection_name, log_file_path):
     # create specific subfolder for the current collection
     collection_dir = os.path.join(download_dir, collection_name)
     os.makedirs(collection_dir, exist_ok=True)
@@ -73,16 +74,26 @@ async def download_collection_pages(page, download_dir, total_pages, collection_
             except Exception as error:
                 print(f"Error downloading document {index + 1} on page {current_page}: {error}")
 
+                # log failed downloads
+                timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                error_message = f"[{timestamp}] ERROR: Collection '{collection_name}', Page {current_page}, Document Index {index + 1}. Details: {error}\n"
+                with open (log_file_path, "a", encoding="uft-8") as log_file:
+                    log_file.write(error_message)
+
                 # close popup
                 if 'popup' in locals() and not popup.is_closed():
                     await popup.close()
 
 # main & session management
 async def run():
-    # setup base directory for alle downloads
+    # setup base directory for all downloads
     base_download_dir = str(Path(__file__).parent.parent / "data" / "01_raw")
-    #base_download_dir = os.path.join(os.getcwd(), "downloads")
     os.makedirs(base_download_dir, exist_ok=True)
+
+    log_file_path = os.path.join(base_download_dir, "error_log.txt")
+
+    with open(log_file_path, "a", encoding="utf-8") as log_file:
+        log_file.write(f"\n--- Start new Scraping-Job at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ---\n")
 
     # configurations of target collections
     collections_to_scrape = [
@@ -144,7 +155,7 @@ async def run():
                 except Exception as error:
                     print(f"NAVIGATION ERROR in collection {collection['name']}. Step: {step}. Details: {error}")
                     navigation_failed = True
-                    break # Bricht die Navigationsschleife ab
+                    break 
 
             if navigation_failed:
                 print(f"Skipping download for {collection['name']} due to navigation errors.")
@@ -159,7 +170,8 @@ async def run():
                  page=page,
                  download_dir=base_download_dir,
                  total_pages=collection["total_pages"],
-                 collection_name=collection["name"]
+                 collection_name=collection["name"],
+                 log_file_path=log_file_path
             )
 
             # close context to clear session
