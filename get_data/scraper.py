@@ -11,9 +11,6 @@ async def login_and_base_navigation(page):
     await page.get_by_role("button", name="Suche ohne Anmeldung").click()
     await page.get_by_role("link", name="Schließen").click()
     await page.get_by_text("Film und Filmbegleitmaterial").click()
-    
-    # wait
-    await page.wait_for_timeout(1000)
 
 # Iterates through all pages of a specific collection and downloads documents
 async def download_collection_pages(page, download_dir, total_pages, collection_name):
@@ -53,7 +50,9 @@ async def download_collection_pages(page, download_dir, total_pages, collection_
                 target_frame = popup.frame_locator('frame[name="digitalisatFrame"]').frame_locator('#digitalisatContainer')
 
                 # click download button
-                await target_frame.get_by_role("button", name="Download").click()
+                btn_download_menu = target_frame.get_by_role("button", name="Download")
+                await btn_download_menu.wait_for(state="visible", timeout=15000)
+                await btn_download_menu.click()
 
                 # intercept the actual file download
                 async with popup.expect_download() as download_info:
