@@ -9,10 +9,7 @@ def extract_archives():
     for zip_path in base_dir.rglob("*.zip"):
         
         # define extraction target (same name, no .zip extension)
-        extract_dir = zip_path.with_suffix('')
-        
-        # create target directory
-        extract_dir.mkdir(parents=True, exist_ok=True)
+        extract_dir = zip_path.parent
         
         print(f"Extracting: {zip_path.name}")
         
