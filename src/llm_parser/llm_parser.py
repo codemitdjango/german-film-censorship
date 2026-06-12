@@ -171,6 +171,7 @@ def main():
   sampling_params = SamplingParams(
       temperature=0.0,
       seed=42,
+      max_tokens=4096,
       structured_outputs=StructuredOutputsParams(json_schema) # maybe als class 
       #guided_decoding=GuidedDecodingParams(json=schema_str)
   )
@@ -194,7 +195,7 @@ def main():
       try:  
           output = llm.chat(messages=messages, sampling_params=sampling_params, use_tqdm=True)
 
-          output_text = output[0].outputs[0]
+          output_text = output[0].outputs[0].text
           print(output_text)
 
           out_file = processed_dir / f"{txt_file.stem}.json"
