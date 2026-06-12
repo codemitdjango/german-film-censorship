@@ -1,3 +1,4 @@
+import json
 from vllm import LLM, SamplingParams
 from vllm.sampling_params import StructuredOutputsParams
 from pathlib import Path
@@ -168,7 +169,8 @@ llm = LLM(model=model_name)
 sampling_params = SamplingParams(
     temperature=0.0,
     seed=42,
-    structured_outputs=json_schema # maybe als class 
+    structured_outputs=json.dumps(json_schema) # maybe als class 
+    #guided_decoding=GuidedDecodingParams(json=schema_str)
 )
 
 for txt_file in ocr_dir.glob('*.txt'):
