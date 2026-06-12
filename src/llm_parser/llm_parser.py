@@ -136,7 +136,8 @@ def main():
         limit_mm_per_prompt={"image": max_images_per_prompt},
         # ACHTUNG: Bei vielen Bildern muss max_model_len hoch sein.
         # Passe dies an den VRAM deiner GPU an (z.B. 16384 oder 32768).
-        max_model_len=16384 
+        max_model_len=16384,
+        allowed_local_media_path=str(image_dir.absolute())
     )
 
     sampling_params = SamplingParams(
