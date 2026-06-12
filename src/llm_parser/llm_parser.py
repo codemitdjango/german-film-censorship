@@ -1,4 +1,5 @@
 import json
+from collections import defaultdict
 from vllm import LLM, SamplingParams
 from vllm.sampling_params import StructuredOutputsParams
 from pathlib import Path
@@ -6,46 +7,23 @@ from pathlib import Path
 json_schema = {
   "type": "object",
   "properties": {
-    "prüf-nr": {
-      "type": "integer"
-    },
-    "Gesetz": {
-      "type": "string"
-    },
-    "Ursprungs-Firma": {
-      "type": "string"
-    },
-    "Titel des Bildes": {
-      "type": "string"
-    },
-    "Text unter Titel des Bildes (Kurzbeschreibung des Filmes)": {
-      "type": "string"
-    },
-    "Spielleitung / Personen der Handlung:": {
-      "type": "string"
-    },
-    "Photographie": {
-      "type": "string"
-    },
-    "Archiketur": {
-      "type": "string"
-    },
+    "prüf-nr": {"type": "integer"},
+    "Gesetz": {"type": "string"},
+    "Ursprungs-Firma": {"type": "string"},
+    "Titel des Bildes": {"type": "string"},
+    "Text unter Titel des Bildes (Kurzbeschreibung des Filmes)": {"type": "string"},
+    "Spielleitung / Personen der Handlung:": {"type": "string"},
+    "Photographie": {"type": "string"},
+    "Archiketur": {"type": "string"},
     "Personenverzeichnis": {
       "type": "array",
       "items": {
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string"
-          },
-          "rolle": {
-            "type": "string"
-          }
+          "name": {"type": "string"},
+          "rolle": {"type": "string"}
         },
-        "required": [
-          "name",
-          "rolle"
-        ]
+        "required": ["name", "rolle"]
       }
     },
     "Text": {
@@ -53,163 +31,161 @@ json_schema = {
       "items": {
         "type": "object",
         "properties": {
-          "akt": {
-            "type": "integer"
-          },
-          "text": {
-            "type": "string"
-          }
+          "akt": {"type": "integer"},
+          "text": {"type": "string"}
         },
-        "required": [
-          "akt",
-          "text"
-        ]
+        "required": ["akt", "text"]
       }
     },
-    "Auschnitte": {
-      "type": "string"
-    },
+    "Auschnitte": {"type": "string"},
     "Länge": {
       "type": "array",
       "items": {
         "type": "object",
         "properties": {
-          "akt": {
-            "type": "integer"
-          },
-          "meter": {
-            "type": "integer"
-          },
-          "nach kürzung": {
-            "type": "integer"
-          },
+          "akt": {"type": "integer"},
+          "meter": {"type": "integer"},
+          "nach kürzung": {"type": "integer"},
           "gesamtlänge": {
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
-                "gesamtlänge": {
-                  "type": "integer"
-                },
-                "nach kürzung": {
-                  "type": "integer"
-                }
+                "gesamtlänge": {"type": "integer"},
+                "nach kürzung": {"type": "integer"}
               }
-              # TODO: required für das innere Array hier einfügen, falls nötig
             }
           }
         }
       }
     },
-    "Entscheidung": {
-      "type": "string"
-    },
+    "Entscheidung": {"type": "string"},
     "ort und datum": {
       "type": "array",
       "items": {
         "type": "object",
         "properties": {
-          "ort": {
-            "type": "string"
-          },
-          "datum": {
-            "type": "string"
-          }
+          "ort": {"type": "string"},
+          "datum": {"type": "string"}
         },
-        "required": [
-          "ort",
-          "datum"
-        ]
+        "required": ["ort", "datum"]
       }
     },
-    "Filmprüfstelle": {
-      "type": "string"
-    }
+    "Filmprüfstelle": {"type": "string"}
   },
   "required": [
-      "prüf-nr",
-      "Gesetz",
-      "Ursprungs-Firma",
-      "Titel des Bildes",
+      "prüf-nr", "Gesetz", "Ursprungs-Firma", "Titel des Bildes",
       "Text unter Titel des Bildes (Kurzbeschreibung des Filmes)",
-      "Spielleitung / Personen der Handlung:",
-      "Photographie",
-      "Archiketur",
-      "Personenverzeichnis",
-      "Text",
-      "Auschnitte",
-      "Länge",
-      "Entscheidung",
+      "Spielleitung / Personen der Handlung:", "Photographie", "Archiketur",
+      "Personenverzeichnis", "Text", "Auschnitte", "Länge", "Entscheidung",
       "Filmprüfstelle"
   ]
 }
 
-system_prompt = """Du bist ein hochpräzises Daten-Extraktions-System. 
-Deine einzige Aufgabe ist es, Informationen aus einem unstrukturierten, teils fehlerhaften OCR-Text zu extrahieren und in ein strikt vorgegebenes JSON-Schema zu überführen.
+system_prompt = """Du bist ein hochpräzises visuelles Daten-Extraktions-System. 
+Deine einzige Aufgabe ist es, Informationen direkt aus den bereitgestellten Dokumenten-Bildern zu extrahieren und in ein strikt vorgegebenes JSON-Schema zu überführen. Das Dokument besteht aus mehreren Seiten, die dir in korrekter Reihenfolge vorliegen.
 
 REGELN FÜR DIE EXTRAKTION:
-1. OCR-Korrektur: Der Eingabetext enthält typische OCR-Fehler (falsche Zeichen, verdrehte Reihenfolge, fehlende Leerzeichen). Analysiere den semantischen Kontext und korrigiere offensichtliche Zeichenfehler automatisch.
-2. Strikte Faktentreue: Erfinde NIEMALS Informationen hinzu. Leite keine Daten ab, die nicht explizit oder als klarer OCR-Fehler im Text stehen.
-3. Fehlende Werte: Wenn eine Information für ein Feld des JSON-Schemas im Text nicht auffindbar ist, setze den Wert ZWINGEND auf `null`. Verwende keine Platzhalter wie "unbekannt" oder "N/A".
-4. Relevanz-Filter: Der OCR-Text enthält wahrscheinlich irrelevante Kopfzeilen, Fußzeilen oder Zusatzinformationen. Ignoriere alles, was nicht im Ziel-Schema abgefragt wird.
-5. Formatierung: Halte dich exakt an die Datentypen des Schemas (Zahlen als Number, nicht als String; Datumsformate exakt wie gefordert).
+1. Visuelle Analyse: Lies den Text exakt so aus, wie er auf den Bildern steht. Führe die Informationen der Einzelseiten logisch zusammen.
+2. Strikte Faktentreue: Erfinde NIEMALS Informationen hinzu. Leite keine Daten ab, die nicht explizit auf den Bildern erkennbar sind.
+3. Fehlende Werte: Wenn eine Information für ein Feld des JSON-Schemas nicht auffindbar ist, setze den Wert ZWINGEND auf `null`.
+4. Relevanz-Filter: Ignoriere Randnotizen, Stempel oder Kopf-/Fußzeilen, sofern diese nicht explizit im Ziel-Schema abgefragt werden.
+5. Formatierung: Halte dich exakt an die Datentypen des Schemas.
 
 Gib AUSSCHLIESSLICH das finale JSON-Objekt aus. Keine Erklärungen, kein Markdown-Codeblock, keine einleitenden Worte.
 """
 
-ocr_dir = Path('data/02_ocr')
-ocr_dir.mkdir(parents=True, exist_ok=True)
-
-processed_dir = Path('../../data/03_processed')
+image_dir = Path('data/01_raw')
+processed_dir = Path('data/03_processed')
 processed_dir.mkdir(parents=True, exist_ok=True)
 
-model_name = "Qwen/Qwen2.5-14B-Instruct-AWQ"
+model_name = "Qwen/Qwen2-VL-7B-Instruct"
 
 def main():
 
-  llm = LLM(model=model_name)
-  sampling_params = SamplingParams(
-      temperature=0.0,
-      seed=42,
-      max_tokens=4096,
-      structured_outputs=StructuredOutputsParams(json_schema) # maybe als class 
-      #guided_decoding=GuidedDecodingParams(json=schema_str)
-  )
+    # 1. Bilder suchen und nach Dokument gruppieren
+    image_groups = defaultdict(list)
+    image_extensions = ('*.png', '*.jpg', '*.jpeg')
+    
+    for ext in image_extensions:
+        # rglob findet auch Dateien in Unterordnern wie R_9346-I_Zulassungskarten
+        for img_path in image_dir.rglob(ext):
+            # Nimmt an, dass Dateien nach dem Muster PRAEFIX_0001.jpg benannt sind
+            parts = img_path.stem.split('_')
+            if len(parts) > 1 and parts[-1].isdigit():
+                prefix = "_".join(parts[:-1]) # Extrahiert z.B. R_9346_I_1
+                image_groups[prefix].append(img_path)
+            else:
+                image_groups[img_path.stem].append(img_path) # Fallback für unformatierte Dateinamen
+                
+    # Bilder innerhalb einer Gruppe chronologisch sortieren (0001, 0002, ...)
+    for prefix in image_groups:
+        image_groups[prefix].sort()
 
-  for txt_file in ocr_dir.glob('*.txt'):
-      print(f"Processing: {txt_file.name}")
+    if not image_groups:
+        print("Keine Bilder gefunden.")
+        return
 
-      ocr_text = txt_file.read_text()
+    # Ermittle die maximale Anzahl an Bildern pro Dokument für vLLM
+    max_images_per_prompt = max(len(imgs) for imgs in image_groups.values())
+    print(f"Maximale Bilder pro Dokument: {max_images_per_prompt}")
 
-      messages=[
-          {
-              "role": "system", 
-              "content": system_prompt
-            },
-            {
-                "role": "user",
-                "content" : ocr_text 
-            }
-      ]
+    # 2. Modell initialisieren
+    llm = LLM(
+        model=model_name,
+        limit_mm_per_prompt={"image": max_images_per_prompt},
+        # ACHTUNG: Bei vielen Bildern muss max_model_len hoch sein.
+        # Passe dies an den VRAM deiner GPU an (z.B. 16384 oder 32768).
+        max_model_len=16384 
+    )
 
-      try:  
-          output = llm.chat(messages=messages, sampling_params=sampling_params, use_tqdm=True)
+    sampling_params = SamplingParams(
+        temperature=0.0,
+        seed=42,
+        max_tokens=4096,
+        structured_outputs=StructuredOutputsParams(json_schema)
+    )
 
-          output_text = output[0].outputs[0].text
-          print(output_text)
+    # 3. Inferenz durchführen
+    for doc_id, img_paths in image_groups.items():
+        print(f"\nProcessing Document: {doc_id} ({len(img_paths)} Bilder)")
 
-          out_file = processed_dir / f"{txt_file.stem}.json"
+        # Content-Liste für den User-Prompt aufbauen
+        user_content = []
+        for img in img_paths:
+            user_content.append({
+                "type": "image_url",
+                "image_url": {"url": f"file://{img.absolute()}"}
+            })
+        
+        # Text-Anweisung am Ende anfügen
+        user_content.append({
+            "type": "text", 
+            "text": "Extrahiere alle relevanten Daten aus diesen Seiten entsprechend des JSON-Schemas."
+        })
 
-          with open(out_file, mode="w") as f:
-              f.write(output_text)
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_content}
+        ]
+
+        try:  
+            output = llm.chat(messages=messages, sampling_params=sampling_params, use_tqdm=True)
+
+            output_text = output[0].outputs[0].text
+            print(output_text)
+
+            out_file = processed_dir / f"{doc_id}.json"
+
+            with open(out_file, mode="w", encoding="utf-8") as f:
+                f.write(output_text)
             
-          print(f"-> saved as: {out_file.name}\n")
-      
-      except Exception as e:
-          print(f"Error on File {txt_file.name}: {e}\n")
+            print(f"-> saved as: {out_file.name}\n")
+        
+        except Exception as e:
+            print(f"Error on Document {doc_id}: {e}\n")
 
-  print("LLM parser done")
-
+    print("VLM parser done")
 
 if __name__ == "__main__":
     main()
