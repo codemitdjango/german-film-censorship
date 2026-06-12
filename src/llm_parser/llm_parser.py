@@ -171,7 +171,7 @@ def main():
   sampling_params = SamplingParams(
       temperature=0.0,
       seed=42,
-      structured_outputs=json.dumps(json_schema) # maybe als class 
+      structured_outputs=StructuredOutputsParams(json_schema) # maybe als class 
       #guided_decoding=GuidedDecodingParams(json=schema_str)
   )
 
