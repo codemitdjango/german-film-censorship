@@ -134,10 +134,11 @@ def main():
     llm = LLM(
         model=model_name,
         limit_mm_per_prompt={"image": max_images_per_prompt},
-        # ACHTUNG: Bei vielen Bildern muss max_model_len hoch sein.
-        # Passe dies an den VRAM deiner GPU an (z.B. 16384 oder 32768).
-        max_model_len=16384,
-        allowed_local_media_path=str(image_dir.absolute())
+        max_model_len=131072,
+        allowed_local_media_path=str(image_dir.absolute()),
+        tensor_parallel_size=4, # bis zu 8 möglich auf paula
+        gpu_memory_utilization=0.95,
+        dtype="bfloat16"
     )
 
     sampling_params = SamplingParams(
