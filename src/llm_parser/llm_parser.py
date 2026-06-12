@@ -165,43 +165,49 @@ processed_dir.mkdir(parents=True, exist_ok=True)
 
 model_name = "Qwen/Qwen2.5-14B-Instruct-AWQ"
 
-llm = LLM(model=model_name)
-sampling_params = SamplingParams(
-    temperature=0.0,
-    seed=42,
-    structured_outputs=json.dumps(json_schema) # maybe als class 
-    #guided_decoding=GuidedDecodingParams(json=schema_str)
-)
+def main():
 
-for txt_file in ocr_dir.glob('*.txt'):
-    print(f"Processing: {txt_file.name}")
+  llm = LLM(model=model_name)
+  sampling_params = SamplingParams(
+      temperature=0.0,
+      seed=42,
+      structured_outputs=json.dumps(json_schema) # maybe als class 
+      #guided_decoding=GuidedDecodingParams(json=schema_str)
+  )
 
-    ocr_text = txt_file.read_text()
+  for txt_file in ocr_dir.glob('*.txt'):
+      print(f"Processing: {txt_file.name}")
 
-    messages=[
-        {
-            "role": "system", 
-            "content": system_prompt
-          },
+      ocr_text = txt_file.read_text()
+
+      messages=[
           {
-              "role": "user",
-              "content" : ocr_text 
-          }
-    ]
+              "role": "system", 
+              "content": system_prompt
+            },
+            {
+                "role": "user",
+                "content" : ocr_text 
+            }
+      ]
 
-    try:  
-        output = llm.chat(messages=messages, sampling_params=sampling_params, use_tqdm=True)
+      try:  
+          output = llm.chat(messages=messages, sampling_params=sampling_params, use_tqdm=True)
 
-        output_text = output.outputs[0].text
+          output_text = output.outputs[0].text
 
-        out_file = processed_dir / f"{txt_file.stem}.json"
+          out_file = processed_dir / f"{txt_file.stem}.json"
 
-        with open(out_file, mode="w") as f:
-            f.write(output_text)
-          
-        print(f"-> saved as: {out_file.name}\n")
-    
-    except Exception as e:
-        print(f"Error on File {txt_file.name}: {e}\n")
+          with open(out_file, mode="w") as f:
+              f.write(output_text)
+            
+          print(f"-> saved as: {out_file.name}\n")
+      
+      except Exception as e:
+          print(f"Error on File {txt_file.name}: {e}\n")
 
-print("LLM parser done")
+  print("LLM parser done")
+
+
+if __name__ == "__main__":
+    main()
