@@ -195,6 +195,7 @@ def main():
           output = llm.chat(messages=messages, sampling_params=sampling_params, use_tqdm=True)
 
           output_text = output.outputs[0].text
+          print(output_text)
 
           out_file = processed_dir / f"{txt_file.stem}.json"
 
