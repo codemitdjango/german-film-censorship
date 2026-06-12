@@ -157,7 +157,7 @@ REGELN FÜR DIE EXTRAKTION:
 Gib AUSSCHLIESSLICH das finale JSON-Objekt aus. Keine Erklärungen, kein Markdown-Codeblock, keine einleitenden Worte.
 """
 
-ocr_dir = Path('../../data/02_ocr')
+ocr_dir = Path('data/02_ocr')
 ocr_dir.mkdir(parents=True, exist_ok=True)
 
 processed_dir = Path('../../data/03_processed')
