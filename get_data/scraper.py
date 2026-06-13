@@ -15,7 +15,7 @@ async def login_and_base_navigation(page):
     await page.get_by_text("Film und Filmbegleitmaterial").click()
 
 # iterate through all pages of a collection and trigger downloads
-async def download_collection_pages(page, download_dir, total_pages, collection_name, log_file_path):
+async def download_collection_pages(page, download_dir, start_page, total_pages, collection_name, log_file_path):
 
     # setup collection-specific directory
     collection_dir = os.path.join(download_dir, collection_name)
@@ -24,7 +24,7 @@ async def download_collection_pages(page, download_dir, total_pages, collection_
     print(f"\nStarting download for collection: {collection_name} into {collection_dir}")
 
     # iteratre through each page
-    for current_page in range(1, total_pages + 1):
+    for current_page in range(start_page, total_pages + 1):
         print(f"\n--- Processing page {current_page} of {total_pages} ---")
 
         # hanlde pagination via dropdown (skip for page 1)
@@ -118,7 +118,7 @@ async def download_collection_pages(page, download_dir, total_pages, collection_
 # main workflow execution
 async def run():
     # setup base directories
-    base_download_dir = str(Path(__file__).parent.parent / "data" / "01_raw")
+    base_download_dir = r"S:Zulassungskarten_Data"
     os.makedirs(base_download_dir, exist_ok=True)
     log_file_path = os.path.join(base_download_dir, "error_log.txt")
 
@@ -133,6 +133,7 @@ async def run():
                 {"type": "text", "value": "R 9346-I Zulassungskarten"},
                 {"type": "role", "role": "treeitem", "name": "nicht klassifiziert"}
             ],
+            "start_page": 13,
             "total_pages": 363
         },
         {
@@ -197,6 +198,7 @@ async def run():
             await download_collection_pages(
                  page=page,
                  download_dir=base_download_dir,
+                 start_page=collection.get("start_page", 1) # otherwise 1
                  total_pages=collection["total_pages"],
                  collection_name=collection["name"],
                  log_file_path=log_file_path
