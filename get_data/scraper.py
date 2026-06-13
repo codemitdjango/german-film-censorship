@@ -198,7 +198,7 @@ async def run():
             await download_collection_pages(
                  page=page,
                  download_dir=base_download_dir,
-                 start_page=collection.get("start_page", 1) # otherwise 1
+                 start_page=collection.get("start_page", 1), # otherwise 1
                  total_pages=collection["total_pages"],
                  collection_name=collection["name"],
                  log_file_path=log_file_path
