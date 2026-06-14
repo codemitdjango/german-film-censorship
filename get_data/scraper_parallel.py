@@ -15,7 +15,7 @@ async def login_and_base_navigation(page):
     await page.get_by_text("Film und Filmbegleitmaterial").click()
 
 # iterate through all pages of a collection and trigger downloads
-async def download_collection_pages(page, download_dir, start_page, total_pages, collection_name, log_file_path):
+async def download_collection_pages(page, download_dir, start_page, end_pages, collection_name, log_file_path):
 
     # setup collection-specific directory
     collection_dir = os.path.join(download_dir, collection_name)
@@ -24,14 +24,13 @@ async def download_collection_pages(page, download_dir, start_page, total_pages,
     print(f"\nStarting download for collection: {collection_name} into {collection_dir}")
 
     # iteratre through each page
-    for current_page in range(start_page, total_pages + 1):
-        print(f"\n--- Processing page {current_page} of {total_pages} ---")
+    for current_page in range(start_page, end_pages + 1):
+        print(f"\n--- Processing page {current_page} of {end_pages} ---")
 
         # hanlde pagination via dropdown (skip for page 1)
         if current_page > 1:
             dropdown_locator = page.locator("[id=\"masterLayoutForm:tabPanel:tabSearchNavi:selectPageList\"]")
             await dropdown_locator.select_option(str(current_page))
-            
             # wait
             await page.wait_for_timeout(4000)
 
@@ -105,7 +104,7 @@ async def download_collection_pages(page, download_dir, start_page, total_pages,
             except Exception as error:
                 print(f"Error downloading document {index + 1} on page {current_page}: {error}")
 
-                # llog error to file
+                # log error to file
                 timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 error_message = f"[{timestamp}] ERROR: Collection '{collection_name}', Page {current_page}, Document Index {index + 1}. Details: {error}\n"
                 with open (log_file_path, "a", encoding="utf-8") as log_file:
@@ -115,17 +114,52 @@ async def download_collection_pages(page, download_dir, start_page, total_pages,
                 if 'popup' in locals() and not popup.is_closed():
                     await popup.close()
 
-# main workflow execution
+# NEU: Der isolierte Worker für einen Seiten-Chunk
+async def process_chunk(browser, collection, start_page, end_page, base_dir, log_file_path, semaphore):
+    # Semaphore blockiert hier, falls schon z.B. 3 Worker laufen
+    async with semaphore:
+        context = await browser.new_context(accept_downloads=True)
+        page = await context.new_page()
+        
+        try:
+            # Jeder Worker muss sich selbständig einloggen und durchnavigieren
+            await login_and_base_navigation(page)
+            
+            navigation_failed = False
+            for step in collection["navigation_steps"]:
+                try:
+                    if step["type"] == "text":
+                        await page.get_by_text(step["value"]).click()
+                    elif step["type"] == "exact_text":
+                        await page.get_by_text(step["value"], exact=True).click()
+                    elif step["type"] == "role":
+                        await page.get_by_role(step["role"], name=step["name"]).click()
+                    await page.wait_for_timeout(1500)
+                except Exception as error:
+                    print(f"NAVIGATION ERROR Worker [{start_page}-{end_page}]: {error}")
+                    navigation_failed = True
+                    break 
+
+            if not navigation_failed:
+                await page.wait_for_timeout(2000)
+                await download_collection_pages(
+                    page=page,
+                    download_dir=base_dir,
+                    start_page=start_page,
+                    end_page=end_page,
+                    collection_name=collection["name"],
+                    log_file_path=log_file_path
+                )
+        finally:
+            await context.close()
+            print(f"[Worker {start_page}-{end_page}] Context closed.")
+
+
 async def run():
-    # setup base directories
-    base_download_dir = r"S:Zulassungskarten_Data"
+    base_download_dir = r"S:\Zulassungskarten_Data"
     os.makedirs(base_download_dir, exist_ok=True)
     log_file_path = os.path.join(base_download_dir, "error_log.txt")
 
-    with open(log_file_path, "a", encoding="utf-8") as log_file:
-        log_file.write(f"--- Start new Scraping-Job at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ---\n")
-
-    # define collections to scrape
     collections_to_scrape = [
         {
             "name": "R_9346-I_Zulassungskarten",
@@ -133,7 +167,7 @@ async def run():
                 {"type": "text", "value": "R 9346-I Zulassungskarten"},
                 {"type": "role", "role": "treeitem", "name": "nicht klassifiziert"}
             ],
-            "start_page": 83,
+            "start_page": 58,
             "total_pages": 363
         },
         {
@@ -156,60 +190,44 @@ async def run():
         }
     ]
 
-    # initialize browser session
+    # Begrenze die maximale Anzahl paralleler Browser-Kontexte (z.B. auf 3)
+    MAX_CONCURRENT_WORKERS = 3
+    CHUNK_SIZE = 100 # Anzahl Seiten pro Worker
+    semaphore = asyncio.Semaphore(MAX_CONCURRENT_WORKERS)
+
     async with async_playwright() as playwright:
         browser = await playwright.chromium.launch(headless=False)
         
-        # iteratre over each collection
         for collection in collections_to_scrape:
-            print(f"Starting isolated session for collection: {collection['name']}")
-
-            # open new browser context
-            context = await browser.new_context(accept_downloads=True)
-            page = await context.new_page()
-
-            await login_and_base_navigation(page)
-
-            # follow navigation steps
-            navigation_failed = False
-            for step in collection["navigation_steps"]:
-                try:
-                    if step["type"] == "text":
-                        await page.get_by_text(step["value"]).click()
-                    elif step["type"] == "exact_text":
-                        await page.get_by_text(step["value"], exact=True).click()
-                    elif step["type"] == "role":
-                        await page.get_by_role(step["role"], name=step["name"]).click()
-
-                    await page.wait_for_timeout(1500)
-                except Exception as error:
-                    print(f"NAVIGATION ERROR in collection {collection['name']}. Step: {step}. Details: {error}")
-                    navigation_failed = True
-                    break 
-
-            if navigation_failed:
-                print(f"Skipping download for {collection['name']} due to navigation errors.")
-                await context.close()
-                continue
-
-            await page.wait_for_timeout(2000)
-
-            # start downloading process
-            await download_collection_pages(
-                 page=page,
-                 download_dir=base_download_dir,
-                 start_page=collection.get("start_page", 1), # otherwise 1
-                 total_pages=collection["total_pages"],
-                 collection_name=collection["name"],
-                 log_file_path=log_file_path
-            )
-
-            # cclean up session
-            await context.close()
-            print(f"Collection {collection['name']} completed. Session terminated.")
+            total_pages = collection["total_pages"]
+            start_page_overall = collection.get("start_page", 1)
+            
+            # Tasks generieren (Chunks berechnen)
+            tasks = []
+            for chunk_start in range(start_page_overall, total_pages + 1, CHUNK_SIZE):
+                chunk_end = min(chunk_start + CHUNK_SIZE - 1, total_pages)
+                
+                # Task für diesen Chunk erstellen
+                task = asyncio.create_task(
+                    process_chunk(
+                        browser=browser,
+                        collection=collection,
+                        start_page=chunk_start,
+                        end_page=chunk_end,
+                        base_dir=base_download_dir,
+                        log_file_path=log_file_path,
+                        semaphore=semaphore
+                    )
+                )
+                tasks.append(task)
+            
+            print(f"Starting {len(tasks)} parallel workers for {collection['name']}...")
+            
+            # Alle Tasks für diese Collection asynchron ausführen und warten
+            await asyncio.gather(*tasks)
 
         print("\nAll configured collections have been successfully downloaded.")
-        await browser.close()    
+        await browser.close()
 
 if __name__ == "__main__":
     asyncio.run(run())
