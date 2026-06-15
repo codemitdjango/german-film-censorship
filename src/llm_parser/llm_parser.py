@@ -57,16 +57,16 @@ def main():
     print(f"Maximale Bilder pro Dokument: {max_images_per_prompt}")
 
     # 2. Modell initialisieren
-    llm2 = LLM(
-        model=model_name,
-        limit_mm_per_prompt={"image": max_images_per_prompt},
-        #max_model_len=32768,
-        allowed_local_media_path=str(image_dir.absolute()),
-        tensor_parallel_size=4, # bis zu 8 möglich auf paula
-        gpu_memory_utilization=0.95,
-        dtype="bfloat16",
-        disable_flashinfer_sampling=True
-    )
+    #llm2 = LLM(
+    #    model=model_name,
+    #    limit_mm_per_prompt={"image": max_images_per_prompt},
+    #    #max_model_len=32768,
+    #    allowed_local_media_path=str(image_dir.absolute()),
+    #    tensor_parallel_size=4, # bis zu 8 möglich auf paula
+    #    gpu_memory_utilization=0.95,
+    #    dtype="bfloat16",
+    #    disable_flashinfer_sampling=True
+    #)
 
     # Wenn du vLLM via Python-Skript initialisierst:
     llm = LLM(
