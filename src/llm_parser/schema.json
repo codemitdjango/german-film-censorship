@@ -1,0 +1,21 @@
+{
+  "type": "object",
+  "properties": {
+    "Prüf-Nr": {"type": ["integer", "null"]},
+    "Gesetz": {"type": ["string", "null"]},
+    "Architektur": {"type": ["string", "null"]},
+    "Ausschnitte": {"type": ["string", "null"]},
+    "Länge": {
+      "type": ["array", "null"],
+      "items": {
+        "type": "object",
+        "properties": {
+          "akt": {"type": "integer"},
+          "meter": {"type": "integer"},
+          "nach_kuerzung": {"type": ["integer", "null"]},
+          "gesamtlänge": {"type": ["integer", "null"]} 
+        }
+      }
+    }
+  }
+}

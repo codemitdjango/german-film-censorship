@@ -4,95 +4,26 @@ from vllm import LLM, SamplingParams
 from vllm.sampling_params import StructuredOutputsParams
 from pathlib import Path
 
-json_schema = {
-  "type": "object",
-  "properties": {
-    "prüf-nr": {"type": "integer"},
-    "Gesetz": {"type": "string"},
-    "Ursprungs-Firma": {"type": "string"},
-    "Titel des Bildes": {"type": "string"},
-    "Text unter Titel des Bildes (Kurzbeschreibung des Filmes)": {"type": "string"},
-    "Spielleitung / Personen der Handlung:": {"type": "string"},
-    "Photographie": {"type": "string"},
-    "Archiketur": {"type": "string"},
-    "Personenverzeichnis": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "name": {"type": "string"},
-          "rolle": {"type": "string"}
-        },
-        "required": ["name", "rolle"]
-      }
-    },
-    "Text": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "akt": {"type": "integer"},
-          "text": {"type": "string"}
-        },
-        "required": ["akt", "text"]
-      }
-    },
-    "Auschnitte": {"type": "string"},
-    "Länge": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "akt": {"type": "integer"},
-          "meter": {"type": "integer"},
-          "nach kürzung": {"type": "integer"},
-          "gesamtlänge": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "gesamtlänge": {"type": "integer"},
-                "nach kürzung": {"type": "integer"}
-              }
-            }
-          }
-        }
-      }
-    },
-    "Entscheidung": {"type": "string"},
-    "ort und datum": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "ort": {"type": "string"},
-          "datum": {"type": "string"}
-        },
-        "required": ["ort", "datum"]
-      }
-    },
-    "Filmprüfstelle": {"type": "string"}
-  },
-  "required": [
-      "prüf-nr", "Gesetz", "Ursprungs-Firma", "Titel des Bildes",
-      "Text unter Titel des Bildes (Kurzbeschreibung des Filmes)",
-      "Spielleitung / Personen der Handlung:", "Photographie", "Archiketur",
-      "Personenverzeichnis", "Text", "Auschnitte", "Länge", "Entscheidung",
-      "Filmprüfstelle"
-  ]
-}
+# load JSON 
+json_schema = json.loads(Path("schema.json").read_text(encoding="utf-8"))
 
-system_prompt = """Du bist ein hochpräzises visuelles Daten-Extraktions-System. 
-Deine einzige Aufgabe ist es, Informationen direkt aus den bereitgestellten Dokumenten-Bildern zu extrahieren und in ein strikt vorgegebenes JSON-Schema zu überführen. Das Dokument besteht aus mehreren Seiten, die dir in korrekter Reihenfolge vorliegen.
+system_prompt = """
+You are an expert visual data extraction system.
+Your specific task is to extract information from images of historical German censorship/examination records and format them strictly according to the provided JSON schema. The document consists of multiple pages provided in chronological order.
 
-REGELN FÜR DIE EXTRAKTION:
-1. Visuelle Analyse: Lies den Text exakt so aus, wie er auf den Bildern steht. Führe die Informationen der Einzelseiten logisch zusammen.
-2. Strikte Faktentreue: Erfinde NIEMALS Informationen hinzu. Leite keine Daten ab, die nicht explizit auf den Bildern erkennbar sind.
-3. Fehlende Werte: Wenn eine Information für ein Feld des JSON-Schemas nicht auffindbar ist, setze den Wert ZWINGEND auf `null`.
-4. Relevanz-Filter: Ignoriere Randnotizen, Stempel oder Kopf-/Fußzeilen, sofern diese nicht explizit im Ziel-Schema abgefragt werden.
-5. Formatierung: Halte dich exakt an die Datentypen des Schemas.
+EXTRACTION RULES:
+1. Language & Fidelity: Extract the text exactly as written in the original German. Do not translate. Never invent or infer information that is not explicitly visible.
+2. Handling Line Breaks: If a word is hyphenated across two lines, merge it into a single word. Remove arbitrary line breaks within continuous sentences.
+3. Missing Information: If the specific information for a field cannot be found on the pages, you MUST set the value to `null`. Do not use placeholder strings like "N/A", "unbekannt", or "-".
+4. Noise Reduction: Ignore marginalia, stamps, handwritten scribbles, or headers/footers unless they directly answer a requested field in the schema.
+5. Numerical Values: For lengths ("Länge") or document numbers ("prüf-nr"), extract ONLY the numeric integer value, stripping out units like "Meter" or "Nr." unless the schema explicitly requires a string.
 
-Gib AUSSCHLIESSLICH das finale JSON-Objekt aus. Keine Erklärungen, kein Markdown-Codeblock, keine einleitenden Worte.
+FIELD MAPPING & CONTEXT:
+- "Ursprungs-Firma": The production company or studio.
+- "Text unter Titel des Bildes": Treat this as the short description or synopsis of the film.
+- "Spielleitung": This is the historical term for the director.
+- "Architektur": This refers to set design or art direction.
+- "Auschnitte" / "Entscheidung": Transcribe the censor's decisions or required cuts accurately.
 """
 
 image_dir = Path('data/01_raw')
@@ -106,6 +37,7 @@ def main():
     image_groups = defaultdict(list)
     image_extensions = ('*.png', '*.jpg', '*.jpeg')
     
+    # das entfernen???
     for ext in image_extensions:
         for img_path in image_dir.rglob(ext):
             group_name = img_path.parent.name
@@ -141,7 +73,7 @@ def main():
     sampling_params = SamplingParams(
         temperature=0.0,
         seed=42,
-        max_tokens=4096,
+        #max_tokens=4096,
         structured_outputs=StructuredOutputsParams(json_schema)
     )
 
