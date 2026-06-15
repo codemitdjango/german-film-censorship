@@ -13,9 +13,12 @@ source .venv/bin/activate
 
 #pip3 install vllm
 
+# Optional: Stelle sicher, dass du im richtigen Verzeichnis bist
+cd $SLURM_SUBMIT_DIR
+
 # NCCL Fixes & Debugging??
 export NCCL_DEBUG=INFO
-export NCCL_IB_DISABLE=1
+# export NCCL_IB_DISABLE=1
 export VLLM_WORKER_MULTIPROC_METHOD=spawn
 
 python src/llm_parser/llm_parser.py \

@@ -38,17 +38,13 @@ def main():
     image_groups = defaultdict(list)
     image_extensions = ('*.png', '*.jpg', '*.jpeg')
     
-    # das entfernen???
+    # collect images
     for ext in image_extensions:
         for img_path in image_dir.rglob(ext):
             group_name = img_path.parent.name
             image_groups[group_name].append(img_path)
-            
-            # sort
-            for group in image_groups:
-                image_groups[group].sort()
                 
-    # Bilder innerhalb einer Gruppe chronologisch sortieren (0001, 0002, ...)
+    # sort
     for prefix in image_groups:
         image_groups[prefix].sort()
 
