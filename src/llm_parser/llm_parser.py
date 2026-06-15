@@ -57,7 +57,7 @@ def main():
     print(f"Maximale Bilder pro Dokument: {max_images_per_prompt}")
 
     # 2. Modell initialisieren
-    llm = LLM(
+    llm2 = LLM(
         model=model_name,
         limit_mm_per_prompt={"image": max_images_per_prompt},
         #max_model_len=32768,
@@ -66,6 +66,14 @@ def main():
         gpu_memory_utilization=0.95,
         dtype="bfloat16",
         disable_flashinfer_sampling=True
+    )
+
+    # Wenn du vLLM via Python-Skript initialisierst:
+    llm = LLM(
+        model="Qwen/Qwen2-VL-7B-Instruct",
+        tensor_parallel_size=4,
+        disable_custom_all_reduce=True,
+        enforce_eager=True # Hilft oft zusätzlich auf Clustern
     )
 
     sampling_params = SamplingParams(
