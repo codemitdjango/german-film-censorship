@@ -146,7 +146,7 @@ async def process_chunk(browser, collection, start_page, end_page, base_dir, log
                     page=page,
                     download_dir=base_dir,
                     start_page=start_page,
-                    end_page=end_page,
+                    end_pages=end_page,
                     collection_name=collection["name"],
                     log_file_path=log_file_path
                 )
