@@ -25,7 +25,9 @@ export NCCL_DEBUG=WARN # INFO spammt dein Log mit über 100 Zeilen pro GPU voll,
 
 # Verhindert den IPv6 / localhost Error (errno: 97), den du im Log hast:
 export VLLM_HOST_IP=127.0.0.1
-export NCCL_SOCKET_IFNAME=eth0 # Oder den entsprechenden Infiniband/Ethernet-Namen des Paula-Knotens, z.B. ibs5
+export GLOO_SOCKET_IFNAME=lo
+
+export NCCL_SOCKET_IFNAME=lo
 
 
 python src/llm_parser/llm_parser.py \
