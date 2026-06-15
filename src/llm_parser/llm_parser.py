@@ -5,7 +5,8 @@ from vllm.sampling_params import StructuredOutputsParams
 from pathlib import Path
 
 # load JSON 
-json_schema = json.loads(Path("schema.json").read_text(encoding="utf-8"))
+SCRIPT_DIR = Path(__file__).parent
+json_schema = json.loads(Path(SCRIPT_DIR / "schema.json").read_text(encoding="utf-8"))
 
 system_prompt = """
 You are an expert visual data extraction system.
