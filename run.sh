@@ -12,7 +12,10 @@
 module purge
 module load GCCcore/15.2.0  # Passend zu deiner Python-Installation
 module load Python/3.14.2
+#module load Python/3.12.2
 module load CUDA/12.4.0
+
+#module load CUDA/12.3.0
 
 # Optional: Stelle sicher, dass du im richtigen Verzeichnis bist
 cd $SLURM_SUBMIT_DIR

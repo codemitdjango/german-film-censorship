@@ -64,7 +64,8 @@ def main():
         allowed_local_media_path=str(image_dir.absolute()),
         tensor_parallel_size=4, # bis zu 8 möglich auf paula
         gpu_memory_utilization=0.95,
-        dtype="bfloat16"
+        dtype="bfloat16",
+        disable_flashinfer_sampling=True
     )
 
     sampling_params = SamplingParams(
