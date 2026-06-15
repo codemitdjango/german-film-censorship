@@ -18,7 +18,7 @@ def extract_archives():
             zip_ref.extractall(extract_dir)
             
         # delete original zip file
-        # zip_path.unlink()
+        zip_path.unlink()
 
 if __name__ == "__main__":
     extract_archives()

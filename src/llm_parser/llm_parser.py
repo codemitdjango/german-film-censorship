@@ -103,20 +103,17 @@ model_name = "Qwen/Qwen2-VL-7B-Instruct"
 
 def main():
 
-    # 1. Bilder suchen und nach Dokument gruppieren
     image_groups = defaultdict(list)
     image_extensions = ('*.png', '*.jpg', '*.jpeg')
     
     for ext in image_extensions:
-        # rglob findet auch Dateien in Unterordnern wie R_9346-I_Zulassungskarten
         for img_path in image_dir.rglob(ext):
-            # Nimmt an, dass Dateien nach dem Muster PRAEFIX_0001.jpg benannt sind
-            parts = img_path.stem.split('_')
-            if len(parts) > 1 and parts[-1].isdigit():
-                prefix = "_".join(parts[:-1]) # Extrahiert z.B. R_9346_I_1
-                image_groups[prefix].append(img_path)
-            else:
-                image_groups[img_path.stem].append(img_path) # Fallback für unformatierte Dateinamen
+            group_name = img_path.parent.name
+            image_groups[group_name].append(img_path)
+            
+            # sort
+            for group in image_groups:
+                image_groups[group].sort()
                 
     # Bilder innerhalb einer Gruppe chronologisch sortieren (0001, 0002, ...)
     for prefix in image_groups:
