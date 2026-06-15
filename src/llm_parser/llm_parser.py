@@ -131,7 +131,6 @@ def main():
     llm = LLM(
         model=model_name,
         limit_mm_per_prompt={"image": max_images_per_prompt},
-        max_model_len=131072,
         allowed_local_media_path=str(image_dir.absolute()),
         tensor_parallel_size=4, # bis zu 8 möglich auf paula
         gpu_memory_utilization=0.95,
