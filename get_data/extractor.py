@@ -8,7 +8,6 @@ def extract_archives():
     # find all zip files recursively
     for zip_path in base_dir.rglob("*.zip"):
         
-        # define extraction target (same name, no .zip extension)
         extract_dir = zip_path.parent
         
         print(f"Extracting: {zip_path.name}")
@@ -22,3 +21,7 @@ def extract_archives():
 
 if __name__ == "__main__":
     extract_archives()
+
+
+
+    
