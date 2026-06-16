@@ -41,7 +41,7 @@ async def ensure_session(page, collection):
         if page.is_closed():
             return False
             
-        if "login.xhtml" in page.url or await page.locator("[id*='sessionExpiresMessageDialog']").is_visible():
+        if "login.xhtml" in page.url or await page.locator("[id='sessionExpiresMessageDialog']").is_visible():
             print(f"\n[{datetime.now().strftime('%H:%M:%S')}] Session abgelaufen. Erneuere Verbindung...")
             await login_and_base_navigation(page)
             
