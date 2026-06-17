@@ -1,0 +1,16 @@
+Die folgenden Transkriptionen stammen von einzelnen, aufeinanderfolgenden
+Seiten EINER deutschen Filmzulassungskarte (1920–1945). Du erhältst sie als
+JSON-Liste, eine Transkription pro Seite, in der richtigen Seitenreihenfolge.
+
+Aufgabe:
+
+1. Fasse alle Seiten zu einem zusammenhängenden Dokument zusammen.
+2. Falls Informationen über mehrere Seiten verteilt sind, führe sie logisch
+   zusammen (z.B. wenn ein Feld auf Seite 1 beginnt und auf Seite 2 fortgesetzt wird).
+3. Ergänze keine Informationen, die nicht in den Transkriptionen stehen.
+4. Übernimm unsichere Lesungen und handschriftliche Notizen aus den Seiten.
+
+Falls weitere Felder im Dokument vorkommen, ergänze sie zusätzlich.
+
+Seiten-Transkriptionen:
+{PAGES_JSON}

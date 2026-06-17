@@ -7,69 +7,21 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Config
-IMAGE_FOLDER = r"./data/01_raw"
+IMAGE_FOLDER = r"../../data/01_raw"
 API_URL = os.getenv("API_URL")
 API_KEY = os.getenv("API_KEY", "fallback")
 MODEL = "google/gemma-4-12b"
 OUTPUT_FILE = "zensurkarte.json"
 TEMPERATURE = 0.1 # bei 0 hängt das Modell im LOOP
 TIMEOUT_SECONDS = 600
-
 # Prompts
-PAGE_PROMPT = """
-Das folgende Bild zeigt EINE Seite einer deutschen Filmzulassungskarte,
-ausgestellt zwischen 1920 und 1945.
-
-Aufgabe:
-
-1. Führe eine vollständige OCR dieser einen Seite durch.
-2. Berücksichtige Drucktext, Stempel, Randnotizen und Handschrift.
-3. Bewahre die originale Schreibweise.
-4. Ergänze keine Informationen, die nicht im Bild stehen.
-5. Unsichere Lesungen markiere im Text mit [unsicher: ...].
-"""
-
-MERGE_PROMPT = """
-Die folgenden Transkriptionen stammen von einzelnen, aufeinanderfolgenden
-Seiten EINER deutschen Filmzulassungskarte (1920–1945). Du erhältst sie als
-JSON-Liste, eine Transkription pro Seite, in der richtigen Seitenreihenfolge.
-
-Aufgabe:
-
-1. Fasse alle Seiten zu einem zusammenhängenden Dokument zusammen.
-2. Falls Informationen über mehrere Seiten verteilt sind, führe sie logisch
-   zusammen (z.B. wenn ein Feld auf Seite 1 beginnt und auf Seite 2 fortgesetzt wird).
-3. Ergänze keine Informationen, die nicht in den Transkriptionen stehen.
-4. Übernimm unsichere Lesungen und handschriftliche Notizen aus den Seiten.
-
-Falls weitere Felder im Dokument vorkommen, ergänze sie zusätzlich.
-
-Seiten-Transkriptionen:
-{PAGES_JSON}
-"""
-
-PAGE_SCHEMA = {
-    "type": "object",
-    "properties": {
-        "transkription": {
-            "type": "string",
-            "description": "Vollständiger erkannter Text dieser Seite"
-        },
-        "handschriftliche_notizen": {
-            "type": "array",
-            "items": {"type": "string"},
-            "description": "Liste handschriftlicher Notizen"
-        },
-        "unsichere_lesungen": {
-            "type": "array",
-            "items": {"type": "string"}
-        }
-    },
-    "required": ["transkription", "handschriftliche_notizen", "unsichere_lesungen"],
-    "additionalProperties": False # Zwingt das Modell, keine eigenen Felder zu erfinden
-}
-
-MERGE_SCHEMA = {}
+PROMPT_DIR = Path("./prompts")
+PAGE_PROMPT = (PROMPT_DIR / "page_prompt.txt").read_text(encoding="utf-8")
+MERGE_PROMPT = (PROMPT_DIR / "merge_prompt.txt").read_text(encoding="utf-8")
+# JSON
+# Komplett ohne 'with open' über die Path-Klasse
+PAGE_SCHEMA = json.loads((PROMPT_DIR / "page_schema.json").read_text(encoding="utf-8"))
+MERGE_SCHEMA = json.loads((PROMPT_DIR / "merge_schema.json").read_text(encoding="utf-8"))
 
 def encode_image_b64(image_path: Path) -> str:
     with open(image_path, "rb") as f:
