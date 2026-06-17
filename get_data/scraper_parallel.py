@@ -210,7 +210,7 @@ async def run():
                 {"type": "text", "value": "R 9346-I Zulassungskarten"},
                 {"type": "role", "role": "treeitem", "name": "nicht klassifiziert"}
             ],
-            "start_page":  243,  # HIER ANGEPASST: Startet direkt bei der Fehlerseite 150
+            "start_page":  255,
             "total_pages": 363
         }
     ]
