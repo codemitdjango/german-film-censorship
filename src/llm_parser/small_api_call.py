@@ -6,14 +6,11 @@ from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv()
 
-# -----------------------------
-# Konfiguration
-# -----------------------------
-
-IMAGE_FOLDER = r"./censorship_cards"
-API_URL = ""  # Beispiel: Ollama OpenAI-kompatibler Endpunkt
-API_KEY = ""  # bei Ollama/LM Studio meist irrelevant, aber Header wird trotzdem mitgeschickt
-MODEL = "google/gemma-4-12b"  # ANPASSEN: exakter Modellname, wie er in Ollama/LM Studio gelistet ist
+# Config
+IMAGE_FOLDER = r"./data/01_raw"
+API_URL = os.getenv("API_URL")
+API_KEY = os.getenv("API_KEY", "fallback")
+MODEL = "google/gemma-4-12b"
 OUTPUT_FILE = "zensurkarte.json"
 TEMPERATURE = 0.1 # bei 0 hängt das Modell im LOOP
 TIMEOUT_SECONDS = 600
