@@ -1,0 +1,20 @@
+{
+    "type": "object",
+    "properties": {
+        "transkription": {
+            "type": "string",
+            "description": "Vollständiger erkannter Text dieser Seite"
+        },
+        "handschriftliche_notizen": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Liste handschriftlicher Notizen"
+        },
+        "unsichere_lesungen": {
+            "type": "array",
+            "items": {"type": "string"}
+        }
+    },
+    "required": ["transkription", "handschriftliche_notizen", "unsichere_lesungen"],
+    "additionalProperties": false
+}

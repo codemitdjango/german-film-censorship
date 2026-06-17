@@ -1,0 +1,10 @@
+Das folgende Bild zeigt EINE Seite einer deutschen Filmzulassungskarte,
+ausgestellt zwischen 1920 und 1945.
+
+Aufgabe:
+
+1. Führe eine vollständige OCR dieser einen Seite durch.
+2. Berücksichtige Drucktext, Stempel, Randnotizen und Handschrift.
+3. Bewahre die originale Schreibweise.
+4. Ergänze keine Informationen, die nicht im Bild stehen.
+5. Unsichere Lesungen markiere im Text mit [unsicher: ...].
