@@ -1,3 +1,4 @@
+# Imports
 import base64
 import json
 import requests
@@ -26,12 +27,118 @@ MERGE_PROMPT = (PROMPT_DIR / "merge_prompt.txt").read_text(encoding="utf-8")
 PAGE_SCHEMA = json.loads((PROMPT_DIR / "page_schema.json").read_text(encoding="utf-8"))
 MERGE_SCHEMA = json.loads((PROMPT_DIR / "merge_schema.json").read_text(encoding="utf-8"))
 
-#
-def encode_image_b64(image_path: Path) -> str:
-    with open(image_path, "rb") as f:
-        return base64.b64encode(f.read()).decode()
 
-# sends API Request with content and json schema
+# coordinates the entire pipeline by iterating through all document directories
+def main():
+    if not IMAGE_FOLDER.exists() or not IMAGE_FOLDER.is_dir():
+        print(f"[WARNING] Hauptverzeichnis {IMAGE_FOLDER} existiert nicht.")
+        return
+    
+    doc_directories = sorted([d for d in IMAGE_FOLDER.iterdir() if d.is_dir()])
+
+    if not doc_directories:
+        print(f"[WARNING] Keine Dokumenteordner in {IMAGE_FOLDER} gefunden.")
+        return
+    
+    print(f"[INFO] {len(doc_directories)} Dokumentenordner gefunden.")
+
+    # Pipeline for every Folder
+    for doc_dir in doc_directories:
+        process_document_directory(doc_dir)
+
+
+# processes a single document folder: extracts data from all pages, merges them, and exports the results
+def process_document_directory(doc_dir: Path):
+    # one document folder
+    print(f"[INFO] Starte Verarbeitung für Dokument: {doc_dir.name}")
+
+    image_files = get_sorted_images(doc_dir)
+
+    if not image_files:
+        print(f"[WARNING] Keine Bilder in {doc_dir.name} gefunden. Überspringe.")
+        return
+    
+    print(f"[INFO] {len(image_files)} Bild(er) in {doc_dir.name} gefunden. Starte OCR...")
+
+    page_results = []
+    for i, image_file in enumerate(image_files, start=1):
+        try:
+            page_result = process_page(image_file, i)
+        except requests.exceptions.RequestException as e:
+            print(f"[FEHLER] Fehler bei Seite {i} ({image_file.name}): {e}")
+            page_result = {
+                "_seite": i,
+                "_dateiname": image_file.name,
+                "_error": str(e),
+            }
+        page_results.append(page_result)
+
+    output_dir = Path("./output")
+    output_dir.mkdir(exist_ok=True)
+
+    # TODO rename 
+    intermediate_file = output_dir / f"{doc_dir.name}_seiten_einzeln.json"
+    final_file = output_dir / f"{doc_dir.name}_zensurkarte.json"
+
+    with open(intermediate_file, "w", encoding="utf-8") as f:
+        json.dump(page_results, f, ensure_ascii=False, indent=2)
+
+    try:
+        merged = merge_pages(page_results)
+    except requests.exceptions.RequestException as e:
+        print(f"[FEHLER] Fehler beim Zusammenführen von {doc_dir.name}: {e}")
+        return
+    
+    with open(final_file, "w", encoding="utf-8") as f:
+        json.dump(merged, f, ensure_ascii=False, indent=2)
+
+    print(f"[INFO] Fertig. Ergebnis gespeichert in {final_file}")
+
+
+# extracts structured data from a single document page using the vision model
+def process_page(image_path: Path, page_number: int) -> dict:
+    print(f"[INFO] Verarbeite Seite {page_number}: {image_path.name}")
+    b64 = encode_image_b64(image_path)
+    content = [
+        {"type": "text", "text": PAGE_PROMPT},
+        {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{b64}"}}
+    ]
+
+    parsed = call_model(content, PAGE_SCHEMA)
+    parsed["_seite"] = page_number
+    parsed["_dateiname"] = image_path.name
+    return parsed
+
+
+# consolidates individual page results into a single, unified document structure
+def merge_pages(page_results: list[dict]) -> dict:
+    # hier hin schreiben bei welchen dok man ist
+    print("[INFO] Führe alle Seiten zu einem Dokument zusammen...")
+
+    pages_json = json.dumps(page_results, ensure_ascii=False, indent=2)
+    content = MERGE_PROMPT.replace("{PAGES_JSON}", pages_json)
+    return call_model(content, MERGE_SCHEMA)
+
+
+# retrieves all image files from a specific directory in natural alphanumerical order
+def get_sorted_images(dir_path: Path) -> list[Path]:
+    # search every image in a folder and sort
+    extensions = ("*.jpg", "*.jpeg", "*.png", "*.JPG", "*.JPEG", "*.PNG")
+    images = []
+    for ext in extensions:
+        images.extend(dir_path.glob(ext))
+    
+    #sort
+    def natural_sort_key(path: Path):
+        return [
+            int(text) if text.isdigit() else text.lower()
+            for text in re.split(r"(\d+)", path.name)
+        ]
+
+    return sorted(images, key=natural_sort_key)
+
+
+# executes the API call to the LLM and returns a parsed, schema-validated JSON response
 def call_model(content, schema) -> dict:
     payload = {
         "model": MODEL,
@@ -70,111 +177,12 @@ def call_model(content, schema) -> dict:
         return {"_error": f"JSONDecodeError: LLM lieferte defektes JSON. Raw: {raw_text[:100]}..."}
 
 
-
-def process_page(image_path: Path, page_number: int) -> dict:
-    print(f"[INFO] Verarbeite Seite {page_number}: {image_path.name}")
-    b64 = encode_image_b64(image_path)
-    content = [
-        {"type": "text", "text": PAGE_PROMPT},
-        {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{b64}"}}
-    ]
-
-    parsed = call_model(content, PAGE_SCHEMA)
-    parsed["_seite"] = page_number
-    parsed["_dateiname"] = image_path.name
-    return parsed
+# converts a image file into a base64 encoded string for API transmission
+def encode_image_b64(image_path: Path) -> str:
+    with open(image_path, "rb") as f:
+        return base64.b64encode(f.read()).decode()
 
 
-def merge_pages(page_results: list[dict]) -> dict:
-    # hier hin schreiben bei welchen dok man ist
-    print("[INFO] Führe alle Seiten zu einem Dokument zusammen...")
-
-    pages_json = json.dumps(page_results, ensure_ascii=False, indent=2)
-    content = MERGE_PROMPT.replace("{PAGES_JSON}", pages_json)
-    return call_model(content, MERGE_SCHEMA)
-
-
-def get_sorted_images(dir_path: Path) -> list[Path]:
-    # search every image in a folder and sort
-    extensions = ("*.jpg", "*.jpeg", "*.png", "*.JPG", "*.JPEG", "*.PNG")
-    images = []
-    for ext in extensions:
-        images.extend(dir_path.glob(ext))
-    
-    #sort
-    def natural_sort_key(path: Path):
-        return [
-            int(text) if text.isdigit() else text.lower()
-            for text in re.split(r"(\d+)", path.name)
-        ]
-
-    return sorted(images, key=natural_sort_key)
-
-
-def process_document_directory(doc_dir: Path):
-    # one document folder
-    print(f"[INFO] Starte Verarbeitung für Dokument: {doc_dir.name}")
-
-    image_files = get_sorted_images(doc_dir)
-
-    if not image_files:
-        print(f"[WARNING] Keine Bilder in {doc_dir.name} gefunden. Überspringe.")
-        return
-    
-    print(f"[INFO] {len(image_files)} Bild(er) gefunden. Starte OCR...")
-
-    page_results = []
-    for i, image_file in enumerate(image_files, start=1):
-        try:
-            page_result = process_page(image_file, i)
-        except requests.exceptions.RequestException as e:
-            print(f"[FEHLER] Fehler bei Seite {i} ({image_file.name}): {e}")
-            page_result = {
-                "_seite": i,
-                "_dateiname": image_file.name,
-                "_error": str(e),
-            }
-        page_results.append(page_result)
-
-    output_dir = Path("./output")
-    output_dir.mkdir(exist_ok=True)
-
-    # TODO rename 
-    intermediate_file = output_dir / f"{doc_dir.name}_seiten_einzeln.json"
-    final_file = output_dir / f"{doc_dir.name}_zensurkarte.json"
-
-    with open(intermediate_file, "w", encoding="utf-8") as f:
-        json.dump(page_results, f, ensure_ascii=False, indent=2)
-
-    try:
-        merged = merge_pages(page_results)
-    except requests.exceptions.RequestException as e:
-        print(f"[FEHLER] Fehler beim Zusammenführen von {doc_dir.name}: {e}")
-        return
-    
-    with open(final_file, "w", encoding="utf-8") as f:
-        json.dump(merged, f, ensure_ascii=False, indent=2)
-
-    print(f"[INFO] Fertig. Ergebnis gespeichert in {final_file}")
-
-
-def main():
-    if not IMAGE_FOLDER.exists() or not IMAGE_FOLDER.is_dir():
-        print(f"[WARNING] Hauptverzeichnis {IMAGE_FOLDER} existiert nicht.")
-        return
-    
-    doc_directories = sorted([d for d in IMAGE_FOLDER.iterdir() if d.is_dir()])
-
-    if not doc_directories:
-        print(f"[WARNING] Keine Dokumenteordner in {IMAGE_FOLDER} gefunden.")
-        return
-    
-    print(f"[INFO] {len(doc_directories)} Dokumentenordner gefunden.")
-
-    # Pipeline for every Folder
-    for doc_dir in doc_directories:
-        process_document_directory(doc_dir)
-
-
+#
 if __name__ == "__main__":
     main()
