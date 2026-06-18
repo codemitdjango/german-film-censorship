@@ -1,16 +1,20 @@
-Die folgenden Transkriptionen stammen von einzelnen, aufeinanderfolgenden
-Seiten EINER deutschen Filmzulassungskarte (1920–1945). Du erhältst sie als
-JSON-Liste, eine Transkription pro Seite, in der richtigen Seitenreihenfolge.
+Die folgenden Transkriptionen stammen von einzelnen, aufeinanderfolgenden Seiten EINER deutschen Filmzulassungskarte (1920–1945). Du erhältst sie als JSON-Liste, eine Transkription pro Seite.
 
 Aufgabe:
+Extrahiere die relevanten Metadaten, Personen und Inhaltsangaben aus diesen Rohtexten und fülle das vorgegebene JSON-Schema exakt aus.
 
-1. Fasse alle Seiten zu einem zusammenhängenden Dokument zusammen.
-2. Falls Informationen über mehrere Seiten verteilt sind, führe sie logisch
-   zusammen (z.B. wenn ein Feld auf Seite 1 beginnt und auf Seite 2 fortgesetzt wird).
-3. Ergänze keine Informationen, die nicht in den Transkriptionen stehen.
-4. Übernimm unsichere Lesungen und handschriftliche Notizen aus den Seiten.
+ZWINGENDE REGELN:
 
-Falls weitere Felder im Dokument vorkommen, ergänze sie zusätzlich.
+1. Schema-Treue: Du darfst KEINE Felder hinzufügen oder umbenennen. Halte dich strikt an die vorgegebenen Schlüssel.
+2. Seitenübergreifendes Merging: Falls Informationen über mehrere Seiten verteilt sind, führe sie logisch zusammen. (Beispiel: Ein Satz im "Inhalt" beginnt auf Seite 1 und endet auf Seite 2 -> verbinde sie zu einem fließenden Text).
+3. Umgang mit fehlenden Daten (WICHTIG):
+   - Wenn eine Information im Text schlicht nicht vorhanden ist (z.B. keine Angabe zur "Architektur" oder "Photographie"), setze den Wert zwingend auf `null`.
+   - Trage keine Ersatzwerte wie "fehlt", "unbekannt" oder "-" ein. Nutze ausschließlich `null`.
+   - Wenn ein gesamter Block (wie das "personenverzeichnis" oder die "einzelakte" bei den Längenangaben) fehlt, gib ein leeres Array `[]` zurück.
+4. Strukturierung der Listen: 
+   - "personenverzeichnis": Trenne sauber in "rolle" und "darsteller".
+   - "inhalt": Teile den Text logisch in die einzelnen Akte auf (z.B. "1. Akt", "2. Akt").
+5. Originaltreue & Tags: Erfinde keine Daten. Übernimm alle Inline-Tags wie [unsicher: ...], [Handschrift: ...] oder [Block unleserlich] exakt so, wie sie in den Rohtexten stehen.
 
 Seiten-Transkriptionen:
 {PAGES_JSON}

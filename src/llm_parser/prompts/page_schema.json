@@ -1,20 +1,19 @@
 {
-    "type": "object",
-    "properties": {
-        "transkription": {
-            "type": "string",
-            "description": "Vollständiger erkannter Text dieser Seite"
-        },
-        "handschriftliche_notizen": {
-            "type": "array",
-            "items": {"type": "string"},
-            "description": "Liste handschriftlicher Notizen"
-        },
-        "unsichere_lesungen": {
-            "type": "array",
-            "items": {"type": "string"}
-        }
+  "type": "object",
+  "properties": {
+    "seite_leer": {
+      "type": "boolean",
+      "description": "True, wenn die Seite komplett leer ist oder nur unleserliche Kratzer/Flecken enthält. False, wenn Text vorhanden ist."
     },
-    "required": ["transkription", "handschriftliche_notizen", "unsichere_lesungen"],
-    "additionalProperties": false
+    "transkription": {
+      "type": "string",
+      "description": "Der exakte Text der Seite unter Beibehaltung von Zeilenumbrüchen. Enthält Inline-Tags wie [Handschrift: ...]."
+    },
+    "dokumenten_typ": {
+      "type": "string",
+      "description": "Kurze Einschätzung, was diese Seite zeigt (z.B. 'Titelblatt', 'Zensur-Entscheidung', 'Leere Rückseite')."
+    }
+  },
+  "required": ["seite_leer", "transkription", "dokumenten_typ"],
+  "additionalProperties": false
 }

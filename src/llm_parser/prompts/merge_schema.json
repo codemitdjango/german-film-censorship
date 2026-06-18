@@ -1,1 +1,83 @@
-{}
+{
+  "name": "film_zulassungskarte_extraktion",
+  "description": "Extrahiert Metadaten, Personenverzeichnisse und Inhalte aus historischen Film-Zulassungskarten.",
+  "strict": true,
+  "schema": {
+    "type": "object",
+    "properties": {
+      "pruef_nr": { "type": ["string", "null"], "description": "Die Prüfnummer des Films. Null, falls nicht vorhanden." },
+      "stempel_druck": { "type": ["string", "null"] },
+      "ursprungs_firma": { "type": ["string", "null"] },
+      "titel_des_bildes": { "type": ["string", "null"] },
+      "beschreibung": { "type": ["string", "null"] },
+      "hergestellt_von": { "type": ["string", "null"] },
+      "spielleitung": { "type": ["string", "null"] },
+      "photographie": { "type": ["string", "null"] },
+      "architektur": { "type": ["string", "null"] },
+      "personenverzeichnis": {
+        "type": "array",
+        "description": "Liste aller Rollen und deren Darsteller. Leeres Array [], falls kein Verzeichnis vorhanden ist.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "rolle": { "type": ["string", "null"], "description": "Der Name der Figur oder Rolle." },
+            "darsteller": { "type": ["string", "null"], "description": "Der Name des Schauspielers." }
+          },
+          "required": ["rolle", "darsteller"],
+          "additionalProperties": false
+        }
+      },
+      "inhalt": {
+        "type": "array",
+        "description": "Inhaltsangabe unterteilt nach Akten. Leeres Array [], falls nicht vorhanden.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "akt_bezeichnung": { "type": ["string", "null"], "description": "Name oder Nummer des Akts (z. B. '1. Akt', '5. Abt.')." },
+            "text": { "type": ["string", "null"], "description": "Der eigentliche Inhaltstext des Akts." }
+          },
+          "required": ["akt_bezeichnung", "text"],
+          "additionalProperties": false
+        }
+      },
+      "ausschnittnote": { "type": ["string", "null"] },
+      "laengenangaben": {
+        "type": "object",
+        "properties": {
+          "einzelakte": {
+            "type": "array",
+            "description": "Leeres Array [], falls keine Einzelakte angegeben sind.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "akt_nummer": { "type": ["string", "null"] },
+                "laenge": { "type": ["string", "null"] }
+              },
+              "required": ["akt_nummer", "laenge"],
+              "additionalProperties": false
+            }
+          },
+          "gesamtlaenge": { "type": ["string", "null"] }
+        },
+        "required": ["einzelakte", "gesamtlaenge"],
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "pruef_nr",
+      "stempel_druck",
+      "ursprungs_firma",
+      "titel_des_bildes",
+      "beschreibung",
+      "hergestellt_von",
+      "spielleitung",
+      "photographie",
+      "architektur",
+      "personenverzeichnis",
+      "inhalt",
+      "ausschnittnote",
+      "laengenangaben"
+    ],
+    "additionalProperties": false
+  }
+}
