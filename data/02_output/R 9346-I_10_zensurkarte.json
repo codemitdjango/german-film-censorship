@@ -1,0 +1,65 @@
+{
+  "pruef_nr": "52 / 20",
+  "stempel_druck": "Zulassungs-Karten für Bilderstreifen sind öffent. Urkunden im Sinne des § 267 Reichs-Strafgesetzbuchs. Ohne amtlichen Stempel sind sie ungültig. Veränderungen dürfen nur von der Film-Prüfstelle vorgenommen werden.",
+  "ursprungs_firma": "Ungo-Film Ges.",
+  "titel_des_bildes": "Die tote Stunde",
+  "beschreibung": "",
+  "hergestellt_von": "",
+  "spielleitung": "",
+  "photographie": "Holz1",
+  "architektur": "",
+  "personenverzeichnis": [
+    {
+      "rolle": "",
+      "darsteller": ""
+    }
+  ],
+  "inhalt": [
+    {
+      "akt_bezeichnung": "I. Akt",
+      "text": ""
+    },
+    {
+      "akt_bezeichnung": "II. Akt",
+      "text": ""
+    },
+    {
+      "akt_bezeichnung": "III. Akt",
+      "text": ""
+    },
+    {
+      "akt_bezeichnung": "IV. Akt",
+      "text": ""
+    },
+    {
+      "akt_bezeichnung": "V.",
+      "text": ""
+    }
+  ],
+  "ausschnittnote": "Ein tragisches Spiel in 5 Akten.",
+  "laengenangaben": {
+    "einzelakte": [
+      {
+        "akt_nummer": "I",
+        "laenge": ""
+      },
+      {
+        "akt_nummer": "II",
+        "laenge": ""
+      },
+      {
+        "akt_nummer": "III",
+        "laenge": ""
+      },
+      {
+        "akt_nummer": "IV",
+        "laenge": ""
+      },
+      {
+        "akt_nummer": "",
+        "laenge": ""
+      }
+    ],
+    "gesamtlaenge": "1715 m"
+  }
+}
