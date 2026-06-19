@@ -1,19 +1,25 @@
 {
-  "type": "object",
-  "properties": {
-    "seite_leer": {
-      "type": "boolean",
-      "description": "True, wenn die Seite komplett leer ist oder nur unleserliche Kratzer/Flecken enthält. False, wenn Text vorhanden ist."
+  "name": "eine_seite_ocr_erkennung",
+  "description": "Vollständiger erkannter Text dieser Seite",
+  "strict": true,
+  "schema": {
+    "type": "object",
+    "properties": {
+      "seite_leer": {
+        "type": "boolean",
+        "description": "True, wenn die Seite komplett leer ist oder nur unleserliche Kratzer/Flecken enthält. False, wenn Text vorhanden ist."
+      },
+      "transkription": {
+        "type": "string",
+        "description": "Der exakte Text der Seite unter Beibehaltung von Zeilenumbrüchen. Enthält Inline-Tags wie [Handschrift: ...]."
+      },
+      "dokumenten_typ": {
+        "type": "string",
+        "description": "Kurze Einschätzung, was diese Seite zeigt (z.B. 'Titelblatt', 'Zensur-Entscheidung', 'Leere Rückseite')."
+      }
     },
-    "transkription": {
-      "type": "string",
-      "description": "Der exakte Text der Seite unter Beibehaltung von Zeilenumbrüchen. Enthält Inline-Tags wie [Handschrift: ...]."
-    },
-    "dokumenten_typ": {
-      "type": "string",
-      "description": "Kurze Einschätzung, was diese Seite zeigt (z.B. 'Titelblatt', 'Zensur-Entscheidung', 'Leere Rückseite')."
-    }
-  },
-  "required": ["seite_leer", "transkription", "dokumenten_typ"],
-  "additionalProperties": false
+    "required": ["seite_leer", "transkription", "dokumenten_typ"],
+    "additionalProperties": false
+  }
+  
 }

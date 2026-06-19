@@ -61,6 +61,18 @@
         },
         "required": ["einzelakte", "gesamtlaenge"],
         "additionalProperties": false
+      },
+      "pruefbescheid": {
+        "type": "object",
+        "description": "Informationen zum administrativen Akt der Filmprüfung.",
+        "properties": {
+          "filmpruefstelle": { "type": ["string", "null"], "description": "Name der ausstellenden Behörde, z.B. 'Film-Prüfstelle Berlin'." },
+          "ort": { "type": ["string", "null"], "description": "Ort der Ausfertigung." },
+          "datum": { "type": ["string", "null"], "description": "Ausstellungsdatum" },
+          "entscheidungstext": { "type": ["string", "null"], "description": "Der vollständige Wortlaut der Entscheidung, z.B. 'Der Bildstreifen wird zur öffentlichen Vorführung zugelassen...'" }
+        },
+        "required": ["filmpruefstelle", "ort", "datum", "entscheidungstext"],
+        "additionalProperties": false
       }
     },
     "required": [
@@ -76,7 +88,8 @@
       "personenverzeichnis",
       "inhalt",
       "ausschnittnote",
-      "laengenangaben"
+      "laengenangaben",
+      "pruefbescheid"
     ],
     "additionalProperties": false
   }

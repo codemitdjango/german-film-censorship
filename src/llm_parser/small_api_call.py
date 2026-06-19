@@ -8,11 +8,13 @@ from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv()
 
-# Folder & Dir
+# Directories
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent.parent
-IMAGE_FOLDER = PROJECT_ROOT / "data" / "01_raw" / "R_9346-I_Zulassungskarten"
+IMAGE_DIR = PROJECT_ROOT / "data" / "01_raw" / "R_9346-I_Zulassungskarten"
 PROMPT_DIR = SCRIPT_DIR / "prompts"
+OCR_OUTPUT_DIR = PROJECT_ROOT / "data" / "02_ocr"
+PROCESSED_OUTPUT_DIR = PROJECT_ROOT / "data" / "03_processed"
 
 # API
 API_URL = os.getenv("API_URL")
@@ -30,14 +32,14 @@ MERGE_SCHEMA = json.loads((PROMPT_DIR / "merge_schema.json").read_text(encoding=
 
 # coordinates the entire pipeline by iterating through all document directories
 def main():
-    if not IMAGE_FOLDER.exists() or not IMAGE_FOLDER.is_dir():
-        print(f"[WARNING] Hauptverzeichnis {IMAGE_FOLDER} existiert nicht.")
+    if not IMAGE_DIR.exists() or not IMAGE_DIR.is_dir():
+        print(f"[WARNING] Hauptverzeichnis {IMAGE_DIR} existiert nicht.")
         return
     
-    doc_directories = sorted([d for d in IMAGE_FOLDER.iterdir() if d.is_dir()])
+    doc_directories = sorted([d for d in IMAGE_DIR.iterdir() if d.is_dir()])
 
     if not doc_directories:
-        print(f"[WARNING] Keine Dokumenteordner in {IMAGE_FOLDER} gefunden.")
+        print(f"[WARNING] Keine Dokumenteordner in {IMAGE_DIR} gefunden.")
         return
     
     print(f"[INFO] {len(doc_directories)} Dokumentenordner gefunden.")
@@ -73,12 +75,10 @@ def process_document_directory(doc_dir: Path):
             }
         page_results.append(page_result)
 
-    output_dir = Path("./output")
-    output_dir.mkdir(exist_ok=True)
 
     # TODO rename 
-    intermediate_file = output_dir / f"{doc_dir.name}_seiten_einzeln.json"
-    final_file = output_dir / f"{doc_dir.name}_zensurkarte.json"
+    intermediate_file =OCR_OUTPUT_DIR / f"{doc_dir.name}_ocr.json"
+    final_file = PROCESSED_OUTPUT_DIR/ f"{doc_dir.name}_processed.json"
 
     with open(intermediate_file, "w", encoding="utf-8") as f:
         json.dump(page_results, f, ensure_ascii=False, indent=2)
@@ -86,13 +86,13 @@ def process_document_directory(doc_dir: Path):
     try:
         merged = merge_pages(page_results)
     except requests.exceptions.RequestException as e:
-        print(f"[FEHLER] Fehler beim Zusammenführen von {doc_dir.name}: {e}")
+        print(f"[FEHLER] Fehler beim Zusammenführen von {doc_dir.name}: \n{e}")
         return
     
     with open(final_file, "w", encoding="utf-8") as f:
         json.dump(merged, f, ensure_ascii=False, indent=2)
 
-    print(f"[INFO] Fertig. Ergebnis gespeichert in {final_file}")
+    print(f"[INFO] Fertig. Ergebnis gespeichert in {final_file}\n")
 
 
 # extracts structured data from a single document page using the vision model
@@ -115,6 +115,7 @@ def merge_pages(page_results: list[dict]) -> dict:
     # hier hin schreiben bei welchen dok man ist
     print("[INFO] Führe alle Seiten zu einem Dokument zusammen...")
 
+    #TODO: separators=(',', ':') oder indent=2
     pages_json = json.dumps(page_results, ensure_ascii=False, indent=2)
     content = MERGE_PROMPT.replace("{PAGES_JSON}", pages_json)
     return call_model(content, MERGE_SCHEMA)
@@ -128,7 +129,7 @@ def get_sorted_images(dir_path: Path) -> list[Path]:
     for ext in extensions:
         images.extend(dir_path.glob(ext))
     
-    #sort
+    # sort
     def natural_sort_key(path: Path):
         return [
             int(text) if text.isdigit() else text.lower()
@@ -150,11 +151,12 @@ def call_model(content, schema) -> dict:
         ],
         "response_format": {
             "type": "json_schema",
-            "json_schema": {
-                "name": "ocr_extraktion",
-                "strict": True,
-                "schema": schema
-            }
+            "json_schema": schema
+            # "json_schema": {
+            #     "name": "ocr_extraktion",
+            #     "strict": True,
+            #     "schema": schema
+            # }
         }
     }
 
@@ -164,6 +166,8 @@ def call_model(content, schema) -> dict:
         json=payload,
         timeout=TIMEOUT_SECONDS
     )
+    if not response.ok:
+        raise requests.exceptions.RequestException(f"API Error {response.status_code}: {response.text}")
     response.raise_for_status()
 
     raw_text = response.json()["choices"][0]["message"]["content"]
@@ -183,6 +187,5 @@ def encode_image_b64(image_path: Path) -> str:
         return base64.b64encode(f.read()).decode()
 
 
-#
 if __name__ == "__main__":
     main()
