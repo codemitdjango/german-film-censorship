@@ -187,5 +187,6 @@ def encode_image_b64(image_path: Path) -> str:
         return base64.b64encode(f.read()).decode()
 
 
+# script execution
 if __name__ == "__main__":
     main()
