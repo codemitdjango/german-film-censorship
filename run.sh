@@ -10,7 +10,7 @@
 #SBATCH --output=logs/qwen_parser%j.log     # logs
 
 module purge
-module load GCCcore/15.2.0  # Passend zu deiner Python-Installation
+#module load GCCcore/15.2.0  # Passend zu deiner Python-Installation
 module load Python/3.14.2
 #module load Python/3.12.2
 module load CUDA/12.4.0
@@ -18,19 +18,19 @@ module load CUDA/12.4.0
 #module load CUDA/12.3.0
 
 # Optional: Stelle sicher, dass du im richtigen Verzeichnis bist
-cd $SLURM_SUBMIT_DIR
+#cd $SLURM_SUBMIT_DIR
 
 source .venv/bin/activate
 
 # 4. Umgebungsvariablen für vLLM / PyTorch Distributed (Bugfixes)
-export VLLM_WORKER_MULTIPROC_METHOD=spawn
-export NCCL_DEBUG=WARN # INFO spammt dein Log mit über 100 Zeilen pro GPU voll, WARN reicht.
+#export VLLM_WORKER_MULTIPROC_METHOD=spawn
+#export NCCL_DEBUG=WARN # INFO spammt dein Log mit über 100 Zeilen pro GPU voll, WARN reicht.
 
 # Verhindert den IPv6 / localhost Error (errno: 97), den du im Log hast:
-export VLLM_HOST_IP=127.0.0.1
-export GLOO_SOCKET_IFNAME=lo
+#export VLLM_HOST_IP=127.0.0.1
+#export GLOO_SOCKET_IFNAME=lo
 
-export NCCL_SOCKET_IFNAME=lo
+#export NCCL_SOCKET_IFNAME=lo
 
 
 python src/llm_parser/llm_parser.py \
