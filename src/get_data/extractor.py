@@ -3,7 +3,7 @@ from pathlib import Path
 
 def extract_archives():
     # define base directory
-    base_dir = Path(__file__).parent.parent / "data" / "01_raw"
+    base_dir = Path(__file__).parent.parent / "data" / "01_raw" # TODO CHANGE TO DIR
 
     # find all zip files recursively
     for zip_path in base_dir.rglob("*.zip"):
