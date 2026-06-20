@@ -4,54 +4,117 @@ import json
 from datetime import datetime
 from playwright.async_api import async_playwright
 
-async def wait_for_overlays(page_or_popup):
-    try:
-        loading_modal = page_or_popup.locator("#loading_modal")
-        if await loading_modal.is_visible():
-            await loading_modal.wait_for(state="hidden", timeout=20000)
+# config scraping parameters, launches browser, coordinates parallel execution of workers
+async def run():
+    base_download_dir = r"S:\Zulassungskarten_Data"
+    os.makedirs(base_download_dir, exist_ok=True)
+    log_file_path = os.path.join(base_download_dir, "error_log.txt")
+
+    # define collection to scrape
+    collections_to_scrape = [
+        {
+            "name": "R_9346-I_Zulassungskarten",
+            "navigation_steps": [
+                {"type": "text", "value": "R 9346-I Zulassungskarten"},
+                {"type": "role", "role": "treeitem", "name": "nicht klassifiziert"}
+            ],
+            "start_page":  200,
+            "total_pages": 300
+        }
+    ]
+
+    MAX_CONCURRENT_WORKERS = 3
+    CHUNK_SIZE = 1  
+    semaphore = asyncio.Semaphore(MAX_CONCURRENT_WORKERS)
+
+    async with async_playwright() as playwright:
+        browser = await playwright.chromium.launch(headless=True) # TRUE um Chrome Fenster nicht zu sehen
         
-        session_modal = page_or_popup.locator("[id*='sessionExpiresMessageDialog_modal']")
-        if await session_modal.is_visible():
-            await session_modal.wait_for(state="hidden", timeout=5000)
-    except Exception:
-        pass
-
-async def login_and_base_navigation(page):
-    print(f"[{datetime.now().strftime('%H:%M:%S')}] Starte Login-Prozess...")
-    await page.goto("https://invenio.bundesarchiv.de/invenio/login.xhtml", wait_until="networkidle")
-    
-    try:
-        await page.get_by_role("button", name="Suche ohne Anmeldung").click(timeout=5000)
-        await page.get_by_role("link", name="Schließen").click(timeout=5000)
-    except Exception:
-        pass
-
-    await page.get_by_text("Film und Filmbegleitmaterial").click()
-    await page.wait_for_timeout(1000)
-
-async def ensure_session(page, collection):
-    try:
-        if page.is_closed():
-            return False
+        for collection in collections_to_scrape:
+            total_pages = collection["total_pages"]
+            start_page_overall = collection.get("start_page", 1)
             
-        if "login.xhtml" in page.url or await page.locator("[id='sessionExpiresMessageDialog']").is_visible():
-            print(f"\n[{datetime.now().strftime('%H:%M:%S')}] Session abgelaufen. Erneuere Verbindung...")
+            tasks = []
+            for chunk_start in range(start_page_overall, total_pages + 1, CHUNK_SIZE):
+                chunk_end = min(chunk_start + CHUNK_SIZE - 1, total_pages)
+                
+                task = asyncio.create_task(
+                    process_chunk(
+                        browser=browser,
+                        collection=collection,
+                        start_page=chunk_start,
+                        end_page=chunk_end,
+                        base_dir=base_download_dir,
+                        log_file_path=log_file_path,
+                        semaphore=semaphore
+                    )
+                )
+                tasks.append(task)
+            
+            print(f"Starte {len(tasks)} parallele Worker für {collection['name']}...")
+            results = await asyncio.gather(*tasks, return_exceptions=True)
+
+            for res in results:
+                if isinstance(res, Exception):
+                    print(f"Ein Worker ist mit Fehler beendet worden: {res}")
+
+                    print("\nAlle konfigurierten Downloads abgeschlossen.")
+
+
+        print("\nAlle konfigurierten Downloads abgeschlossen.")
+        await browser.close()
+
+
+# manages an isolated browser context for a specific chunk of pages
+async def process_chunk(browser, collection, start_page, end_page, base_dir, log_file_path, semaphore):
+    async with semaphore:
+        context = await browser.new_context(accept_downloads=True)
+        page = await context.new_page()
+        page.set_default_timeout(45000) 
+        
+        try:
             await login_and_base_navigation(page)
             
+            navigation_failed = False
             for step in collection["navigation_steps"]:
-                if step["type"] == "text":
-                    await page.get_by_text(step["value"]).click()
-                elif step["type"] == "exact_text":
-                    await page.get_by_text(step["value"], exact=True).click()
-                elif step["type"] == "role":
-                    await page.get_by_role(step["role"], name=step["name"]).click()
-                await page.wait_for_timeout(1500)
-            await page.wait_for_timeout(2000)
-            return True
-    except Exception as e:
-        print(f"Session-Check ignoriert (Verbindung im Umbruch): {e}")
-    return False
+                try:
+                    if step["type"] == "text":
+                        await page.get_by_text(step["value"]).click()
+                    elif step["type"] == "exact_text":
+                        await page.get_by_text(step["value"], exact=True).click()
+                    elif step["type"] == "role":
+                        await page.get_by_role(step["role"], name=step["name"]).click()
+                    await page.wait_for_timeout(2000)
+                    await wait_for_overlays(page)
+                except Exception as error:
+                    print(f"Navigations Fehler Worker [{start_page}-{end_page}]: {error}")
+                    navigation_failed = True
+                    break 
 
+            if not navigation_failed:
+                await page.wait_for_timeout(2000)
+                try: 
+                    await download_collection_pages(
+                        page=page,
+                        download_dir=base_dir,
+                        start_page=start_page,
+                        end_pages=end_page,
+                        collection=collection,
+                        log_file_path=log_file_path
+                    )
+                except Exception as error:
+                    print(f"Fehler im Worker [{start_page}-{end_page}]: {error}")
+        finally:
+            try:
+                if not page.is_closed():
+                    await page.close()
+                await context.close()
+                print(f"[Worker {start_page}-{end_page}] Context sauber geschlossen.")
+            except Exception:
+                pass
+
+
+# iterates trough the search result pages to extract metadata and download the associated digital documents
 async def download_collection_pages(page, download_dir, start_page, end_pages, collection, log_file_path):
     collection_name = collection["name"]
     collection_dir = os.path.join(download_dir, collection_name)
@@ -137,101 +200,61 @@ async def download_collection_pages(page, download_dir, start_page, end_pages, c
                 if popup and not popup.is_closed():
                     await popup.close()
 
-async def process_chunk(browser, collection, start_page, end_page, base_dir, log_file_path, semaphore):
-    async with semaphore:
-        context = await browser.new_context(accept_downloads=True)
-        page = await context.new_page()
-        page.set_default_timeout(45000) 
-        
-        try:
+
+# handels the initial website access, bypasses the guest login, and navigates to the primary target section
+async def login_and_base_navigation(page):
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] Starte Login-Prozess...")
+    await page.goto("https://invenio.bundesarchiv.de/invenio/login.xhtml", wait_until="networkidle")
+    
+    try:
+        await page.get_by_role("button", name="Suche ohne Anmeldung").click(timeout=5000)
+        await page.get_by_role("link", name="Schließen").click(timeout=5000)
+    except Exception:
+        pass
+
+    await page.get_by_text("Film und Filmbegleitmaterial").click()
+    await page.wait_for_timeout(1000)
+
+
+# monitors the connection state and automatically re-authenticates and rstores the navigation path if the session expires
+async def ensure_session(page, collection):
+    try:
+        if page.is_closed():
+            return False
+            
+        if "login.xhtml" in page.url or await page.locator("[id='sessionExpiresMessageDialog']").is_visible():
+            print(f"\n[{datetime.now().strftime('%H:%M:%S')}] Session abgelaufen. Erneuere Verbindung...")
             await login_and_base_navigation(page)
             
-            navigation_failed = False
             for step in collection["navigation_steps"]:
-                try:
-                    if step["type"] == "text":
-                        await page.get_by_text(step["value"]).click()
-                    elif step["type"] == "exact_text":
-                        await page.get_by_text(step["value"], exact=True).click()
-                    elif step["type"] == "role":
-                        await page.get_by_role(step["role"], name=step["name"]).click()
-                    await page.wait_for_timeout(2000)
-                    await wait_for_overlays(page)
-                except Exception as error:
-                    print(f"NAVIGATION ERROR Worker [{start_page}-{end_page}]: {error}")
-                    navigation_failed = True
-                    break 
+                if step["type"] == "text":
+                    await page.get_by_text(step["value"]).click()
+                elif step["type"] == "exact_text":
+                    await page.get_by_text(step["value"], exact=True).click()
+                elif step["type"] == "role":
+                    await page.get_by_role(step["role"], name=step["name"]).click()
+                await page.wait_for_timeout(1500)
+            await page.wait_for_timeout(2000)
+            return True
+    except Exception as e:
+        print(f"Session-Check ignoriert (Verbindung im Umbruch): {e}")
+    return False
 
-            if not navigation_failed:
-                await page.wait_for_timeout(2000)
-                await download_collection_pages(
-                    page=page,
-                    download_dir=base_dir,
-                    start_page=start_page,
-                    end_pages=end_page,
-                    collection=collection,
-                    log_file_path=log_file_path
-                )
-        finally:
-            try:
-                if not page.is_closed():
-                    await page.close()
-                await context.close()
-                print(f"[Worker {start_page}-{end_page}] Context sauber geschlossen.")
-            except Exception:
-                pass
 
-async def run():
-    base_download_dir = r"S:\Zulassungskarten_Data"
-    os.makedirs(base_download_dir, exist_ok=True)
-    log_file_path = os.path.join(base_download_dir, "error_log.txt")
-
-    # define collection to scrape
-    collections_to_scrape = [
-        {
-            "name": "R_9346-I_Zulassungskarten",
-            "navigation_steps": [
-                {"type": "text", "value": "R 9346-I Zulassungskarten"},
-                {"type": "role", "role": "treeitem", "name": "nicht klassifiziert"}
-            ],
-            "start_page":  271,
-            "total_pages": 363
-        }
-    ]
-
-    MAX_CONCURRENT_WORKERS = 2 
-    CHUNK_SIZE = 2  
-    semaphore = asyncio.Semaphore(MAX_CONCURRENT_WORKERS)
-
-    async with async_playwright() as playwright:
-        browser = await playwright.chromium.launch(headless=False) # TRUE SETZEN???
+# pauses execution until blocking ui elements like loading spinners or modal dialogs disappear
+async def wait_for_overlays(page_or_popup):
+    try:
+        loading_modal = page_or_popup.locator("#loading_modal")
+        if await loading_modal.is_visible():
+            await loading_modal.wait_for(state="hidden", timeout=20000)
         
-        for collection in collections_to_scrape:
-            total_pages = collection["total_pages"]
-            start_page_overall = collection.get("start_page", 1)
-            
-            tasks = []
-            for chunk_start in range(start_page_overall, total_pages + 1, CHUNK_SIZE):
-                chunk_end = min(chunk_start + CHUNK_SIZE - 1, total_pages)
-                
-                task = asyncio.create_task(
-                    process_chunk(
-                        browser=browser,
-                        collection=collection,
-                        start_page=chunk_start,
-                        end_page=chunk_end,
-                        base_dir=base_download_dir,
-                        log_file_path=log_file_path,
-                        semaphore=semaphore
-                    )
-                )
-                tasks.append(task)
-            
-            print(f"Starte {len(tasks)} parallele Worker für {collection['name']}...")
-            await asyncio.gather(*tasks)
+        session_modal = page_or_popup.locator("[id*='sessionExpiresMessageDialog_modal']")
+        if await session_modal.is_visible():
+            await session_modal.wait_for(state="hidden", timeout=5000)
+    except Exception:
+        pass
 
-        print("\nAlle konfigurierten Downloads abgeschlossen.")
-        await browser.close()
 
+# script execution
 if __name__ == "__main__":
     asyncio.run(run())
