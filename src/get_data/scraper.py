@@ -18,15 +18,6 @@ async def run():
                 {"type": "text", "value": "R 9346-I Zulassungskarten"},
                 {"type": "role", "role": "treeitem", "name": "nicht klassifiziert"}
             ],
-            "start_page":   8,
-            "total_pages": 8
-        },
-        {
-            "name": "R_9346-I_Zulassungskarten",
-            "navigation_steps": [
-                {"type": "text", "value": "R 9346-I Zulassungskarten"},
-                {"type": "role", "role": "treeitem", "name": "nicht klassifiziert"}
-            ],
             "start_page":  12,
             "total_pages": 13
         },
