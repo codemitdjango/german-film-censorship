@@ -33,6 +33,10 @@ MERGE_SCHEMA = json.loads((PROMPT_DIR / "merge_schema.json").read_text(encoding=
 
 # coordinates the entire pipeline by iterating through all document directories
 def main():
+    # sicherstellen, dass die verzeichnisstruktur existiert
+    for directory in [OCR_OUTPUT_DIR, PROCESSED_OUTPUT_DIR]:
+        directory.mkdir(parents=True, exist_ok=True)
+
     if not IMAGE_DIR.exists() or not IMAGE_DIR.is_dir():
         print(f"[WARNING] Hauptverzeichnis {IMAGE_DIR} existiert nicht.")
         return
@@ -78,7 +82,7 @@ def process_document_directory(doc_dir: Path):
 
 
     # TODO rename 
-    intermediate_file =OCR_OUTPUT_DIR / f"{doc_dir.name}_ocr.json"
+    intermediate_file = OCR_OUTPUT_DIR / f"{doc_dir.name}_ocr.json"
     final_file = PROCESSED_OUTPUT_DIR/ f"{doc_dir.name}_processed.json"
 
     with open(intermediate_file, "w", encoding="utf-8") as f:

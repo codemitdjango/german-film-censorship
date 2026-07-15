@@ -6,6 +6,7 @@ Führe eine zeilengenaue Transkription durch und gib das Ergebnis strikt im gefo
 TRANSKRIPTIONS-REGELN:
 1. Originaltreue: Bewahre die originale historische Schreibweise (z.B. "Thür" statt "Tür", "Censur" statt "Zensur"). Korrigiere keine Tippfehler des Originals.
 2. Layout: Übernimm Zeilenumbrüche exakt so, wie sie im Dokument erscheinen (\n).
+4. Benutzte für Anführungsstriche \" um das JSON-Schema nicht kaputt zu machen
 3. Unleserliche Stellen & Anti-Loop-Regel (WICHTIG):
    - Wenn ein einzelnes Wort unleserlich ist, schreibe exakt einmal [unleserlich].
    - Wenn ganze Sätze, Absätze oder große Textblöcke unleserlich sind, schreibe genau EINMAL [Block unleserlich] und überspringe diesen Bereich komplett. 
