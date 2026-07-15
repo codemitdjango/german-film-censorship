@@ -1,95 +1,108 @@
 {
-  "name": "film_zulassungskarte_extraktion",
-  "description": "Extrahiert Metadaten, Personenverzeichnisse und Inhalte aus historischen Film-Zulassungskarten.",
+  "name": "movie_certification_extraction",
+  "description": "metadata, cast and intertitles from historical film certificates",
   "strict": true,
   "schema": {
     "type": "object",
     "properties": {
-      "pruef_nr": { "type": ["string", "null"], "description": "Die Prüfnummer des Films. Null, falls nicht vorhanden." },
-      "stempel_druck": { "type": ["string", "null"] },
-      "ursprungs_firma": { "type": ["string", "null"] },
-      "titel_des_bildes": { "type": ["string", "null"] },
-      "beschreibung": { "type": ["string", "null"] },
-      "hergestellt_von": { "type": ["string", "null"] },
-      "spielleitung": { "type": ["string", "null"] },
-      "photographie": { "type": ["string", "null"] },
-      "architektur": { "type": ["string", "null"] },
-      "personenverzeichnis": {
+      "examination_number": { "type": ["string", "null"] },
+      "stamp_text": { "type": ["string", "null"] },
+      "origin_company": { "type": ["string", "null"] },
+      "movie_title": { "type": ["string", "null"] },
+      "movie_subtitle": { "type": ["string", "null"] },
+      "produced_by": { "type": ["string", "null"] },
+      "director": { "type": ["string", "null"] },
+      "cinematography": { "type": ["string", "null"] },
+      "set_design": { "type": ["string", "null"] },
+      "cast_list": {
         "type": "array",
-        "description": "Liste aller Rollen und deren Darsteller. Leeres Array [], falls kein Verzeichnis vorhanden ist.",
+        "description": "characters and respective actors",
         "items": {
           "type": "object",
           "properties": {
-            "rolle": { "type": ["string", "null"], "description": "Der Name der Figur oder Rolle." },
-            "darsteller": { "type": ["string", "null"], "description": "Der Name des Schauspielers." }
-          },
-          "required": ["rolle", "darsteller"],
-          "additionalProperties": false
-        }
+            "role": { "type": ["string", "null"] },
+            "actor": { "type": ["string", "null"] },
+            "actor_affiliation": {
+              "type": ["string", "null"],
+              "description": "theater or company affiliation of the actor, usually in parentheses" 
+            }
+          }
+        },
+        "required": ["role", "actor"],
+        "additionalProperties": false
       },
-      "inhalt": {
+      "intertitles": {
         "type": "array",
-        "description": "Inhaltsangabe unterteilt nach Akten. Leeres Array [], falls nicht vorhanden.",
+        "description": "numbered text cards per act",
         "items": {
           "type": "object",
           "properties": {
-            "akt_bezeichnung": { "type": ["string", "null"], "description": "Name oder Nummer des Akts (z. B. '1. Akt', '5. Abt.')." },
-            "text": { "type": ["string", "null"], "description": "Der eigentliche Inhaltstext des Akts." }
+            "act_label": { "type": ["string", "null"] },
+            "text": { "type": ["string", "null"] }
           },
-          "required": ["akt_bezeichnung", "text"],
+          "required": ["act_label", "text"],
           "additionalProperties": false
         }
       },
-      "ausschnittnote": { "type": ["string", "null"] },
-      "laengenangaben": {
+      "excerpt_note": { "type": ["string", "null"] },
+      "length_details": {
         "type": "object",
+        "description": "film length in meters including censorship cuts",
         "properties": {
-          "einzelakte": {
+          "individual_acts": {
             "type": "array",
-            "description": "Leeres Array [], falls keine Einzelakte angegeben sind.",
             "items": {
               "type": "object",
               "properties": {
-                "akt_nummer": { "type": ["string", "null"] },
-                "laenge": { "type": ["string", "null"] }
+                "act_number": { "type": ["string", "null"] },
+                "original_length": { "type": ["string", "null"] },
+                "length_after_cut": { "type": ["string", "null"] }
               },
-              "required": ["akt_nummer", "laenge"],
+              "required": ["act_number", "original_length", "length_after_cut"],
               "additionalProperties": false
             }
           },
-          "gesamtlaenge": { "type": ["string", "null"] }
+          "total_length": {
+            "type": "object",
+            "properties": {
+              "original_length": { "type": ["string", "null"] },
+              "length_after_cut": { "type": ["string", "null"] }
+            },
+            "required": ["original_length", "length_after_cut"],
+            "additionalProperties": false
+          }
         },
-        "required": ["einzelakte", "gesamtlaenge"],
+        "required": ["individual_acts", "total_length"],
         "additionalProperties": false
       },
-      "pruefbescheid": {
+      "examination_certificate": {
         "type": "object",
-        "description": "Informationen zum administrativen Akt der Filmprüfung.",
+        "description": "administrative details of film examination",
         "properties": {
-          "filmpruefstelle": { "type": ["string", "null"], "description": "Name der ausstellenden Behörde, z.B. 'Film-Prüfstelle Berlin'." },
-          "ort": { "type": ["string", "null"], "description": "Ort der Ausfertigung." },
-          "datum": { "type": ["string", "null"], "description": "Ausstellungsdatum" },
-          "entscheidungstext": { "type": ["string", "null"], "description": "Der vollständige Wortlaut der Entscheidung, z.B. 'Der Bildstreifen wird zur öffentlichen Vorführung zugelassen...'" }
+          "examination_board": { "type": ["string", "null"] },
+          "location": { "type": ["string", "null"] },
+          "date": { "type": ["string", "null"] },
+          "decision_text": { "type": ["string", "null"] }
         },
-        "required": ["filmpruefstelle", "ort", "datum", "entscheidungstext"],
+        "required": ["examination_board", "location", "date", "decision_text"],
         "additionalProperties": false
       }
     },
     "required": [
-      "pruef_nr",
-      "stempel_druck",
-      "ursprungs_firma",
-      "titel_des_bildes",
-      "beschreibung",
-      "hergestellt_von",
-      "spielleitung",
-      "photographie",
-      "architektur",
-      "personenverzeichnis",
-      "inhalt",
-      "ausschnittnote",
-      "laengenangaben",
-      "pruefbescheid"
+      "examination_number",
+      "stamp_text",
+      "origin_company",
+      "movie_title",
+      "movie_subtitle",
+      "produced_by",
+      "director",
+      "cinematography",
+      "set_design",
+      "cast_list",
+      "intertitles",
+      "excerpt_note",
+      "length_details",
+      "examination_certificate"
     ],
     "additionalProperties": false
   }

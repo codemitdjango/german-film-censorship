@@ -95,7 +95,8 @@ def process_document_directory(doc_dir: Path):
     print(f"[INFO] Fertig. Ergebnis gespeichert in {final_file}\n")
 
 
-# extracts structured data from a single document page using the vision model
+# extracts structured data from a single document page
+# injects few-shot examples for output structure guidance
 def process_page(image_path: Path, page_number: int) -> dict:
     print(f"[INFO] Verarbeite Seite {page_number}: {image_path.name}")
     b64 = encode_image_b64(image_path)
@@ -112,13 +113,22 @@ def process_page(image_path: Path, page_number: int) -> dict:
 
 # consolidates individual page results into a single, unified document structure
 def merge_pages(page_results: list[dict]) -> dict:
-    # hier hin schreiben bei welchen dok man ist
+    #TODO hier hin schreiben bei welchen dok man ist
     print("[INFO] Führe alle Seiten zu einem Dokument zusammen...")
 
-    #TODO: separators=(',', ':') oder indent=2
+    # load few shot examples
+    input_path = PROMPT_DIR / "few_shot_merge_input.json"
+    output_path = PROMPT_DIR / "few_shot_merge_output.json"
+
+    few_shots = [
+        {"role": "user", "content": input_path.read_text(encoding="utf-8")},
+        {"role": "assistant", "content": output_path.read_text(encoding="utf-8")}
+    ]
+
+    #TODO: separators=(',', ':') oder indent=2 ????
     pages_json = json.dumps(page_results, ensure_ascii=False, indent=2)
     content = MERGE_PROMPT.replace("{PAGES_JSON}", pages_json)
-    return call_model(content, MERGE_SCHEMA)
+    return call_model(content, MERGE_SCHEMA, few_shots)
 
 
 # retrieves all image files from a specific directory in natural alphanumerical order
@@ -139,24 +149,27 @@ def get_sorted_images(dir_path: Path) -> list[Path]:
     return sorted(images, key=natural_sort_key)
 
 
-# executes the API call to the LLM and returns a parsed, schema-validated JSON response
-def call_model(content, schema) -> dict:
+# executes the api call to the LLM
+# suuports optional few-shot examples via messages array
+def call_model(content, schema, few_shots=None) -> dict:
+    messages = []
+
+    # insert few-shot conversation history before actual prompt
+    if few_shots:
+        messages.extend(few_shots)
+
+    messages.append({ "role": "user", "content": content})
+
+
     payload = {
         "model": MODEL,
         "temperature": TEMPERATURE,
         # "max_tokens": 4096,  # WICHTIG: Erhöhtes Limit für OCR-Outputs
         "frequency_penalty": 1.2,  # Bestraft das Modell, wenn es dieselben Wörter oft wiederholt
-        "messages": [
-            { "role": "user", "content": content }
-        ],
+        "messages": messages,
         "response_format": {
             "type": "json_schema",
             "json_schema": schema
-            # "json_schema": {
-            #     "name": "ocr_extraktion",
-            #     "strict": True,
-            #     "schema": schema
-            # }
         }
     }
 
