@@ -13,6 +13,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent.parent
 IMAGE_DIR = PROJECT_ROOT / "data" / "01_raw" / "R_9346-I_Zulassungskarten"
 PROMPT_DIR = SCRIPT_DIR / "prompts"
+FEW_SHOTS_DIR = SCRIPT_DIR / "few_shots"
 OCR_OUTPUT_DIR = PROJECT_ROOT / "data" / "02_ocr"
 PROCESSED_OUTPUT_DIR = PROJECT_ROOT / "data" / "03_processed"
 
@@ -95,39 +96,76 @@ def process_document_directory(doc_dir: Path):
     print(f"[INFO] Fertig. Ergebnis gespeichert in {final_file}\n")
 
 
-# extracts structured data from a single document page
-# injects few-shot examples for output structure guidance
+# process page to dict and inject few-shots
 def process_page(image_path: Path, page_number: int) -> dict:
     print(f"[INFO] Verarbeite Seite {page_number}: {image_path.name}")
+
+    # prepare main content
     b64 = encode_image_b64(image_path)
     content = [
         {"type": "text", "text": PAGE_PROMPT},
         {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{b64}"}}
     ]
 
-    parsed = call_model(content, PAGE_SCHEMA)
-    parsed["_seite"] = page_number
-    parsed["_dateiname"] = image_path.name
+    # load few-shot files
+    fs_input_path = FEW_SHOTS_DIR / "few_shot_ocr_input.jpg"
+    fs_output_path = FEW_SHOTS_DIR / "few_shot_ocr_output.txt"
+
+    # parse few-shot data
+    fs_input_b64 = encode_image_b64(fs_input_path)
+    fs_output_data = fs_output_path.read_text(encoding="utf-8")
+
+    # build few-shot messages
+    few_shots = [
+        {
+            "role": "user",
+            "content": [
+                {"type": "text", "text": PAGE_PROMPT},
+                {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{fs_input_b64}"}}
+            ]
+        },
+        {
+            "role": "assistant",
+            "content": fs_output_data
+        }
+    ]
+    
+    # call model and append metadata
+    parsed = call_model(content, PAGE_SCHEMA, few_shots)
+    parsed["_page"] = page_number
+    parsed["_filename"] = image_path.name
     return parsed
 
 
-# consolidates individual page results into a single, unified document structure
+# consolidates pages to a single coument structure
 def merge_pages(page_results: list[dict]) -> dict:
     #TODO hier hin schreiben bei welchen dok man ist
     print("[INFO] Führe alle Seiten zu einem Dokument zusammen...")
 
-    # load few shot examples
-    input_path = PROMPT_DIR / "few_shot_merge_input.json"
-    output_path = PROMPT_DIR / "few_shot_merge_output.json"
+    # load few-shot files
+    fs_input_path = FEW_SHOTS_DIR / "few_shot_merge_input.json"
+    fs_output_path = FEW_SHOTS_DIR/ "few_shot_merge_output.json"
 
+    # parse few-shot data
+    fs_input_data = json.loads(fs_input_path.read_text(encoding="utf-8"))
+    fs_output_data = json.loads(fs_output_path.read_text(encoding="utf-8"))
+
+    # build few-shot messages
     few_shots = [
-        {"role": "user", "content": input_path.read_text(encoding="utf-8")},
-        {"role": "assistant", "content": output_path.read_text(encoding="utf-8")}
+        {
+            "role": "user", 
+            "content": json.dumps(fs_input_data, ensure_ascii=False, separators=(',', ':'))
+        },
+        {
+            "role": "assistant", 
+            "content": json.dumps(fs_output_data, ensure_ascii=False, separators=(',', ':'))
+        }
     ]
 
-    #TODO: separators=(',', ':') oder indent=2 ????
-    pages_json = json.dumps(page_results, ensure_ascii=False, indent=2)
+    # prepare content and call model
+    pages_json = json.dumps(page_results, ensure_ascii=False, separators=(',', ':'))
     content = MERGE_PROMPT.replace("{PAGES_JSON}", pages_json)
+
     return call_model(content, MERGE_SCHEMA, few_shots)
 
 

@@ -58,7 +58,7 @@
                 "original_length": { "type": ["string", "null"] },
                 "length_after_cut": { "type": ["string", "null"] }
               },
-              "required": ["act_number", "original_length", "length_after_cut"],
+              "required": ["act_number", "original_length"],
               "additionalProperties": false
             }
           },
@@ -68,7 +68,7 @@
               "original_length": { "type": ["string", "null"] },
               "length_after_cut": { "type": ["string", "null"] }
             },
-            "required": ["original_length", "length_after_cut"],
+            "required": ["original_length"],
             "additionalProperties": false
           }
         },
