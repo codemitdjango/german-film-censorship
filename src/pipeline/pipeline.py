@@ -56,9 +56,7 @@ def main():
 
 # processes a single document folder: extracts data from all pages, merges them, and exports the results
 def process_document_directory(doc_dir: Path):
-    # one document folder
     print(f"[INFO] Starte Verarbeitung für Dokument: {doc_dir.name}")
-
     image_files = get_sorted_images(doc_dir)
 
     if not image_files:
@@ -66,20 +64,15 @@ def process_document_directory(doc_dir: Path):
         return
     
     print(f"[INFO] {len(image_files)} Bild(er) in {doc_dir.name} gefunden. Starte OCR...")
-
     page_results = []
+
     for i, image_file in enumerate(image_files, start=1):
         try:
             page_result = process_page(image_file, i)
+            page_results.append(page_result)
         except requests.exceptions.RequestException as e:
             print(f"[FEHLER] Fehler bei Seite {i} ({image_file.name}): {e}")
-            page_result = {
-                "_seite": i,
-                "_dateiname": image_file.name,
-                "_error": str(e),
-            }
-        page_results.append(page_result)
-
+            page_results.append({"_page": i, "_filename": image_file.name, "_error": str(e)})
 
     # TODO rename 
     intermediate_file = OCR_OUTPUT_DIR / f"{doc_dir.name}_ocr.json"
@@ -88,8 +81,15 @@ def process_document_directory(doc_dir: Path):
     with open(intermediate_file, "w", encoding="utf-8") as f:
         json.dump(page_results, f, ensure_ascii=False, indent=2)
 
+    # filter failed pages before merge
+    valid_pages = [page for page in page_results if "_error" not in page]
+
+    if not valid_pages:
+        print(f"[FEHLER] Keine validen Seiten für {doc_dir.name} gefunden. Abbruch.")
+        return
+    
     try:
-        merged = merge_pages(page_results)
+        merged = merge_pages(valid_pages, doc_dir.name)
     except requests.exceptions.RequestException as e:
         print(f"[FEHLER] Fehler beim Zusammenführen von {doc_dir.name}: \n{e}")
         return
@@ -113,11 +113,14 @@ def process_page(image_path: Path, page_number: int) -> dict:
 
     # load few-shot files
     fs_input_path = FEW_SHOTS_DIR / "few_shot_ocr_input.jpg"
-    fs_output_path = FEW_SHOTS_DIR / "few_shot_ocr_output.txt"
+    # fs_output_path = FEW_SHOTS_DIR / "few_shot_ocr_output.txt"
+    fs_output_path = FEW_SHOTS_DIR / "few_shot_ocr_output.json"
 
     # parse few-shot data
     fs_input_b64 = encode_image_b64(fs_input_path)
-    fs_output_data = fs_output_path.read_text(encoding="utf-8")
+    # fs_output_data = fs_output_path.read_text(encoding="utf-8")
+    fs_output_data = json.loads(fs_output_path.read_text(encoding="utf-8"))
+    fs_output_str = json.dumps(fs_output_data, ensure_ascii=False)
 
     # build few-shot messages
     few_shots = [
@@ -130,21 +133,22 @@ def process_page(image_path: Path, page_number: int) -> dict:
         },
         {
             "role": "assistant",
-            "content": fs_output_data
+            # "content": fs_output_data
+            "content": fs_output_str
         }
     ]
     
     # call model and append metadata
-    parsed = call_model(content, PAGE_SCHEMA, few_shots)
+    # parsed = call_model(content, PAGE_SCHEMA, few_shots)
+    parsed = call_model(content, PAGE_SCHEMA)
     parsed["_page"] = page_number
     parsed["_filename"] = image_path.name
     return parsed
 
 
 # consolidates pages to a single coument structure
-def merge_pages(page_results: list[dict]) -> dict:
-    #TODO hier hin schreiben bei welchen dok man ist
-    print("[INFO] Führe alle Seiten zu einem Dokument zusammen...")
+def merge_pages(page_results: list[dict], doc_name: str) -> dict:
+    print(f"[INFO] Führe alle Seiten zu einem Dokument zusammen: {doc_name}")
 
     # load few-shot files
     fs_input_path = FEW_SHOTS_DIR / "few_shot_merge_input.json"
@@ -170,7 +174,8 @@ def merge_pages(page_results: list[dict]) -> dict:
     pages_json = json.dumps(page_results, ensure_ascii=False, separators=(',', ':'))
     content = MERGE_PROMPT.replace("{PAGES_JSON}", pages_json)
 
-    return call_model(content, MERGE_SCHEMA, few_shots)
+    # return call_model(content, MERGE_SCHEMA, few_shots)
+    return call_model(content, MERGE_SCHEMA)
 
 
 # retrieves all image files from a specific directory in natural alphanumerical order
@@ -206,8 +211,9 @@ def call_model(content, schema, few_shots=None) -> dict:
     payload = {
         "model": MODEL,
         "temperature": TEMPERATURE,
-        # "max_tokens": 4096,  # WICHTIG: Erhöhtes Limit für OCR-Outputs
-        "frequency_penalty": 1.2,  # Bestraft das Modell, wenn es dieselben Wörter oft wiederholt
+        "max_tokens": 4096, 
+        "frequency_penalty": 1.1,  # Bestraft das Modell, wenn es dieselben Wörter oft wiederholt
+        # "frequency_penalty": 1.2,  # Bestraft das Modell, wenn es dieselben Wörter oft wiederholt
         "messages": messages,
         "response_format": {
             "type": "json_schema",
