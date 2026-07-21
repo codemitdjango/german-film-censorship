@@ -22,14 +22,36 @@ API_URL = os.getenv("API_URL")
 API_KEY = os.getenv("API_KEY", "fallback")
 MODEL = "google/gemma-4-12b"
 TEMPERATURE = 0.1 # bei 0 hängt das Modell im LOOP
+MAX_TOKENS = 262144 
+FREQUENCY_PENALTY = 1.2 # Bestraft das Modell, wenn es dieselben Wörter oft wiederholt
+# "frequency_penalty": 1.2,  # Bestraft das Modell, wenn es dieselben Wörter oft wiederholt
 TIMEOUT_SECONDS = 600
 
-# Prompts & JSONS
+# encode image to base64
+def encode_image_b64(image_path: Path) -> str:
+    with open(image_path, "rb") as f:
+        return base64.b64encode(f.read()).decode()
+    
+# load prompts, schemas and pre-compute few-shot strings
 PAGE_PROMPT = (PROMPT_DIR / "page_prompt.txt").read_text(encoding="utf-8")
 MERGE_PROMPT = (PROMPT_DIR / "merge_prompt.txt").read_text(encoding="utf-8")
 PAGE_SCHEMA = json.loads((PROMPT_DIR / "page_schema.json").read_text(encoding="utf-8"))
 MERGE_SCHEMA = json.loads((PROMPT_DIR / "merge_schema.json").read_text(encoding="utf-8"))
 
+FS_OCR_INPUT_B64 = encode_image_b64(FEW_SHOTS_DIR / "few_shot_ocr_input.jpg")
+FS_OCR_OUTPUT_STR = json.dumps(
+    json.loads((FEW_SHOTS_DIR / "few_shot_ocr_output.json").read_text(encoding="utf-8")), 
+    ensure_ascii=False
+)
+
+FS_MERGE_INPUT_STR = json.dumps(
+    json.loads((FEW_SHOTS_DIR / "few_shot_merge_input.json").read_text(encoding="utf-8")), 
+    ensure_ascii=False, separators=(',', ':')
+)
+FS_MERGE_OUTPUT_STR = json.dumps(
+    json.loads((FEW_SHOTS_DIR / "few_shot_merge_output.json").read_text(encoding="utf-8")), 
+    ensure_ascii=False, separators=(',', ':')
+)
 
 # coordinates the entire pipeline by iterating through all document directories
 def main():
@@ -111,30 +133,19 @@ def process_page(image_path: Path, page_number: int) -> dict:
         {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{b64}"}}
     ]
 
-    # load few-shot files
-    fs_input_path = FEW_SHOTS_DIR / "few_shot_ocr_input.jpg"
-    # fs_output_path = FEW_SHOTS_DIR / "few_shot_ocr_output.txt"
-    fs_output_path = FEW_SHOTS_DIR / "few_shot_ocr_output.json"
-
-    # parse few-shot data
-    fs_input_b64 = encode_image_b64(fs_input_path)
-    # fs_output_data = fs_output_path.read_text(encoding="utf-8")
-    fs_output_data = json.loads(fs_output_path.read_text(encoding="utf-8"))
-    fs_output_str = json.dumps(fs_output_data, ensure_ascii=False)
-
     # build few-shot messages
     few_shots = [
         {
             "role": "user",
             "content": [
                 {"type": "text", "text": PAGE_PROMPT},
-                {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{fs_input_b64}"}}
+                {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{FS_OCR_INPUT_B64}"}}
             ]
         },
         {
             "role": "assistant",
             # "content": fs_output_data
-            "content": fs_output_str
+            "content": FS_OCR_OUTPUT_STR
         }
     ]
     
@@ -211,9 +222,8 @@ def call_model(content, schema, few_shots=None) -> dict:
     payload = {
         "model": MODEL,
         "temperature": TEMPERATURE,
-        "max_tokens": 4096, 
-        "frequency_penalty": 1.1,  # Bestraft das Modell, wenn es dieselben Wörter oft wiederholt
-        # "frequency_penalty": 1.2,  # Bestraft das Modell, wenn es dieselben Wörter oft wiederholt
+        "max_tokens": MAX_TOKENS, 
+        "frequency_penalty": FREQUENCY_PENALTY,  
         "messages": messages,
         "response_format": {
             "type": "json_schema",
@@ -231,6 +241,11 @@ def call_model(content, schema, few_shots=None) -> dict:
         raise requests.exceptions.RequestException(f"API Error {response.status_code}: {response.text}")
     response.raise_for_status()
 
+    # parse response and check termination reason
+    response_json = response.json()
+    finish_reason = response_json["choices"][0].get("finish_reason")
+    print(f"[INFO] Finish Reason: {finish_reason}")
+
     raw_text = response.json()["choices"][0]["message"]["content"]
     try: 
         return json.loads(raw_text)
@@ -240,13 +255,6 @@ def call_model(content, schema, few_shots=None) -> dict:
         # Pragmatischer Fallback: Gib ein Dict mit Error-Flag zurück, 
         # damit der Prozess nicht komplett stirbt, sondern diese Seite überspringt.
         return {"_error": f"JSONDecodeError: LLM lieferte defektes JSON. Raw: {raw_text[:100]}..."}
-
-
-# converts a image file into a base64 encoded string for API transmission
-def encode_image_b64(image_path: Path) -> str:
-    with open(image_path, "rb") as f:
-        return base64.b64encode(f.read()).decode()
-
 
 # script execution
 if __name__ == "__main__":
