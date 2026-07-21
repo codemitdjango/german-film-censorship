@@ -22,9 +22,10 @@ API_URL = os.getenv("API_URL")
 API_KEY = os.getenv("API_KEY", "fallback")
 MODEL = "google/gemma-4-12b"
 TEMPERATURE = 0.1 # bei 0 hängt das Modell im LOOP
-MAX_TOKENS = 262144 
-FREQUENCY_PENALTY = 1.2 # Bestraft das Modell, wenn es dieselben Wörter oft wiederholt
-# "frequency_penalty": 1.2,  # Bestraft das Modell, wenn es dieselben Wörter oft wiederholt
+# MAX_TOKENS = 262144 
+MAX_TOKENS = 4096
+FREQUENCY_PENALTY = 0.1
+#1.2 # Bestraft das Modell, wenn es dieselben Wörter oft wiederholt
 TIMEOUT_SECONDS = 600
 
 # encode image to base64
@@ -96,7 +97,6 @@ def process_document_directory(doc_dir: Path):
             print(f"[FEHLER] Fehler bei Seite {i} ({image_file.name}): {e}")
             page_results.append({"_page": i, "_filename": image_file.name, "_error": str(e)})
 
-    # TODO rename 
     intermediate_file = OCR_OUTPUT_DIR / f"{doc_dir.name}_ocr.json"
     final_file = PROCESSED_OUTPUT_DIR/ f"{doc_dir.name}_processed.json"
 
@@ -150,8 +150,8 @@ def process_page(image_path: Path, page_number: int) -> dict:
     ]
     
     # call model and append metadata
-    # parsed = call_model(content, PAGE_SCHEMA, few_shots)
-    parsed = call_model(content, PAGE_SCHEMA)
+    parsed = call_model(content, PAGE_SCHEMA, few_shots)
+    # parsed = call_model(content, PAGE_SCHEMA)
     parsed["_page"] = page_number
     parsed["_filename"] = image_path.name
     return parsed
@@ -161,23 +161,15 @@ def process_page(image_path: Path, page_number: int) -> dict:
 def merge_pages(page_results: list[dict], doc_name: str) -> dict:
     print(f"[INFO] Führe alle Seiten zu einem Dokument zusammen: {doc_name}")
 
-    # load few-shot files
-    fs_input_path = FEW_SHOTS_DIR / "few_shot_merge_input.json"
-    fs_output_path = FEW_SHOTS_DIR/ "few_shot_merge_output.json"
-
-    # parse few-shot data
-    fs_input_data = json.loads(fs_input_path.read_text(encoding="utf-8"))
-    fs_output_data = json.loads(fs_output_path.read_text(encoding="utf-8"))
-
     # build few-shot messages
     few_shots = [
         {
             "role": "user", 
-            "content": json.dumps(fs_input_data, ensure_ascii=False, separators=(',', ':'))
+            "content": FS_MERGE_INPUT_STR
         },
         {
             "role": "assistant", 
-            "content": json.dumps(fs_output_data, ensure_ascii=False, separators=(',', ':'))
+            "content": FS_MERGE_OUTPUT_STR
         }
     ]
 
@@ -185,8 +177,8 @@ def merge_pages(page_results: list[dict], doc_name: str) -> dict:
     pages_json = json.dumps(page_results, ensure_ascii=False, separators=(',', ':'))
     content = MERGE_PROMPT.replace("{PAGES_JSON}", pages_json)
 
-    # return call_model(content, MERGE_SCHEMA, few_shots)
-    return call_model(content, MERGE_SCHEMA)
+    return call_model(content, MERGE_SCHEMA, few_shots)
+    # return call_model(content, MERGE_SCHEMA)
 
 
 # retrieves all image files from a specific directory in natural alphanumerical order
@@ -254,7 +246,7 @@ def call_model(content, schema, few_shots=None) -> dict:
         
         # Pragmatischer Fallback: Gib ein Dict mit Error-Flag zurück, 
         # damit der Prozess nicht komplett stirbt, sondern diese Seite überspringt.
-        return {"_error": f"JSONDecodeError: LLM lieferte defektes JSON. Raw: {raw_text[:100]}..."}
+        return {"_error": f"JSONDecodeError: LLM lieferte defektes JSON. Raw: {raw_text}"}
 
 # script execution
 if __name__ == "__main__":
