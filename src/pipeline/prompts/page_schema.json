@@ -5,20 +5,16 @@
   "schema": {
     "type": "object",
     "properties": {
-      "seite_leer": {
+      "page_empty": {
         "type": "boolean",
         "description": "True, wenn die Seite komplett leer ist oder nur unleserliche Kratzer/Flecken enthält. False, wenn Text vorhanden ist."
       },
-      "transkription": {
+      "transcription": {
         "type": "string",
-        "description": "Der exakte Text der Seite unter Beibehaltung von Zeilenumbrüchen. Enthält Inline-Tags wie [Handschrift: ...]."
-      },
-      "dokumenten_typ": {
-        "type": "string",
-        "description": "Kurze Einschätzung, was diese Seite zeigt (z.B. 'Titelblatt', 'Zensur-Entscheidung', 'Leere Rückseite')."
+        "description": "Der exakte Text der Seite unter Beibehaltung von Zeilenumbrüchen."
       }
     },
-    "required": ["seite_leer", "transkription", "dokumenten_typ"],
+    "required": ["page_empty", "transcription"],
     "additionalProperties": false
   }
   
