@@ -1,6 +1,6 @@
 {
   "name": "eine_seite_ocr_erkennung",
-  "description": "Vollständiger erkannter Text dieser Seite",
+  "description": "Vollständiger erkannter Text dieser Seite inklusive strukturierter Zwischentitel",
   "strict": true,
   "schema": {
     "type": "object",
@@ -12,9 +12,28 @@
       "transcription": {
         "type": "string",
         "description": "Der exakte Text der Seite unter Beibehaltung von Zeilenumbrüchen."
+      },
+      "intertitles": {
+        "type": "array",
+        "description": "liste der nummerierten Zwischentitel auf dieser Seite, nach Akten sortiert.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "act_label": {
+              "type": ["string", "null"],
+              "description": "Zugehöriger Akt falls vorhanden (z.B. '1. Akt', '2. Akt'). Kann null sein, wen der Akt bereits zuvor genannt wurde."
+            },
+            "text": {
+              "type": ["string", "null"],
+              "description": "Der vollständige Text des Zwischentitels inklusive Nummerierung (z. B. '1. Der Irre.')."
+            }
+          },
+          "required": ["text", "act_label"],
+          "additionalProperties": false
+        }
       }
     },
-    "required": ["page_empty", "transcription"],
+    "required": ["page_empty", "transcription", "intertitles"],
     "additionalProperties": false
   }
   

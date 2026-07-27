@@ -31,19 +31,6 @@
         "required": ["role", "actor"],
         "additionalProperties": false
       },
-      "intertitles": {
-        "type": "array",
-        "description": "numbered text cards per act",
-        "items": {
-          "type": "object",
-          "properties": {
-            "act_label": { "type": ["string", "null"] },
-            "text": { "type": ["string", "null"] }
-          },
-          "required": ["act_label", "text"],
-          "additionalProperties": false
-        }
-      },
       "excerpt_note": { "type": ["string", "null"] },
       "length_details": {
         "type": "object",
@@ -99,7 +86,6 @@
       "cinematography",
       "set_design",
       "cast_list",
-      "intertitles",
       "excerpt_note",
       "length_details",
       "examination_certificate"

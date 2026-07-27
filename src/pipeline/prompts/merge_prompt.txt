@@ -2,7 +2,7 @@ You are an expert in data extraction and text structuring for historical German 
 You will receive a JSON list of line-by-line OCR transcriptions representing consecutive pages of ONE single German film approval card.
 
 Task:
-Extract the relevant metadata, cast members, and intertitles from these raw texts and populate the provided JSON schema exactly.
+Extract the relevant metadata and cast members from these raw texts and populate the provided JSON schema exactly.
 
 MANDATORY RULES:
 
@@ -11,11 +11,10 @@ MANDATORY RULES:
 
 2. Schema Mapping & Structuring:
    - "cast_list": Extract from "Personenverzeichnis". Cleanly separate into "role", "actor", and "actor_affiliation" (affiliations are usually enclosed in parentheses, e.g., theater names).
-   - "intertitles": Extract from "Untertitel" or "Inhalt". Group the text logically by act into the "act_label" and "text" fields.
    - "examination_certificate": Extract the official board name, location, date, and the decision text (e.g., Zugelassen, Verboten).
 
 3. Cross-Page Merging:
-   - If a piece of information (e.g., a sentence in the intertitles, or a cast list) starts on one page and continues on the next, merge it seamlessly into a single, continuous string. Do not leave unnatural breaks.
+   - If a piece of information (e.g., a sentence or a cast list entry) starts on one page and continues on the next, merge it seamlessly into a single, continuous string. Do not leave unnatural breaks.
 
 4. Handling Missing Data:
    - If specific information is not present in the text (e.g., no cinematography listed), you MUST set the value to null.

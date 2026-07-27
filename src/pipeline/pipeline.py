@@ -1,4 +1,3 @@
-# Imports
 import base64
 import json
 import requests
@@ -6,9 +5,10 @@ import os
 import re
 from pathlib import Path
 from dotenv import load_dotenv
+
 load_dotenv()
 
-# Directories
+# path configuration
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent.parent
 IMAGE_DIR = PROJECT_ROOT / "data" / "01_raw" / "R_9346-I_Zulassungskarten"
@@ -17,15 +17,14 @@ FEW_SHOTS_DIR = SCRIPT_DIR / "few_shots"
 OCR_OUTPUT_DIR = PROJECT_ROOT / "data" / "02_ocr"
 PROCESSED_OUTPUT_DIR = PROJECT_ROOT / "data" / "03_processed"
 
-# API
+# api parameters
 API_URL = os.getenv("API_URL")
 API_KEY = os.getenv("API_KEY", "fallback")
 MODEL = "google/gemma-4-12b"
 TEMPERATURE = 0.1 # bei 0 hängt das Modell im LOOP
 # MAX_TOKENS = 262144 
 MAX_TOKENS = 4096
-FREQUENCY_PENALTY = 0.1
-#1.2 # Bestraft das Modell, wenn es dieselben Wörter oft wiederholt
+FREQUENCY_PENALTY = 0.1 #1.2 # Bestraft das Modell, wenn es dieselben Wörter oft wiederholt
 TIMEOUT_SECONDS = 600
 
 # encode image to base64
@@ -45,6 +44,12 @@ FS_OCR_OUTPUT_STR = json.dumps(
     ensure_ascii=False
 )
 
+FS2_OCR_INPUT_B64 = encode_image_b64(FEW_SHOTS_DIR / "few_shot_ocr_input2.jpg")
+FS2_OCR_OUTPUT_STR = json.dumps(
+    json.loads((FEW_SHOTS_DIR / "few_shot_ocr_output2.json").read_text(encoding="utf-8")), 
+    ensure_ascii=False
+)
+
 FS_MERGE_INPUT_STR = json.dumps(
     json.loads((FEW_SHOTS_DIR / "few_shot_merge_input.json").read_text(encoding="utf-8")), 
     ensure_ascii=False, separators=(',', ':')
@@ -56,7 +61,7 @@ FS_MERGE_OUTPUT_STR = json.dumps(
 
 # coordinates the entire pipeline by iterating through all document directories
 def main():
-    # sicherstellen, dass die verzeichnisstruktur existiert
+    # ensure output directories exist
     for directory in [OCR_OUTPUT_DIR, PROCESSED_OUTPUT_DIR]:
         directory.mkdir(parents=True, exist_ok=True)
 
@@ -144,8 +149,19 @@ def process_page(image_path: Path, page_number: int) -> dict:
         },
         {
             "role": "assistant",
-            # "content": fs_output_data
             "content": FS_OCR_OUTPUT_STR
+        },
+        # second few shot
+        {
+            "role": "user",
+            "content": [
+                {"type": "text", "text": PAGE_PROMPT},
+                {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{FS2_OCR_INPUT_B64}"}}
+            ]
+        },
+        {
+            "role": "assistant",
+            "content": FS2_OCR_OUTPUT_STR
         }
     ]
     
@@ -161,6 +177,25 @@ def process_page(image_path: Path, page_number: int) -> dict:
 def merge_pages(page_results: list[dict], doc_name: str) -> dict:
     print(f"[INFO] Führe alle Seiten zu einem Dokument zusammen: {doc_name}")
 
+    all_intertitles = []
+    cleaned_pages = []
+
+    for page in page_results:
+        page_copy = dict(page)
+        intertitles = page_copy.pop("intertitles", [])
+        if isinstance(intertitles, list):
+            all_intertitles.extend(intertitles)
+        cleaned_pages.append(page_copy)
+
+    # dynamically adjust merge schema to exclude intertitle form output generation
+    trimmed_merge_schema = json.loads(json.dumps(MERGE_SCHEMA))
+    schema_props = trimmed_merge_schema.get("schema", {}).get("properties", {})
+    if "intertitles" in schema_props:
+        del schema_props["intertitles"]
+    schema_reqs = trimmed_merge_schema.get("schema", {}).get("required", [])
+    if "intertitles" in schema_reqs:
+        schema_reqs.remove("intertitles")
+
     # build few-shot messages
     few_shots = [
         {
@@ -174,11 +209,16 @@ def merge_pages(page_results: list[dict], doc_name: str) -> dict:
     ]
 
     # prepare content and call model
-    pages_json = json.dumps(page_results, ensure_ascii=False, separators=(',', ':'))
+    pages_json = json.dumps(cleaned_pages, ensure_ascii=False, separators=(',', ':'))
     content = MERGE_PROMPT.replace("{PAGES_JSON}", pages_json)
 
-    return call_model(content, MERGE_SCHEMA, few_shots)
-    # return call_model(content, MERGE_SCHEMA)
+    merged_result = call_model(content, trimmed_merge_schema, few_shots)
+    # merged_result = call_model(content, trimmed_merge_schema)
+
+    # reattach combined intertitles deterministacially
+    merged_result["intertitles"] = all_intertitles
+
+    return merged_result
 
 
 # retrieves all image files from a specific directory in natural alphanumerical order
@@ -209,7 +249,6 @@ def call_model(content, schema, few_shots=None) -> dict:
         messages.extend(few_shots)
 
     messages.append({ "role": "user", "content": content})
-
 
     payload = {
         "model": MODEL,
