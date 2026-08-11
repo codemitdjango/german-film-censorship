@@ -12,15 +12,19 @@ TRANSCRIPTION RULES:
 5. Hallucinations: Do not invent missing dates, names, or words. Use the tag <unleserlich> for illegible text.
 
 INTERTITLES EXTRACTION:
-6. Intertitles Identification:
-   - Extract all numbered film intertitles / text cards present on this page into the "intertitles" array.
-   - For "act_label":
-     * If explicit act headers exist in the document (e.g., "1. Akt", "2. Akt"), use the exact act label for the corresponding intertitles.
-     * If no explicit act header like "1. Akt" is written, but the document describes a single-act film (e.g., "Lustspiel in 1 Akt", "Drama in 1 Akt") or the intertitles start directly without a new act heading, assign "1. Akt" as the default "act_label".
-     * Only set "act_label" to null if it is entirely impossible to infer the act.
-   - For "text", include the number and full text of the intertitle (e.g., "1. Der Irre.", "2. Ich habe großen Durst...").
-   - If no intertitles are present on this page, return an empty array [].
+6. Intertitle Granularity & Isolation:
+   - Extract EXACTLY ONE intertitle object per Act (e.g., "1. Akt", "2. Akt").
+   - DO NOT split individual numbered items (e.g., "1. ...", "2. ...") into separate objects. Combine all text belonging to the same act into a single "text" field within one intertitle object for that act.
+   - Stop a title's text before the next act header starts, or at explicit structural markers like "Ende des X. Aktes" / "Ende.".
+   - Ignore general metadata headers (like film title, director, cast list, censors' administrative text, reel lengths) when populating intertitles.
 
-SCHEMA MAPPING: 
-   - Write the exact page text into the "transcription" key.
-   - If the page contains no relevant text or only illegible scratches/stains, set "page_empty" to true, leave "transcription" empty, and "intertitles" as an empty array [].
+7. Act Label Assignment & Detection:
+   - Identify Act Headers: An act header can appear as explicit text (e.g., "1. Akt", "2. Akt", "Akt 1", "1. Teil", "Teil 1", "2. Teil") OR as a single standalone number marking a new section (e.g., a standalone "1.", "2.", "3." followed by the first intertitle of that act).
+   - Normalization: Always normalize the extracted act label to the format "X. Akt" (e.g., if you encounter "1.", "1. Akt", "Akt 1", "1. Teil", or "Teil 1", set "act_label": "1. Akt").
+   - Sequence Validation: Use chronological logic to distinguish act numbers from intertitle numbers. Acts follow a strict sequence (1. Akt -> 2. Akt -> 3. Akt). If a section starts with "2." after "1. Akt" has ended, treat "2." as the header for "2. Akt", not as an individual intertitle index.
+   - Page Continuation: If titles appear at the top of a page without an explicit header, look ahead to closing markers (e.g., "Ende des 2. Aktes") or check the previous context to infer the active act.
+   - Fallback: If no act number can be determined anywhere on the document, default to "1. Akt".
+
+SCHEMA MAPPING:
+- Write the exact page text into the "transcription" key.
+- If the page contains no relevant text or only illegible scratches/stains, set "page_empty" to true, leave "transcription" empty, and "intertitles" as an empty array [].

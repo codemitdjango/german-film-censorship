@@ -3,8 +3,7 @@ from pathlib import Path
 
 def extract_archives():
     # define base directory
-    base_dir = Path(__file__).parent.parent / "data" / "01_raw" # TODO CHANGE TO DIR
-
+    base_dir = Path('S:/Zulassungskarten_Data/R_9346-I_Zulassungskarten')
     # find all zip files recursively
     for zip_path in base_dir.rglob("*.zip"):
         
@@ -21,7 +20,3 @@ def extract_archives():
 
 if __name__ == "__main__":
     extract_archives()
-
-
-
-    

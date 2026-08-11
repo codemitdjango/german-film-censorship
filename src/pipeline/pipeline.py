@@ -11,26 +11,25 @@ load_dotenv()
 # path configuration
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent.parent
-IMAGE_DIR = PROJECT_ROOT / "data" / "01_raw" / "R_9346-I_Zulassungskarten"
+
 PROMPT_DIR = SCRIPT_DIR / "prompts"
 FEW_SHOTS_DIR = SCRIPT_DIR / "few_shots"
-OCR_OUTPUT_DIR = PROJECT_ROOT / "data" / "02_ocr"
-PROCESSED_OUTPUT_DIR = PROJECT_ROOT / "data" / "03_processed"
+
+DATA_BASE_DIR = Path(os.getenv("DATA_BASE_DIR"))
+
+IMAGE_DIR = DATA_BASE_DIR / "R_9346-I_Zulassungskarten"
+OCR_OUTPUT_DIR = DATA_BASE_DIR / "02_ocr"
+PROCESSED_OUTPUT_DIR = DATA_BASE_DIR/ "03_processed"
 
 # api parameters
 API_URL = os.getenv("API_URL")
 API_KEY = os.getenv("API_KEY", "fallback")
 MODEL = "google/gemma-4-12b"
-TEMPERATURE = 0.1 # bei 0 hängt das Modell im LOOP
-# MAX_TOKENS = 262144 
-MAX_TOKENS = 4096
-FREQUENCY_PENALTY = 0.1 #1.2 # Bestraft das Modell, wenn es dieselben Wörter oft wiederholt
-TIMEOUT_SECONDS = 600#
-# Use the following standardized sampling configuration across all use cases:
-
-#      temperature=1.0
-#      top_p=0.95
-#      top_k=64
+# TEMPERATURE = 0.1 # bei 0 hängt das Modell im LOOP
+TEMPERATURE= 1.0 # standardized sampling configuration
+MAX_TOKENS = 262144 
+# FREQUENCY_PENALTY = 0.1 #1.2 # Bestraft das Modell, wenn es dieselben Wörter oft wiederholt
+TIMEOUT_SECONDS = 600
 
 # encode image to base64
 def encode_image_b64(image_path: Path) -> str:
@@ -229,7 +228,7 @@ def merge_pages(page_results: list[dict], doc_name: str) -> dict:
 # retrieves all image files from a specific directory in natural alphanumerical order
 def get_sorted_images(dir_path: Path) -> list[Path]:
     # search every image in a folder and sort
-    extensions = ("*.jpg", "*.jpeg", "*.png", "*.JPG", "*.JPEG", "*.PNG")
+    extensions = ("*.jpg", "*.jpeg", "*.png")
     images = []
     for ext in extensions:
         images.extend(dir_path.glob(ext))
@@ -259,7 +258,9 @@ def call_model(content, schema, few_shots=None) -> dict:
         "model": MODEL,
         "temperature": TEMPERATURE,
         "max_tokens": MAX_TOKENS, 
-        "frequency_penalty": FREQUENCY_PENALTY,  
+        # "frequency_penalty": FREQUENCY_PENALTY,  
+        "top_p": 0.95,
+        "top_k": 64,
         "messages": messages,
         "response_format": {
             "type": "json_schema",
