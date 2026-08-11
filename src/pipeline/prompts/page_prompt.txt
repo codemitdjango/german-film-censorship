@@ -14,7 +14,10 @@ TRANSCRIPTION RULES:
 INTERTITLES EXTRACTION:
 6. Intertitles Identification:
    - Extract all numbered film intertitles / text cards present on this page into the "intertitles" array.
-   - For "act_label", specify the act to which the intertitle belongs (e.g., "1. Akt", "2. Akt"). If no act is explicitly headered on this page, set it to null.
+   - For "act_label":
+     * If explicit act headers exist in the document (e.g., "1. Akt", "2. Akt"), use the exact act label for the corresponding intertitles.
+     * If no explicit act header like "1. Akt" is written, but the document describes a single-act film (e.g., "Lustspiel in 1 Akt", "Drama in 1 Akt") or the intertitles start directly without a new act heading, assign "1. Akt" as the default "act_label".
+     * Only set "act_label" to null if it is entirely impossible to infer the act.
    - For "text", include the number and full text of the intertitle (e.g., "1. Der Irre.", "2. Ich habe großen Durst...").
    - If no intertitles are present on this page, return an empty array [].
 

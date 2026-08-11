@@ -25,7 +25,12 @@ TEMPERATURE = 0.1 # bei 0 hängt das Modell im LOOP
 # MAX_TOKENS = 262144 
 MAX_TOKENS = 4096
 FREQUENCY_PENALTY = 0.1 #1.2 # Bestraft das Modell, wenn es dieselben Wörter oft wiederholt
-TIMEOUT_SECONDS = 600
+TIMEOUT_SECONDS = 600#
+# Use the following standardized sampling configuration across all use cases:
+
+#      temperature=1.0
+#      top_p=0.95
+#      top_k=64
 
 # encode image to base64
 def encode_image_b64(image_path: Path) -> str:

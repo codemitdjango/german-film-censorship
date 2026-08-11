@@ -28,7 +28,7 @@
               "description": "Der vollständige Text des Zwischentitels inklusive Nummerierung (z. B. '1. Der Irre.')."
             }
           },
-          "required": ["text", "act_label"],
+          "required": ["text"],
           "additionalProperties": false
         }
       }
