@@ -1,29 +1,21 @@
 You are an expert in data extraction and text structuring for historical German documents (1920-1945).
-You will receive a JSON list of line-by-line OCR transcriptions representing consecutive pages of ONE single German film approval card.
+You will receive a JSON array containing line-by-line OCR transcriptions of consecutive pages from ONE single German film approval card ("Filmprüfstelle Berlin").
 
 Task:
-Extract the relevant metadata and cast members from these raw texts and populate the provided JSON schema exactly.
+Extract all film metadata, cast, examination board details, and technical properties from the provided page transcriptions and populate the required output schema.
 
 MANDATORY RULES:
 
-1. Language Integrity (CRITICAL): 
-   - The schema keys are in English, but all extracted text values MUST remain in the original German exactly as transcribed. Do not translate any titles, roles, or text into English.
+1. Language Integrity (CRITICAL):
+   - Schema keys are defined in English, but ALL extracted values MUST remain strictly in their original German phrasing as transcribed. Do not translate any text.
 
-2. Schema Mapping & Structuring:
-   - "cast_list": Extract from "Personenverzeichnis". Cleanly separate into "role", "actor", and "actor_affiliation" (affiliations are usually enclosed in parentheses, e.g., theater names).
-   - "examination_certificate": Extract the official board name, location, date, and the decision text (e.g., Zugelassen, Verboten).
+2. Strict Fidelity & Zero Hallucination:
+   - Extract ONLY information that is explicitly stated in the source text.
+   - Do NOT invent, assume, or complete missing names, dates, or numbers.
+   - If a specific field is not mentioned anywhere in the transcriptions, set its value to null.
 
 3. Cross-Page Merging:
-   - If a piece of information (e.g., a sentence or a cast list entry) starts on one page and continues on the next, merge it seamlessly into a single, continuous string. Do not leave unnatural breaks.
+   - Merge text spans that are split across page breaks (e.g., actor names, decision texts, or notes) into single continuous strings without artificial line breaks.
 
-4. Handling Missing Data:
-   - If specific information is not present in the text (e.g., no cinematography listed), you MUST set the value to null.
-   - NEVER use placeholder strings like "N/A", "unknown", "fehlt", or "-".
-   - If an entire section is missing (e.g., no length details for individual acts), return an empty array [].
-
-5. Original Fidelity:
-   - Do not invent or infer missing data.
-   - Preserve all inline tags exactly as they appear in the raw texts (e.g., <unleserlich>).
-
-Page Transcriptions:
+SOURCE DATA:
 {PAGES_JSON}

@@ -1,34 +1,34 @@
 {
   "name": "eine_seite_ocr_erkennung",
-  "description": "Vollständiger erkannter Text dieser Seite inklusive strukturierter Zwischentitel",
+  "description": "Erfasst den vollständigen Text einer Seite sowie strukturiere Zwischentitel pro Akt gemäß den TRANSCRIPTION- und INTERTITLES-Regeln.",
   "strict": true,
   "schema": {
     "type": "object",
     "properties": {
       "page_empty": {
         "type": "boolean",
-        "description": "True, wenn die Seite komplett leer ist oder nur unleserliche Kratzer/Flecken enthält. False, wenn Text vorhanden ist."
+        "description": "true, wenn die Seite komplett leer ist. Bei sichtbarem Text false."
       },
       "transcription": {
         "type": "string",
-        "description": "Der exakte Text der Seite unter Beibehaltung von Zeilenumbrüchen."
+        "description": "Exakter Text der Seite unter Beibehaltung von Zeilenumbrüchen (\\n). Max. 2 Umbrüche in Folge, Punktreihen durch ... ersetzen"
       },
       "intertitles": {
         "type": "array",
-        "description": "liste der nummerierten Zwischentitel auf dieser Seite, nach Akten sortiert.",
+        "description": "Liste von Akt-Objekten auf dieser Seite. Genau ein Objekt pro Akt. Bei leerer Seite [] verwenden.",
         "items": {
           "type": "object",
           "properties": {
             "act_label": {
-              "type": ["string", "null"],
-              "description": "Zugehöriger Akt falls vorhanden (z.B. '1. Akt', '2. Akt'). Kann null sein, wen der Akt bereits zuvor genannt wurde."
+              "type": "string",
+              "description": "Normalisierte Akt-Bezeichnung im Format 'X. Akt' (z.B. '1. Akt', '2. Akt'). Falls kein Akt-Header oder Ende-Marker auf der Seite sichtbar ist, MUSS exakt 'Fortsetzung' gesetzt werden."
             },
             "text": {
-              "type": ["string", "null"],
-              "description": "Der vollständige Text des Zwischentitels inklusive Nummerierung (z. B. '1. Der Irre.')."
+              "type": "string",
+              "description": "Gesamter zusammenhängender Text aller Zwischentitel dieses Akts auf dieser Seite inklusive Nummerierungen. Endet vor dem nächsten Akt oder bei 'Ende des X. Aktes'."
             }
           },
-          "required": ["text"],
+          "required": ["act_label", "text"],
           "additionalProperties": false
         }
       }
@@ -36,5 +36,4 @@
     "required": ["page_empty", "transcription", "intertitles"],
     "additionalProperties": false
   }
-  
 }

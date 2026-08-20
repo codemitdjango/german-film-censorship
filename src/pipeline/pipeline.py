@@ -240,7 +240,7 @@ def merge_pages(page_results: list[dict], doc_name: str) -> dict:
     reraise=True,
     stop=stop_after_attempt(5),
     wait=wait_exponential(multiplier=2, min=5, max=60),
-    retry=retry_if_exception_type((requests.exceptions.RequestException, json.JSONDecodeError))
+    retry=retry_if_exception_type(Exception)
 )
 def call_model(content, schema, few_shots=None) -> dict:
     messages = []
@@ -273,7 +273,7 @@ def call_model(content, schema, few_shots=None) -> dict:
     )
 
     if not response.ok:
-        raise requests.exceptions.RequestException(f"API Error {response.status_code}: {response.text}")
+        raise requests.exceptions.RequestException(f"api error {response.status_code}: {response.text}")
     response.raise_for_status()
 
     # parse response and check termination reason

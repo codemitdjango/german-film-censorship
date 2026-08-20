@@ -1,61 +1,114 @@
 {
   "name": "movie_certification_extraction",
-  "description": "metadata, cast and intertitles from historical film certificates",
+  "description": "Strukturierte Extraktion von Metadaten, Besetzung und Prüfvermerken aus Transkriptionen historischer Zulassungskarten.",
   "strict": true,
   "schema": {
     "type": "object",
     "properties": {
-      "examination_number": { "type": ["string", "null"] },
-      "stamp_text": { "type": ["string", "null"] },
-      "origin_company": { "type": ["string", "null"] },
-      "movie_title": { "type": ["string", "null"] },
-      "movie_subtitle": { "type": ["string", "null"] },
-      "produced_by": { "type": ["string", "null"] },
-      "director": { "type": ["string", "null"] },
-      "cinematography": { "type": ["string", "null"] },
-      "set_design": { "type": ["string", "null"] },
+      "examination_number": {
+        "type": ["string", "null"],
+        "description": "Prüfnummer der Filmprüfstelle. Null, falls nicht vorhanden."
+      },
+      "stamp_text": {
+        "type": ["string", "null"],
+        "description": "Vollständiger Text von Stempeln oder Dienststempeln im Originalwortlaut. Null, falls nicht vorhanden."
+      },
+      "origin_company": {
+        "type": ["string", "null"],
+        "description": "Herkunftsfirma, Antragsteller oder Vertriebsgesellschaft. Null, falls nicht vorhanden."
+      },
+      "movie_title": {
+        "type": ["string", "null"],
+        "description": "Exakter Haupttitel des Films in Originalschreibung. Null, falls nicht vorhanden."
+      },
+      "movie_subtitle": {
+        "type": ["string", "null"],
+        "description": "Untertitel oder Zusatz zum Filmtitel. Null, falls nicht vorhanden."
+      },
+      "produced_by": {
+        "type": ["string", "null"],
+        "description": "Produzent, Herstellungsleitung oder produzierende Firma. Null, falls nicht vorhanden."
+      },
+      "director": {
+        "type": ["string", "null"],
+        "description": "Regisseur / Spielleitung. Null, falls nicht vorhanden."
+      },
+      "cinematography": {
+        "type": ["string", "null"],
+        "description": "Kamera / Photographie / Bildeinstellung. Null, falls nicht vorhanden."
+      },
+      "set_design": {
+        "type": ["string", "null"],
+        "description": "Bauten, Szenenbild oder Ausstattung. Null, falls nicht vorhanden."
+      },
       "cast_list": {
         "type": "array",
-        "description": "characters and respective actors",
+        "description": "Liste der Rollen und Darsteller. Punkte zwischen Rolle und Name entfernen.",
         "items": {
           "type": "object",
           "properties": {
-            "role": { "type": ["string", "null"] },
-            "actor": { "type": ["string", "null"] },
+            "role": {
+              "type": ["string", "null"],
+              "description": "Bezeichnung der Rolle/Figur im Originalwortlaut."
+            },
+            "actor": {
+              "type": ["string", "null"],
+              "description": "Name des Schauspielers/der Schauspielerin."
+            },
             "actor_affiliation": {
               "type": ["string", "null"],
-              "description": "theater or company affiliation of the actor, usually in parentheses" 
+              "description": "Theater- oder Ensemble-Zugehörigkeit des Darstellers (meist in Klammern)."
             }
-          }
-        },
-        "required": ["role", "actor"],
-        "additionalProperties": false
+          },
+          "required": ["role", "actor", "actor_affiliation"],
+          "additionalProperties": false
+        }
       },
-      "excerpt_note": { "type": ["string", "null"] },
+      "excerpt_note": {
+        "type": ["string", "null"],
+        "description": "Vermerke zu Auszügen, Beikarten oder Sonderdrucken. Null, falls nicht vorhanden."
+      },
       "length_details": {
         "type": "object",
-        "description": "film length in meters including censorship cuts",
+        "description": "Längenangaben des Films in Metern (Original und nach Zensurschnitten).",
         "properties": {
           "individual_acts": {
             "type": "array",
+            "description": "Längen der einzelnen Akte.",
             "items": {
               "type": "object",
               "properties": {
-                "act_number": { "type": ["string", "null"] },
-                "original_length": { "type": ["string", "null"] },
-                "length_after_cut": { "type": ["string", "null"] }
+                "act_number": {
+                  "type": ["string", "null"],
+                  "description": "Bezeichnung des Akts."
+                },
+                "original_length": {
+                  "type": ["string", "null"],
+                  "description": "Ursprüngliche Länge in Metern."
+                },
+                "length_after_cut": {
+                  "type": ["string", "null"],
+                  "description": "Länge nach Zensurschnitten in Metern. Null, falls unverändert oder nicht angegeben."
+                }
               },
-              "required": ["act_number", "original_length"],
+              "required": ["act_number", "original_length", "length_after_cut"],
               "additionalProperties": false
             }
           },
           "total_length": {
             "type": "object",
+            "description": "Gesamtlänge des Films.",
             "properties": {
-              "original_length": { "type": ["string", "null"] },
-              "length_after_cut": { "type": ["string", "null"] }
+              "original_length": {
+                "type": ["string", "null"],
+                "description": "Ursprüngliche Gesamtlänge in Metern."
+              },
+              "length_after_cut": {
+                "type": ["string", "null"],
+                "description": "Gesamtlänge nach Zensurschnitten in Metern. Null, falls nicht gekürzt."
+              }
             },
-            "required": ["original_length"],
+            "required": ["original_length", "length_after_cut"],
             "additionalProperties": false
           }
         },
@@ -64,12 +117,24 @@
       },
       "examination_certificate": {
         "type": "object",
-        "description": "administrative details of film examination",
+        "description": "Verwaltungsangaben der Prüfung (Behörde, Ort, Datum, Entscheidungs- und Zensurtext).",
         "properties": {
-          "examination_board": { "type": ["string", "null"] },
-          "location": { "type": ["string", "null"] },
-          "date": { "type": ["string", "null"] },
-          "decision_text": { "type": ["string", "null"] }
+          "examination_board": {
+            "type": ["string", "null"],
+            "description": "Prüfende Stelle (z. B. 'Filmprüfstelle Berlin')."
+          },
+          "location": {
+            "type": ["string", "null"],
+            "description": "Ort der Prüfung (z. B. 'Berlin')."
+          },
+          "date": {
+            "type": ["string", "null"],
+            "description": "Datum der Prüfung im Originalformat."
+          },
+          "decision_text": {
+            "type": ["string", "null"],
+            "description": "Vollständiger Wortlaut des Zensurentscheids. Seitenübergreifend zusammengefügt."
+          }
         },
         "required": ["examination_board", "location", "date", "decision_text"],
         "additionalProperties": false

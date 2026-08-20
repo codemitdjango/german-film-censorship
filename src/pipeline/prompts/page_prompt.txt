@@ -9,11 +9,14 @@ TRANSCRIPTION RULES:
 4. Blank Space & Anti-Looping (CRITICAL):
    - NEVER attempt to reconstruct physical empty space using multiple empty lines or spaces. Use a maximum of two consecutive line breaks (\n\n) between text blocks. Stop transcription immediately when readable text ends.
    - Ignore dot leaders completely. Historical documents use dots to connect names (e.g., "Rolle . . . . . . Schauspieler"). NEVER generate more than three consecutive dots (...). Replace dot leaders with a single space (e.g., "Rolle Schauspieler").
-5. Hallucinations: Do not invent missing dates, names, or words. Use the tag <unleserlich> for illegible text.
+5. Hallucinations & Strict Locality (CRITICAL):
+   - ONLY transcribe and extract text that is physically visible in the provided image.
+   - NEVER complete missing sentences, extrapolate plot lines, or insert titles, names, or acts from external memory or training data.
+   - Do not invent missing dates, names, or words. Use the tag <unleserlich> for illegible text.
 
 INTERTITLES EXTRACTION:
 6. Intertitle Granularity & Isolation:
-   - Extract EXACTLY ONE intertitle object per Act (e.g., "1. Akt", "2. Akt").
+   - Extract EXACTLY ONE intertitle object per Act (e.g., "1. Akt", "2. Akt") visible on the page.
    - DO NOT split individual numbered items (e.g., "1. ...", "2. ...") into separate objects. Combine all text belonging to the same act into a single "text" field within one intertitle object for that act.
    - Stop a title's text before the next act header starts, or at explicit structural markers like "Ende des X. Aktes" / "Ende.".
    - Ignore general metadata headers (like film title, director, cast list, censors' administrative text, reel lengths) when populating intertitles.
@@ -22,8 +25,8 @@ INTERTITLES EXTRACTION:
    - Identify Act Headers: An act header can appear as explicit text (e.g., "1. Akt", "2. Akt", "Akt 1", "1. Teil", "Teil 1", "2. Teil") OR as a single standalone number marking a new section (e.g., a standalone "1.", "2.", "3." followed by the first intertitle of that act).
    - Normalization: Always normalize the extracted act label to the format "X. Akt" (e.g., if you encounter "1.", "1. Akt", "Akt 1", "1. Teil", or "Teil 1", set "act_label": "1. Akt").
    - Sequence Validation: Use chronological logic to distinguish act numbers from intertitle numbers. Acts follow a strict sequence (1. Akt -> 2. Akt -> 3. Akt). If a section starts with "2." after "1. Akt" has ended, treat "2." as the header for "2. Akt", not as an individual intertitle index.
-   - Page Continuation: If titles appear at the top of a page without an explicit header, look ahead to closing markers (e.g., "Ende des 2. Aktes") or check the previous context to infer the active act.
-   - Fallback: If no act number can be determined anywhere on the document, default to "1. Akt".
+   - Page Continuation & Cross-Page Logic: If intertitles start at the top of the page without an explicit Act header, check if an explicit closing marker (e.g., "Ende des 1. Aktes") appears later on the page to deduce the act. 
+   - Fallback (STRICT): If no act header or ending marker is visible on the current page to verify the act number, DO NOT GUESS OR INVENT AN ACT NUMBER. Set "act_label": "Fortsetzung"
 
 SCHEMA MAPPING:
 - Write the exact page text into the "transcription" key.
