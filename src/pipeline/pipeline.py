@@ -8,6 +8,8 @@ from dotenv import load_dotenv
 import requests
 from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_exponential
 
+from helpers import encode_image_b64, get_sorted_images, load_json, save_json
+
 load_dotenv()
 
 # path configuration
@@ -43,38 +45,24 @@ TEMPERATURE= 1.0 # standardized sampling configuration # TEMPERATURE = 0.1 # bei
 MAX_TOKENS = 262144 
 # FREQUENCY_PENALTY = 0.1 #1.2 # Bestraft das Modell, wenn es dieselben Wörter oft wiederholt
 TIMEOUT_SECONDS = 600
-
-# encode image to base64
-def encode_image_b64(image_path: Path) -> str:
-    with open(image_path, "rb") as f:
-        return base64.b64encode(f.read()).decode()
     
 # load prompts, schemas and  few-shot
 PAGE_PROMPT = (PROMPT_DIR / "page_prompt.txt").read_text(encoding="utf-8")
 MERGE_PROMPT = (PROMPT_DIR / "merge_prompt.txt").read_text(encoding="utf-8")
-PAGE_SCHEMA = json.loads((PROMPT_DIR / "page_schema.json").read_text(encoding="utf-8"))
-MERGE_SCHEMA = json.loads((PROMPT_DIR / "merge_schema.json").read_text(encoding="utf-8"))
+PAGE_SCHEMA = load_json(PROMPT_DIR / "page_schema.json")
+MERGE_SCHEMA = load_json(PROMPT_DIR / "merge_schema.json")
 
 FS_OCR_INPUT_B64 = encode_image_b64(FEW_SHOTS_DIR / "few_shot_ocr_input.jpg")
 FS_OCR_OUTPUT_STR = json.dumps(
-    json.loads((FEW_SHOTS_DIR / "few_shot_ocr_output.json").read_text(encoding="utf-8")), 
+    load_json(FEW_SHOTS_DIR / "few_shot_ocr_output.json"), 
     ensure_ascii=False
 )
 
 FS2_OCR_INPUT_B64 = encode_image_b64(FEW_SHOTS_DIR / "few_shot_ocr_input2.jpg")
-FS2_OCR_OUTPUT_STR = json.dumps(
-    json.loads((FEW_SHOTS_DIR / "few_shot_ocr_output2.json").read_text(encoding="utf-8")), 
-    ensure_ascii=False
-)
+FS2_OCR_OUTPUT_STR = json.dumps(load_json(FEW_SHOTS_DIR / "few_shot_ocr_output2.json"), ensure_ascii=False)
 
-FS_MERGE_INPUT_STR = json.dumps(
-    json.loads((FEW_SHOTS_DIR / "few_shot_merge_input.json").read_text(encoding="utf-8")), 
-    ensure_ascii=False, separators=(',', ':')
-)
-FS_MERGE_OUTPUT_STR = json.dumps(
-    json.loads((FEW_SHOTS_DIR / "few_shot_merge_output.json").read_text(encoding="utf-8")), 
-    ensure_ascii=False, separators=(',', ':')
-)
+FS_MERGE_INPUT_STR = json.dumps(load_json(FEW_SHOTS_DIR / "few_shot_merge_input.json"), ensure_ascii=False, separators=(',', ':'))
+FS_MERGE_OUTPUT_STR = json.dumps(load_json(FEW_SHOTS_DIR / "few_shot_merge_output.json"), ensure_ascii=False, separators=(',', ':'))
 
 # coordinates the entire pipeline by iterating through all document directories
 def main():
@@ -124,8 +112,7 @@ def process_document_directory(doc_dir: Path):
         # load from cache if exists
         if page_cache_file.exists():
             try:
-                with open(page_cache_file, "r", encoding="utf-8") as f:
-                    page_result = json.load(f)
+                page_result = load_json(page_cache_file)
                 page_results.append(page_result)
                 continue
             except json.JSONDecodeError:
@@ -137,14 +124,11 @@ def process_document_directory(doc_dir: Path):
             logging.error("dauerhafter fehler bei seite %d (%s): %s", i, image_file.name, e)
             page_result = {"_page": i, "_filename": image_file.name, "_error": str(e)}
 
-        with open(page_cache_file, "w", encoding="utf-8") as f:
-            json.dump(page_result, f, ensure_ascii=False, indent=2)
-
+        save_json(page_cache_file, page_result)
         page_results.append(page_result)
 
     intermediate_file = OCR_OUTPUT_DIR / f"{doc_dir.name}_ocr.json"
-    with open(intermediate_file, "w", encoding="utf-8") as f:
-        json.dump(page_results, f, ensure_ascii=False, indent=2)
+    save_json(intermediate_file, page_results)
 
     # filter failed pages before merge
     valid_pages = [page for page in page_results if "_error" not in page]
@@ -154,8 +138,7 @@ def process_document_directory(doc_dir: Path):
     
     try:
         merged = merge_pages(valid_pages, doc_dir.name)
-        with open(final_file, "w", encoding="utf-8") as f:
-            json.dump(merged, f, ensure_ascii=False, indent=2)
+        save_json(final_file, merged)
         logging.info("erfolgreich abgeschlossen: %s", final_file)
     except Exception as e:
         logging.error("fehler beim zusammenführen von %s: %s", doc_dir.name, e)
@@ -222,7 +205,7 @@ def merge_pages(page_results: list[dict], doc_name: str) -> dict:
         cleaned_pages.append(page_copy)
 
     # dynamically adjust merge schema to exclude intertitle form output generation
-    trimmed_merge_schema = json.loads(json.dumps(MERGE_SCHEMA))
+    trimmed_merge_schema = load_json(PROMPT_DIR / "merge_schema.json")
     schema_props = trimmed_merge_schema.get("schema", {}).get("properties", {})
     if "intertitles" in schema_props:
         del schema_props["intertitles"]
@@ -254,23 +237,6 @@ def merge_pages(page_results: list[dict], doc_name: str) -> dict:
 
     return merged_result
 
-
-# retrieves all image files from a specific directory in natural alphanumerical order
-def get_sorted_images(dir_path: Path) -> list[Path]:
-    # search every image in a folder and sort
-    extensions = ("*.jpg", "*.jpeg", "*.png")
-    images = []
-    for ext in extensions:
-        images.extend(dir_path.glob(ext))
-    
-    # sort
-    def natural_sort_key(path: Path):
-        return [
-            int(text) if text.isdigit() else text.lower()
-            for text in re.split(r"(\d+)", path.name)
-        ]
-
-    return sorted(images, key=natural_sort_key)
 # retry policy: up to 5 retries with exponential backoff for network/http errors
 @retry(
     reraise=True,
