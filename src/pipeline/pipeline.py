@@ -1,10 +1,12 @@
 import base64
 import json
-import requests
+import logging
 import os
 import re
 from pathlib import Path
 from dotenv import load_dotenv
+import requests
+from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_exponential
 
 load_dotenv()
 
@@ -20,13 +22,24 @@ DATA_BASE_DIR = Path(os.getenv("DATA_BASE_DIR"))
 IMAGE_DIR = DATA_BASE_DIR / "R_9346-I_Zulassungskarten"
 OCR_OUTPUT_DIR = DATA_BASE_DIR / "02_ocr"
 PROCESSED_OUTPUT_DIR = DATA_BASE_DIR/ "03_processed"
+LOG_DIR = SCRIPT_DIR / "logs"
+
+# setup logging
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.FileHandler(LOG_DIR / "pipeline.log", encoding="utf-8"),
+        logging.StreamHandler()
+    ]
+)
 
 # api parameters
 API_URL = os.getenv("API_URL")
 API_KEY = os.getenv("API_KEY", "fallback")
 MODEL = "google/gemma-4-12b"
-# TEMPERATURE = 0.1 # bei 0 hängt das Modell im LOOP
-TEMPERATURE= 1.0 # standardized sampling configuration
+TEMPERATURE= 1.0 # standardized sampling configuration # TEMPERATURE = 0.1 # bei 0 hängt das Modell im LOOP
 MAX_TOKENS = 262144 
 # FREQUENCY_PENALTY = 0.1 #1.2 # Bestraft das Modell, wenn es dieselben Wörter oft wiederholt
 TIMEOUT_SECONDS = 600
@@ -36,7 +49,7 @@ def encode_image_b64(image_path: Path) -> str:
     with open(image_path, "rb") as f:
         return base64.b64encode(f.read()).decode()
     
-# load prompts, schemas and pre-compute few-shot strings
+# load prompts, schemas and  few-shot
 PAGE_PROMPT = (PROMPT_DIR / "page_prompt.txt").read_text(encoding="utf-8")
 MERGE_PROMPT = (PROMPT_DIR / "merge_prompt.txt").read_text(encoding="utf-8")
 PAGE_SCHEMA = json.loads((PROMPT_DIR / "page_schema.json").read_text(encoding="utf-8"))
@@ -70,16 +83,16 @@ def main():
         directory.mkdir(parents=True, exist_ok=True)
 
     if not IMAGE_DIR.exists() or not IMAGE_DIR.is_dir():
-        print(f"[WARNING] Hauptverzeichnis {IMAGE_DIR} existiert nicht.")
+        logging.warning("hauptverzeichnis %s exisiert nicht", IMAGE_DIR)
         return
     
     doc_directories = sorted([d for d in IMAGE_DIR.iterdir() if d.is_dir()])
 
     if not doc_directories:
-        print(f"[WARNING] Keine Dokumenteordner in {IMAGE_DIR} gefunden.")
+        logging.warning("keine dokumentenordner in %s gefunden", IMAGE_DIR)
         return
     
-    print(f"[INFO] {len(doc_directories)} Dokumentenordner gefunden.")
+    logging.info("%d dokumentenordner gefunden", len(doc_directories))
 
     # Pipeline for every Folder
     for doc_dir in doc_directories:
@@ -88,55 +101,72 @@ def main():
 
 # processes a single document folder: extracts data from all pages, merges them, and exports the results
 def process_document_directory(doc_dir: Path):
-    print(f"[INFO] Starte Verarbeitung für Dokument: {doc_dir.name}")
+    final_file = PROCESSED_OUTPUT_DIR / f"{doc_dir.name}_processed.json"
+    doc_ocr_dir = OCR_OUTPUT_DIR / doc_dir.name
+    doc_ocr_dir.mkdir(parents=True, exist_ok=True)
+
+    if final_file.exists():
+        logging.info("%s bereits verarbeitet, überspringe", doc_dir.name)
+        return
+
+    logging.info("starte verarbeitung für ordner: %s", doc_dir.name)
     image_files = get_sorted_images(doc_dir)
 
     if not image_files:
-        print(f"[WARNING] Keine Bilder in {doc_dir.name} gefunden. Überspringe.")
+        logging.warning("keine bilder in %s gefunden", doc_dir.name)
         return
     
-    print(f"[INFO] {len(image_files)} Bild(er) in {doc_dir.name} gefunden. Starte OCR...")
     page_results = []
 
     for i, image_file in enumerate(image_files, start=1):
+        page_cache_file = doc_ocr_dir / f"page_{i}_{image_file.stem}.json"
+
+        # load from cache if exists
+        if page_cache_file.exists():
+            try:
+                with open(page_cache_file, "r", encoding="utf-8") as f:
+                    page_result = json.load(f)
+                page_results.append(page_result)
+                continue
+            except json.JSONDecodeError:
+                logging.warning("defekter cache für %s, verarbeite neu", page_cache_file.name)
+
         try:
             page_result = process_page(image_file, i)
-            page_results.append(page_result)
-        except requests.exceptions.RequestException as e:
-            print(f"[FEHLER] Fehler bei Seite {i} ({image_file.name}): {e}")
-            page_results.append({"_page": i, "_filename": image_file.name, "_error": str(e)})
+        except Exception as e:
+            logging.error("dauerhafter fehler bei seite %d (%s): %s", i, image_file.name, e)
+            page_result = {"_page": i, "_filename": image_file.name, "_error": str(e)}
+
+        with open(page_cache_file, "w", encoding="utf-8") as f:
+            json.dump(page_result, f, ensure_ascii=False, indent=2)
+
+        page_results.append(page_result)
 
     intermediate_file = OCR_OUTPUT_DIR / f"{doc_dir.name}_ocr.json"
-    final_file = PROCESSED_OUTPUT_DIR/ f"{doc_dir.name}_processed.json"
-
     with open(intermediate_file, "w", encoding="utf-8") as f:
         json.dump(page_results, f, ensure_ascii=False, indent=2)
 
     # filter failed pages before merge
     valid_pages = [page for page in page_results if "_error" not in page]
-
     if not valid_pages:
-        print(f"[FEHLER] Keine validen Seiten für {doc_dir.name} gefunden. Abbruch.")
+        logging.error("keine validen seiten für %s. abbruch des merges", doc_dir.name)
         return
     
     try:
         merged = merge_pages(valid_pages, doc_dir.name)
-    except requests.exceptions.RequestException as e:
-        print(f"[FEHLER] Fehler beim Zusammenführen von {doc_dir.name}: \n{e}")
-        return
-    
-    with open(final_file, "w", encoding="utf-8") as f:
-        json.dump(merged, f, ensure_ascii=False, indent=2)
-
-    print(f"[INFO] Fertig. Ergebnis gespeichert in {final_file}\n")
+        with open(final_file, "w", encoding="utf-8") as f:
+            json.dump(merged, f, ensure_ascii=False, indent=2)
+        logging.info("erfolgreich abgeschlossen: %s", final_file)
+    except Exception as e:
+        logging.error("fehler beim zusammenführen von %s: %s", doc_dir.name, e)
 
 
 # process page to dict and inject few-shots
 def process_page(image_path: Path, page_number: int) -> dict:
-    print(f"[INFO] Verarbeite Seite {page_number}: {image_path.name}")
+    logging.info("verarbeite seite %d: %s", page_number, image_path.name)
+    b64 = encode_image_b64(image_path)
 
     # prepare main content
-    b64 = encode_image_b64(image_path)
     content = [
         {"type": "text", "text": PAGE_PROMPT},
         {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{b64}"}}
@@ -179,7 +209,7 @@ def process_page(image_path: Path, page_number: int) -> dict:
 
 # consolidates pages to a single coument structure
 def merge_pages(page_results: list[dict], doc_name: str) -> dict:
-    print(f"[INFO] Führe alle Seiten zu einem Dokument zusammen: {doc_name}")
+    logging.info("zusammenführung gestartet: %s", doc_name)
 
     all_intertitles = []
     cleaned_pages = []
@@ -241,8 +271,13 @@ def get_sorted_images(dir_path: Path) -> list[Path]:
         ]
 
     return sorted(images, key=natural_sort_key)
-
-
+# retry policy: up to 5 retries with exponential backoff for network/http errors
+@retry(
+    reraise=True,
+    stop=stop_after_attempt(5),
+    wait=wait_exponential(multiplier=2, min=5, max=60),
+    retry=retry_if_exception_type((requests.exceptions.RequestException, json.JSONDecodeError))
+)
 # executes the api call to the LLM
 # suuports optional few-shot examples via messages array
 def call_model(content, schema, few_shots=None) -> dict:
@@ -274,24 +309,14 @@ def call_model(content, schema, few_shots=None) -> dict:
         json=payload,
         timeout=TIMEOUT_SECONDS
     )
+
     if not response.ok:
         raise requests.exceptions.RequestException(f"API Error {response.status_code}: {response.text}")
     response.raise_for_status()
 
     # parse response and check termination reason
-    response_json = response.json()
-    finish_reason = response_json["choices"][0].get("finish_reason")
-    print(f"[INFO] Finish Reason: {finish_reason}")
-
     raw_text = response.json()["choices"][0]["message"]["content"]
-    try: 
-        return json.loads(raw_text)
-    except json.JSONDecodeError as e:
-        print(f"\n[FEHLER] Fehler beim JSON Parsing: {e} \nRohe LLM-Antwort (Länge: {len(raw_text)} Zeichen):\n{raw_text}\n")
-        
-        # Pragmatischer Fallback: Gib ein Dict mit Error-Flag zurück, 
-        # damit der Prozess nicht komplett stirbt, sondern diese Seite überspringt.
-        return {"_error": f"JSONDecodeError: LLM lieferte defektes JSON. Raw: {raw_text}"}
+    return json.loads(raw_text)
 
 # script execution
 if __name__ == "__main__":
