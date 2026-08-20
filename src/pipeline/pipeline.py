@@ -53,10 +53,7 @@ PAGE_SCHEMA = load_json(PROMPT_DIR / "page_schema.json")
 MERGE_SCHEMA = load_json(PROMPT_DIR / "merge_schema.json")
 
 FS_OCR_INPUT_B64 = encode_image_b64(FEW_SHOTS_DIR / "few_shot_ocr_input.jpg")
-FS_OCR_OUTPUT_STR = json.dumps(
-    load_json(FEW_SHOTS_DIR / "few_shot_ocr_output.json"), 
-    ensure_ascii=False
-)
+FS_OCR_OUTPUT_STR = json.dumps(load_json(FEW_SHOTS_DIR / "few_shot_ocr_output.json"), ensure_ascii=False)
 
 FS2_OCR_INPUT_B64 = encode_image_b64(FEW_SHOTS_DIR / "few_shot_ocr_input2.jpg")
 FS2_OCR_OUTPUT_STR = json.dumps(load_json(FEW_SHOTS_DIR / "few_shot_ocr_output2.json"), ensure_ascii=False)
@@ -237,6 +234,7 @@ def merge_pages(page_results: list[dict], doc_name: str) -> dict:
 
     return merged_result
 
+# executes the api call to the LLM
 # retry policy: up to 5 retries with exponential backoff for network/http errors
 @retry(
     reraise=True,
@@ -244,8 +242,6 @@ def merge_pages(page_results: list[dict], doc_name: str) -> dict:
     wait=wait_exponential(multiplier=2, min=5, max=60),
     retry=retry_if_exception_type((requests.exceptions.RequestException, json.JSONDecodeError))
 )
-# executes the api call to the LLM
-# suuports optional few-shot examples via messages array
 def call_model(content, schema, few_shots=None) -> dict:
     messages = []
 
