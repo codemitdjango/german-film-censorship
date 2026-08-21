@@ -2,7 +2,9 @@ import json
 import logging
 import mimetypes
 import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
+from threading import Lock
 
 from google import genai
 from google.genai import errors, types
@@ -52,6 +54,7 @@ API_KEY = os.getenv("GEMINI_API_KEY")
 MODEL = os.getenv("GEMINI_MODEL")
 
 client = None
+client_lock = Lock()
 
 # load prompts, schemas and few-shot data
 PAGE_PROMPT = (PROMPT_DIR / "page_prompt.txt").read_text(encoding="utf-8")
@@ -109,7 +112,8 @@ def process_document_directory(doc_dir: Path):
         logging.warning("keine bilder in %s gefunden", doc_dir.name)
         return
     
-    page_results = []
+    page_results = [None] * len(image_files)
+    pending_pages = []
 
     for i, image_file in enumerate(image_files, start=1):
         page_cache_file = doc_ocr_dir / f"page_{i}_{image_file.stem}.json"
@@ -118,19 +122,48 @@ def process_document_directory(doc_dir: Path):
         if page_cache_file.exists():
             try:
                 page_result = load_json(page_cache_file)
-                page_results.append(page_result)
+                page_results[i - 1] = page_result
                 continue
             except json.JSONDecodeError:
                 logging.warning("defekter cache für %s, verarbeite neu", page_cache_file.name)
 
-        try:
-            page_result = process_page(image_file, i)
-        except Exception as e:
-            logging.error("dauerhafter fehler bei seite %d (%s): %s", i, image_file.name, e)
-            page_result = {"_page": i, "_filename": image_file.name, "_error": str(e)}
+        pending_pages.append((i, image_file, page_cache_file))
 
-        save_json(page_cache_file, page_result)
-        page_results.append(page_result)
+    if pending_pages:
+        logging.info("starte %d seitenanfragen parallel", len(pending_pages))
+        with ThreadPoolExecutor(
+            max_workers=len(pending_pages),
+            thread_name_prefix="page"
+        ) as executor:
+            futures = {
+                executor.submit(process_page, image_file, page_number): (
+                    page_number,
+                    image_file,
+                    page_cache_file,
+                )
+                for page_number, image_file, page_cache_file in pending_pages
+            }
+
+            # Futures complete out of order, but results are stored by page index.
+            for future in as_completed(futures):
+                page_number, image_file, page_cache_file = futures[future]
+                try:
+                    page_result = future.result()
+                except Exception as e:
+                    logging.error(
+                        "dauerhafter fehler bei seite %d (%s): %s",
+                        page_number,
+                        image_file.name,
+                        e,
+                    )
+                    page_result = {
+                        "_page": page_number,
+                        "_filename": image_file.name,
+                        "_error": str(e),
+                    }
+
+                save_json(page_cache_file, page_result)
+                page_results[page_number - 1] = page_result
 
     intermediate_file = OCR_OUTPUT_DIR / f"{doc_dir.name}_ocr.json"
     save_json(intermediate_file, page_results)
@@ -258,11 +291,13 @@ def _get_client() -> genai.Client:
     global client
 
     if client is None:
-        if not API_KEY or API_KEY == "your_api_key_here":
-            raise RuntimeError(
-                "GEMINI_API_KEY is not configured; set it in .env"
-            )
-        client = genai.Client(api_key=API_KEY)
+        with client_lock:
+            if client is None:
+                if not API_KEY or API_KEY == "your_api_key_here":
+                    raise RuntimeError(
+                        "GEMINI_API_KEY is not configured; set it in .env"
+                    )
+                client = genai.Client(api_key=API_KEY)
 
     return client
 
