@@ -1,0 +1,49 @@
+{
+  "pruef_nr": "349",
+  "stempel_druck": null,
+  "ursprungs_firma": "Projektion A. G. Union",
+  "titel_des_bildes": "Schweinelei.",
+  "beschreibung": null,
+  "hergestellt_von": null,
+  "spielleitung": null,
+  "photographie": null,
+  "architektur": null,
+  "personenverzeichnis": [],
+  "inhalt": [
+    {
+      "akt_bezeichnung": "1.",
+      "text": "Reine Liebe."
+    },
+    {
+      "akt_bezeichnung": "2.",
+      "text": "Ein Dackel liebte eine Sau\ndund wollte sie zur Ehefrau,"
+    },
+    {
+      "akt_bezeichnung": "3.",
+      "text": "Und diese Sau ihn ungerührt,\nfand diese Liebe voller Neig."
+    },
+    {
+      "akt_bezeichnung": "4.",
+      "text": "Und der Erfolg von diesem Bunde\nsieben junge Schweinehunde."
+    },
+    {
+      "akt_bezeichnung": "5.",
+      "text": "Der heringsbühniger."
+    },
+    {
+      "akt_bezeichnung": "6.",
+      "text": "Metamorphose."
+    }
+  ],
+  "ausschnittnote": null,
+  "laengenangaben": {
+    "einzelakte": [],
+    "gesamtlaenge": "88 m"
+  },
+  "pruefbescheid": {
+    "filmpruefstelle": "Berlin",
+    "ort": "Berlin",
+    "datum": "7. September 1920",
+    "entscheidungstext": "Der Bildstreifen wird zur öffentlichen Vorführung\ndeutscher Reihe, auch vor Jugendfilmen, zugelassen."
+  }
+}

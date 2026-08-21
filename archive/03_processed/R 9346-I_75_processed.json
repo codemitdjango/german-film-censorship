@@ -1,0 +1,33 @@
+{
+  "pruef_nr": "412",
+  "stempel_druck": "[Stempel: Zulassungskarten für Bilderfilme sind öffentlich. Urkunden im Sinne des\n§ 267 Reichs-Strafgesetzbuchs. Ohne amtlichen Stempel sind sie ungültig.\nVerwendungen dürfen nur von der Film-Prüfstelle vorgenommen werden.]",
+  "ursprungs_firma": "Berlin W 9, Köthener Strasse 1-4",
+  "titel_des_bildes": "Der Greenumb.",
+  "beschreibung": null,
+  "hergestellt_von": null,
+  "spielleitung": null,
+  "photographie": null,
+  "architektur": null,
+  "personenverzeichnis": [],
+  "inhalt": [
+    {
+      "akt_bezeichnung": "",
+      "text": ""
+    },
+    {
+      "akt_bezeichnung": "",
+      "text": ""
+    }
+  ],
+  "ausschnittnote": null,
+  "laengenangaben": {
+    "einzelakte": [],
+    "gesamtlaenge": "},enfernt: \"260 m\""
+  },
+  "pruefbescheid": {
+    "filmpruefstelle": "Berlin",
+    "ort": null,
+    "datum": "11. September 1920",
+    "entscheidungstext": "Der Bildstreifen wird zur öffentlichen Vorführung im\nDeutschen Reiche, auch vor Jugendlichen, zugelassen."
+  }
+}

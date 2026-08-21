@@ -1,0 +1,123 @@
+{
+  "pruef_nr": "178",
+  "stempel_druck": "Zensur-Abteilung, Filmprüfungsstelle Berlin",
+  "ursprungs_firma": "Decla-Bioscop-Akt.-Ges.",
+  "titel_des_bildes": "Morel, der Meister der Kette.",
+  "beschreibung": "",
+  "hergestellt_von": null,
+  "spielleitung": null,
+  "photographie": null,
+  "architektur": null,
+  "personenverzeichnis": [
+    {
+      "rolle": "Der Herzog von Villefeur",
+      "darsteller": "Hans Schreiber"
+    },
+    {
+      "rolle": "Clotilde, seine Tochter",
+      "darsteller": "Rosa Werner"
+    },
+    {
+      "rolle": "Baron Boudet",
+      "darsteller": "Karl Göh[unsicher: h]"
+    },
+    {
+      "rolle": "Der Polizeipräsert von Paris",
+      "darsteller": "Viktor Hochberg"
+    },
+    {
+      "rolle": "Promise, seine Räche.",
+      "darsteller": "Annie Dittrich"
+    },
+    {
+      "rolle": "Jacques Morel, der Meister der \"Kette\"",
+      "darsteller": "Louis Ralph"
+    },
+    {
+      "rolle": "Lord de Montagnard",
+      "darsteller": "Rudolf Forster"
+    },
+    {
+      "rolle": "Celle",
+      "darsteller": "Marietta Palitz[unsicher: h]"
+    },
+    {
+      "rolle": "Der Polizeikommissar Piérat",
+      "darsteller": "Hugo Werner-Raske"
+    },
+    {
+      "rolle": "Hydie, seine Tochter",
+      "darsteller": "Mihli Berger"
+    },
+    {
+      "rolle": "Brüntille, Detektiv",
+      "darsteller": "Karl Gillinger"
+    },
+    {
+      "rolle": "Porten",
+      "darsteller": "Wilhelm Leicht"
+    }
+  ],
+  "inhalt": [
+    {
+      "akt_bezeichnung": null,
+      "text": ""
+    },
+    {
+      "akt_bezeichnung": "",
+      "text": ""
+    },
+    {
+      "akt_bezeichnung": "",
+      "text": ""
+    },
+    {
+      "akt_bezeichnung": "",
+      "text": ""
+    },
+    {
+      "akt_bezeichnung": "",
+      "text": ""
+    }
+  ],
+  "ausschnittnote": "1. Zwei Abschniitte aus dem Leben eines Abenteuerers.\r\n2. Nach dem Roman Glanz und Blend der Courtisanen.\r\nVon [unsicher: Georges] de Balzac.",
+  "laengenangaben": {
+    "einzelakte": [
+      {
+        "akt_nummer": "I",
+        "laenge": "380 m"
+      },
+      {
+        "akt_nummer": "II",
+        "laenge": "977 m"
+      },
+      {
+        "akt_nummer": "III",
+        "laenge": "298 m"
+      },
+      {
+        "akt_nummer": "IV",
+        "laenge": "340 m"
+      },
+      {
+        "akt_nummer": "V",
+        "laenge": "358 m"
+      },
+      {
+        "akt_nummer": "VI",
+        "laenge": "378 m"
+      },
+      {
+        "akt_nummer": "VII",
+        "laenge": "305 m nach Kürzung 295,60 m"
+      }
+    ],
+    "gesamtlaenge": null
+  },
+  "pruefbescheid": {
+    "filmpruefstelle": "Berlin",
+    "ort": "Berlin",
+    "datum": "8. August 1920",
+    "entscheidungstext": "Der Bildstreifen wird zur öffentlichen Vorführung im Deutschen Reiche zugelassen, darf jedoch vor Jugendlichen nicht vorgeführt werden.\n\nFolgende Seite sind verboten:\nmit 7. 1. Tie Szene nach Titel 15: Der Baron küßt sich vor dem Reinerzypus mannt und preüßert. 4 Meter.  2 Nach Titel 17: Der Baron und das Kammermädchen stehen je an einer Seite des Vorhanges, durch den Schluß des Vorhanges sieht man eine Frauenspektion mit stark entblößten Brüsten. Die Zoje prüft- voll; nach Titel 18 ist ebenfalls zu entfernen. und der Baron betritt freudelustigend das Gemach. 4 Meter.  3. Große Frontaufnahme und darauf folgende regelmäßige Szene: Der Baron allein mit dem sehr dürfig bekleideten Mädchen bis Titel: Ich bin betrogen . . 1,5 Meter."
+  }
+}

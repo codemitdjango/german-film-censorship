@@ -1,0 +1,90 @@
+{
+  "pruef_nr": "350",
+  "stempel_druck": null,
+  "ursprungs_firma": "Projektion A. G. Union",
+  "titel_des_bildes": "Der Zauberer.",
+  "beschreibung": null,
+  "hergestellt_von": null,
+  "spielleitung": null,
+  "photographie": null,
+  "architektur": null,
+  "personenverzeichnis": [
+    {
+      "rolle": "1. Die Wunderblume",
+      "darsteller": null
+    },
+    {
+      "rolle": "2. Die Zauberwand",
+      "darsteller": null
+    },
+    {
+      "rolle": "3. Das verzauberte Musikfilm",
+      "darsteller": null
+    },
+    {
+      "rolle": "4. Modenschau",
+      "darsteller": null
+    },
+    {
+      "rolle": "5. Die fliegenden Köpfe",
+      "darsteller": null
+    },
+    {
+      "rolle": "6. Die tolle Reise",
+      "darsteller": null
+    },
+    {
+      "rolle": "7. Die magische Bilz.",
+      "darsteller": null
+    },
+    {
+      "rolle": "8. Verjüngungstrunk",
+      "darsteller": null
+    }
+  ],
+  "inhalt": [
+    {
+      "akt_bezeichnung": "1. Die Wunderblume",
+      "text": "Die Wunderblume"
+    },
+    {
+      "akt_bezeichnung": "2. Die Zauberwand",
+      "text": "Die Zauberwand"
+    },
+    {
+      "akt_bezeichnung": "3. Das verzauberte Musikfilm",
+      "text": "Das verzauberte Musikfilm"
+    },
+    {
+      "akt_bezeichnung": "4. Modenschau",
+      "text": "Modenschau"
+    },
+    {
+      "akt_bezeichnung": "5. Die fliegenden Köpfe",
+      "text": "Die fliegenden Köpfe"
+    },
+    {
+      "akt_bezeichnung": "6. Die tolle Reise",
+      "text": "Die tolle Reise"
+    },
+    {
+      "akt_bezeichnung": "7. Die magische Bilz.",
+      "text": "Die magische Bilz."
+    },
+    {
+      "akt_bezeichnung": "8. Verjüngungstrunk",
+      "text": "Verjüngungstrunk"
+    }
+  ],
+  "ausschnittnote": null,
+  "laengenangaben": {
+    "einzelakte": [],
+    "gesamtlaenge": "116 m"
+  },
+  "pruefbescheid": {
+    "filmpruefstelle": "Berlin",
+    "ort": "Berlin",
+    "datum": "7. September 1920",
+    "entscheidungstext": "Der Bildstreifen wird zur öffentlichen Vorführung im Deutschen Reiche, auch vor Jugendlichen, zugelassen."
+  }
+}

@@ -1,0 +1,147 @@
+{
+  "pruef_nr": "59",
+  "stempel_druck": null,
+  "ursprungs_firma": "Olympia-Film",
+  "titel_des_bildes": "Die Abenteuer der Marquise von Königsmart.",
+  "beschreibung": "",
+  "hergestellt_von": null,
+  "spielleitung": null,
+  "photographie": null,
+  "architektur": null,
+  "personenverzeichnis": [
+    {
+      "rolle": "Prinz Alexander",
+      "darsteller": ""
+    },
+    {
+      "rolle": "Egon, Graf Königsmart",
+      "darsteller": ""
+    },
+    {
+      "rolle": "Ael von Kroff",
+      "darsteller": ""
+    },
+    {
+      "rolle": "",
+      "darsteller": "John Rappoport (Kom. Haus)"
+    },
+    {
+      "rolle": "",
+      "darsteller": "Herhard Schroff (Al. Schaub-Haus)"
+    },
+    {
+      "rolle": "",
+      "darsteller": "Gustav Adolf Senler (Trianon-Theater)"
+    },
+    {
+      "rolle": "Graf Fahlen, Hornmarschall",
+      "darsteller": "Edgar Paulh (Metropol-Theater)"
+    },
+    {
+      "rolle": "Dora Markunska",
+      "darsteller": "Dagny Servaes"
+    },
+    {
+      "rolle": "Via von Ohra",
+      "darsteller": ""
+    },
+    {
+      "rolle": "",
+      "darsteller": null
+    },
+    {
+      "rolle": "",
+      "darsteller": null
+    },
+    {
+      "rolle": "",
+      "darsteller": null
+    },
+    {
+      "rolle": "Graf Arnoldin, Chef des Geheimkab.",
+      "darsteller": "Albert Parker (Südtheater)"
+    },
+    {
+      "rolle": "Bianca Foresti, Tänzerin",
+      "darsteller": "Violetta Heermann"
+    },
+    {
+      "rolle": "Robert, Wiener Großhansmark",
+      "darsteller": "William Huck (Goldküßchen)"
+    },
+    {
+      "rolle": "Egon, 8 jähriger Sohn Pius",
+      "darsteller": "Martin Herzberg"
+    },
+    {
+      "rolle": "",
+      "darsteller": null
+    },
+    {
+      "rolle": "",
+      "darsteller": null
+    }
+  ],
+  "inhalt": [
+    {
+      "akt_bezeichnung": "1. Akt",
+      "text": ""
+    },
+    {
+      "akt_bezeichnung": "2. Akt",
+      "text": ""
+    },
+    {
+      "akt_bezeichnung": "3. Akt",
+      "text": ""
+    },
+    {
+      "akt_bezeichnung": "4. Akt",
+      "text": ""
+    },
+    {
+      "akt_bezeichnung": "5. Akt",
+      "text": ""
+    },
+    {
+      "akt_bezeichnung": "6. Akt",
+      "text": ""
+    }
+  ],
+  "ausschnittnote": null,
+  "laengenangaben": {
+    "einzelakte": [
+      {
+        "akt_nummer": "",
+        "laenge": ""
+      },
+      {
+        "akt_nummer": "",
+        "laenge": ""
+      },
+      {
+        "akt_nummer": "",
+        "laenge": ""
+      },
+      {
+        "akt_nummer": "",
+        "laenge": ""
+      },
+      {
+        "akt_nummer": "",
+        "laenge": ""
+      },
+      {
+        "akt_nummer": "",
+        "laenge": ""
+      }
+    ],
+    "gesamtlaenge": "1955m"
+  },
+  "pruefbescheid": {
+    "filmpruefstelle": "Film-Prüfstelle Berlin",
+    "ort": "Berlin",
+    "datum": "30. Juni 1920",
+    "entscheidungstext": "Der Bildstreifen wird zur öffentlichen Vorführung im Deutschen Reiche zugelassen, darf jedoch vor Jugendlichen nicht vorgeführt werden."
+  }
+}

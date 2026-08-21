@@ -1,0 +1,41 @@
+{
+  "pruef_nr": "229",
+  "stempel_druck": "Zulassungs-Karten für Abibreitern sind öffentlich. Änderungen im Sinne des § 367 Reichs-Strafgesetzbuchs. Eine amtlichen Stempel sind sie ungültig. Änderungen dürfen nur von der Film-Prüfstelle vorgenommen werden.",
+  "ursprungs_firma": "Werbefilm G. m. b. H.",
+  "titel_des_bildes": "Hansi im Luftballon",
+  "beschreibung": null,
+  "hergestellt_von": null,
+  "spielleitung": null,
+  "photographie": null,
+  "architektur": null,
+  "personenverzeichnis": [],
+  "inhalt": [
+    {
+      "akt_bezeichnung": "1.",
+      "text": "Der Müherhans bekannt im Land,\nFliegt munter hier am Ostsee-Strand."
+    },
+    {
+      "akt_bezeichnung": "2.",
+      "text": "Die Sonne brennt, das Gas entweicht,\nDie Mondnacht durch die Wellen streift."
+    },
+    {
+      "akt_bezeichnung": "3.",
+      "text": "Der Müher-Hans, spielt im Sport,\nTrinkt den Rakus über Nord."
+    },
+    {
+      "akt_bezeichnung": "4.",
+      "text": "Von Goldberg bis nach Bing auf Mügen,\nTrinkt man Rakus mit Bergkrügen."
+    }
+  ],
+  "ausschnittnote": null,
+  "laengenangaben": {
+    "einzelakte": [],
+    "gesamtlaenge": "66 m"
+  },
+  "pruefbescheid": {
+    "filmpruefstelle": "Berlin",
+    "ort": "Berlin",
+    "datum": "4. August 1920",
+    "entscheidungstext": "Der Abibreiten wird zur öffentlichen Vorführung im Deutschen Reiche, auch vor Jugendlichen, zugelassen."
+  }
+}

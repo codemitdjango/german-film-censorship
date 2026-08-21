@@ -1,0 +1,83 @@
+{
+  "pruef_nr": "83",
+  "stempel_druck": null,
+  "ursprungs_firma": "Tannera-Film G. m. b. H.",
+  "titel_des_bildes": "Cora, das Kaiserinnenmädel.",
+  "beschreibung": null,
+  "hergestellt_von": null,
+  "spielleitung": null,
+  "photographie": "Hans K. Müller",
+  "architektur": null,
+  "personenverzeichnis": [
+    {
+      "rolle": "Cora Gotti Hilling",
+      "darsteller": ""
+    },
+    {
+      "rolle": "",
+      "darsteller": ""
+    },
+    {
+      "rolle": "\nLona, ihre Schwester",
+      "darsteller": "Heddi Funk"
+    },
+    {
+      "rolle": "Maldow, Geigenspieler",
+      "darsteller": "Karl Müller"
+    },
+    {
+      "rolle": "",
+      "darsteller": ""
+    },
+    {
+      "rolle": "\nHardow, Agent",
+      "darsteller": "Fred Hardt"
+    }
+  ],
+  "inhalt": [
+    {
+      "akt_bezeichnung": "1. Akt.",
+      "text": "4 Wenn das meine Schwester würde . . . 5. Ich konnte es nicht mehr ansehen, wie er Sie im Jahr verdientes Geld betrog. 6. Es geht nicht - meine Schwester --- 7. Maldow ist vorwärts gekommen. 8. Meine Schwester ist mir so dankbar, weil ich sie aufgezogen habe. 9. Sie ist in einen Geigenspieler ver-titel! 10. Lena später kam und — 11. Lona, ich liebe Sie! — 12. Du kannst mich nicht verlassen, sonst verliere ich mein Wort! 13. Wenn Du fortläufst, muß der Geiger dran glauben! 14. -- und ich werde ihn doch so lieb - 15. Ende des 1. Aktes."
+    },
+    {
+      "akt_bezeichnung": "2. Akt.",
+      "text": "2. Wo ist die schöne Lona? 3. Lona, tanze uns vor . 4. Das hohe Leben steht mich ein, 5. Who is Lona? Sie hellt auf und werde ihr schon zeigen . -70., nun tanze, und sterben — sterben — 8. Wo ist die schöne Lona geblieben? Du Müller bist ihr doch nachgelaufen! 10. Ende des 2. Aktes."
+    },
+    {
+      "akt_bezeichnung": "3. Akt.",
+      "text": "2. Einige Wochen später, 3. Hörst Du, tausend Mart! [Durchgestrichen: Mart!] Schauen Sie das Engagement an, es wird Ihnen solches sobald nicht wieder geboten! 5. Tausend Markt .6. Endlich hat miche[unsicher]er doch durchgehungert! 7. Hohe, jetzt Deine Schenken! 8. Viel Glück! Machen Sie Lona nun glücklich, 9. Ich gehe jetzt, um ein neues Heim zu bauen! 10. Cito!- 11. Tot! 12. Ende des 3. Aktes."
+    },
+    {
+      "akt_bezeichnung": "4. Akt.",
+      "text": "2. Madlow und Lona sind glücklich verheiratet.\n[Durchgestrichen: [Stempel: ]] Tausend Markt, - 4. Liebling, ich muß schnell zur Wart, 3 Uhr wird sie entschlossen! 5. Diesmal eintrifft Du mir nicht, schöne Kate. 6. Ende."
+    }
+  ],
+  "ausschnittnote": null,
+  "laengenangaben": {
+    "einzelakte": [
+      {
+        "akt_nummer": "I",
+        "laenge": "253 m"
+      },
+      {
+        "akt_nummer": "II",
+        "laenge": "210 m"
+      },
+      {
+        "akt_nummer": "III",
+        "laenge": "218 m"
+      },
+      {
+        "akt_nummer": "IV",
+        "laenge": "300 m"
+      }
+    ],
+    "gesamtlaenge": "981 m"
+  },
+  "pruefbescheid": {
+    "filmpruefstelle": "Berlin",
+    "ort": null,
+    "datum": "7. Juli 1920",
+    "entscheidungstext": "Der Bildstreifen wird zur öffentlichen Vorführung im Deutschen Reich zugelassen, darf jedoch vor Jugendlichen nicht vorgeführt werden."
+  }
+}

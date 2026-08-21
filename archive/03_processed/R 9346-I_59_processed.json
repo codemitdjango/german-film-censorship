@@ -1,0 +1,86 @@
+{
+  "pruef_nr": "518",
+  "stempel_druck": "Zulassungs - Karten für Bilderstreifen sind öffentlich abzubenden im Sinne des § 267 Reichs-Strafgesetzbuchs. Ohne amtlichen Stempel sind sie ungültig. Kinderungen dürfen nur von der Film-Prüfstelle vorgenommen werden.",
+  "ursprungs_firma": "Projektions Akt.-Ges. \"Union\"",
+  "titel_des_bildes": "Filmseriene.",
+  "beschreibung": null,
+  "hergestellt_von": null,
+  "spielleitung": null,
+  "photographie": null,
+  "architektur": null,
+  "personenverzeichnis": [
+    {
+      "rolle": "Triers Kritikfilm",
+      "darsteller": "Walter Trier"
+    },
+    {
+      "rolle": "",
+      "darsteller": "Ed. S. Sieferer"
+    },
+    {
+      "rolle": null,
+      "darsteller": "Henry Porter"
+    },
+    {
+      "rolle": null,
+      "darsteller": "Henry als Kohlhufels Töchter."
+    },
+    {
+      "rolle": null,
+      "darsteller": "Ernst Lubitsch"
+    },
+    {
+      "rolle": null,
+      "darsteller": ""
+    },
+    {
+      "rolle": "",
+      "darsteller": ""
+    },
+    {
+      "rolle": "",
+      "darsteller": ""
+    },
+    {
+      "rolle": "",
+      "darsteller": "Hilbert Rassermann"
+    },
+    {
+      "rolle": null,
+      "darsteller": "Paul Wegener in seinen Masken."
+    }
+  ],
+  "inhalt": [
+    {
+      "akt_bezeichnung": "1.",
+      "text": ""
+    },
+    {
+      "akt_bezeichnung": "2.",
+      "text": ""
+    },
+    {
+      "akt_bezeichnung": null,
+      "text": null
+    },
+    {
+      "akt_bezeichnung": null,
+      "text": null
+    },
+    {
+      "akt_bezeichnung": null,
+      "text": null
+    }
+  ],
+  "ausschnittnote": "30 . Henry Porter,\r\n4. Henry als Kohlhufels\nTöchter., 5. Ernst Lubitsch,\r\n6. Die Herrin der Welt 1 Mia\nMay., 7. Il.\r\nDer gelbe und der schwarze Mann.\r\n8 Hilbert\nRassermann, 9. Paul Wegener in seinen Masken.",
+  "laengenangaben": {
+    "einzelakte": [],
+    "gesamtlaenge": "120 m"
+  },
+  "pruefbescheid": {
+    "filmpruefstelle": "Berlin",
+    "ort": "Berlin",
+    "datum": "30. August 1920",
+    "entscheidungstext": null
+  }
+}

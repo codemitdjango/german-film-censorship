@@ -1,0 +1,71 @@
+{
+  "pruef_nr": "253",
+  "stempel_druck": "Zulassungskarten für Bildstreifen sind offenz. erkunden im Sinne des § 267 Reichs-Straßengesetzes. Ohne amtlichen Stempel sind sie ungültig. Veränderungen dürfen nur von der Film-Prüfstelle vorgenommen werden.",
+  "ursprungs_firma": "Friedrichstr. 10",
+  "titel_des_bildes": "Das Glücksschwein.\nDrei lustige Akte von \"Uno\".",
+  "beschreibung": null,
+  "hergestellt_von": null,
+  "spielleitung": null,
+  "photographie": null,
+  "architektur": null,
+  "personenverzeichnis": [
+    {
+      "rolle": "Paul, der Sekretär des Schweinekönigs",
+      "darsteller": "Ethel Off"
+    },
+    {
+      "rolle": "Edel, die Schweineprinzessin",
+      "darsteller": "Josef Commer"
+    },
+    {
+      "rolle": "Joshua Hobbs, der Schweinenötling",
+      "darsteller": "Marua Köhler"
+    },
+    {
+      "rolle": "Euphrosyne, dessen Schwester",
+      "darsteller": "Ernst Wehmer"
+    },
+    {
+      "rolle": "Fritz [unleserlich] zwei Landstreicher",
+      "darsteller": "Paul Moiesca\n[Flac] Zwei Landstreicher"
+    }
+  ],
+  "inhalt": [
+    {
+      "akt_bezeichnung": "1. Akt",
+      "text": "33. Und -- hinein ins leibende Glück. Ende des I . Alles."
+    },
+    {
+      "akt_bezeichnung": "2. Akt",
+      "text": "38. Würden Sie bitte so gut sein, uns beide miteinander ehrlich zu verhindern. Ende des 2. Alles."
+    },
+    {
+      "akt_bezeichnung": "3.",
+      "text": null
+    }
+  ],
+  "ausschnittnote": "Akt 2 nach Titel 21 die Vergrößerung des mit einer Kette geschmückten Frauenbeins (2 Meter)",
+  "laengenangaben": {
+    "einzelakte": [
+      {
+        "akt_nummer": "I",
+        "laenge": "350 m"
+      },
+      {
+        "akt_nummer": "II",
+        "laenge": "365 m nach Kürzung 363,00 m"
+      },
+      {
+        "akt_nummer": "III",
+        "laenge": "222 m"
+      }
+    ],
+    "gesamtlaenge": "937 m nach Kürzung 935,00 m"
+  },
+  "pruefbescheid": {
+    "filmpruefstelle": "Berlin",
+    "ort": "Berlin",
+    "datum": "14. August 1920",
+    "entscheidungstext": "Der Bildstreifen wird zur öffentlichen Vorführung im Deutschen Reiche zugelassen, darf jedoch vor Jugendblicken nicht vorgeführt werden."
+  }
+}
