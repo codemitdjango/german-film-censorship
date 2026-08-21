@@ -1,28 +1,40 @@
 import json
 import logging
+import mimetypes
 import os
 from pathlib import Path
-from dotenv import load_dotenv
-from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_exponential
-from google import genai
-from google.genai import types
-from helpers import get_sorted_images, load_json, save_json
 
-load_dotenv()
+from google import genai
+from google.genai import errors, types
+from dotenv import load_dotenv
+from tenacity import retry, retry_if_exception, stop_after_attempt, wait_exponential
+from helpers import get_sorted_images, load_json, save_json
 
 # path configuration
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent.parent
 
+# Use the project's regular runtime configuration.
+load_dotenv(PROJECT_ROOT / ".env")
+
 PROMPT_DIR = SCRIPT_DIR / "prompts"
 FEW_SHOTS_DIR = SCRIPT_DIR / "few_shots"
 
 DATA_BASE_DIR = Path(os.getenv("DATA_BASE_DIR"))
+if not DATA_BASE_DIR.is_absolute():
+    DATA_BASE_DIR = PROJECT_ROOT / DATA_BASE_DIR
+DATA_BASE_DIR = DATA_BASE_DIR.resolve()
 
 IMAGE_DIR = DATA_BASE_DIR / "R_9346-I_Zulassungskarten"
 OCR_OUTPUT_DIR = DATA_BASE_DIR / "02_ocr"
 PROCESSED_OUTPUT_DIR = DATA_BASE_DIR / "03_processed"
 LOG_DIR = SCRIPT_DIR / "logs"
+
+# The repository may store raw images below data/01_raw when DATA_BASE_DIR
+# points at the project data directory.
+raw_image_dir = DATA_BASE_DIR / "01_raw" / "R_9346-I_Zulassungskarten"
+if not IMAGE_DIR.exists() and raw_image_dir.is_dir():
+    IMAGE_DIR = raw_image_dir
 
 # setup logging
 LOG_DIR.mkdir(parents=True, exist_ok=True)
@@ -37,11 +49,9 @@ logging.basicConfig(
 
 # api parameters and client initialization
 API_KEY = os.getenv("GEMINI_API_KEY")
-# MODEL = "gemma-4-26b-a4b-it"
-MODEL = "gemma-4-31b-it"
-TEMPERATURE = 1.0
+MODEL = os.getenv("GEMINI_MODEL")
 
-client = genai.Client(api_key=API_KEY)
+client = None
 
 # load prompts, schemas and few-shot data
 PAGE_PROMPT = (PROMPT_DIR / "page_prompt.txt").read_text(encoding="utf-8")
@@ -147,7 +157,10 @@ def process_page(image_path: Path, page_number: int) -> dict:
     # prepare main parts for current request
     content_parts = [
         types.Part.from_text(text=PAGE_PROMPT),
-        types.Part.from_bytes(data=image_bytes, mime_type="image/jpeg")
+        types.Part.from_bytes(
+            data=image_bytes,
+            mime_type=mimetypes.guess_type(image_path.name)[0] or "image/jpeg"
+        )
     ]
 
     # build few-shot conversation history
@@ -231,14 +244,41 @@ def merge_pages(page_results: list[dict], doc_name: str) -> dict:
     return merged_result
 
 
-# executes the api call to the LLM via official google-genai SDK
+# API errors caused by an invalid request, such as HTTP 400, must be surfaced
+# immediately instead of being retried five times.
+def _is_retryable(exc: BaseException) -> bool:
+    if isinstance(exc, errors.APIError):
+        return exc.code == 408 or exc.code == 429 or exc.code >= 500
+
+    # The SDK can expose transport errors directly depending on its HTTP backend.
+    return exc.__class__.__module__.split(".", 1)[0] in {"httpx", "httpcore"}
+
+
+def _get_client() -> genai.Client:
+    global client
+
+    if client is None:
+        if not API_KEY or API_KEY == "your_api_key_here":
+            raise RuntimeError(
+                "GEMINI_API_KEY is not configured; set it in .env"
+            )
+        client = genai.Client(api_key=API_KEY)
+
+    return client
+
+
+# executes the api call to the LLM via the official Google GenAI SDK
 @retry(
     reraise=True,
     stop=stop_after_attempt(5),
     wait=wait_exponential(multiplier=2, min=5, max=60),
-    retry=retry_if_exception_type(Exception)
+    retry=retry_if_exception(_is_retryable)
 )
-def call_model(content_parts: list[types.Part], schema: dict, few_shots: list[types.Content] = None) -> dict:
+def call_model(
+    content_parts: list[types.Part],
+    schema: dict,
+    few_shots: list[types.Content] | None = None
+) -> dict:
     contents = []
 
     # insert few-shots if provided
@@ -253,27 +293,21 @@ def call_model(content_parts: list[types.Part], schema: dict, few_shots: list[ty
         )
     )
 
-    # build content generation configuration
+    # merge_schema.json uses the OpenAI wrapper format; Google expects its inner
+    # JSON Schema. response_json_schema preserves nullable fields and unions.
+    response_json_schema = schema.get("schema", schema)
     generate_content_config = types.GenerateContentConfig(
-        temperature=TEMPERATURE,
+        temperature=1.0,
         top_p=0.95,
         top_k=64,
         response_mime_type="application/json",
-        response_schema=schema,
+        response_json_schema=response_json_schema,
         automatic_function_calling=types.AutomaticFunctionCallingConfig(
             disable=True
         ),
-        thinking_config=types.ThinkingConfig(
-            thinking_budget=0
-        ),
-        # thinking_config=types.ThinkingConfig(
-        #     # thinking_level="HIGH",
-        #     # thinking_level="LOW",
-        #     thinking_level="OFF",
-        # ),
     )
 
-    response = client.models.generate_content(
+    response = _get_client().models.generate_content(
         model=MODEL,
         contents=contents,
         config=generate_content_config
