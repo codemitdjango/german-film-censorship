@@ -1,0 +1,79 @@
+{
+  "pruef_nr": "527",
+  "stempel_druck": null,
+  "ursprungs_firma": "Ebert-Film G. m. b. H.",
+  "titel_des_bildes": "Nur ein Flimmerstern.",
+  "beschreibung": "",
+  "hergestellt_von": null,
+  "spielleitung": "Ingo Brandt",
+  "photographie": null,
+  "architektur": null,
+  "personenverzeichnis": [
+    {
+      "rolle": "Müller, Vorarbeiter in einer Fabrik.",
+      "darsteller": "Mar Mothes"
+    },
+    {
+      "rolle": "Marthild, seine Frau",
+      "darsteller": "Helene Boh"
+    },
+    {
+      "rolle": "Eva, beide Töchter",
+      "darsteller": "* * Eva Speier"
+    },
+    {
+      "rolle": "Dr. Fehrenberg",
+      "darsteller": "[unsicher: Ingo Brandt]"
+    },
+    {
+      "rolle": "Prof. Dr. Neuhardt",
+      "darsteller": "Gertli Peter"
+    }
+  ],
+  "inhalt": [
+    {
+      "akt_bezeichnung": "1.",
+      "text": "1. Wie steht's mit der Arbeit? 2. Leider müssen fellin im Konfektionshaus Hugo Hirsch, 30 Jahre eine Stelle für 30 - in unserer Filmstadt gef-reit geworden. 4., \"Eine Wolke flog zum Nicht.\" Sensationsfilm in 4 Akten. In der Hauptrolle: Marofika. [unsicher: Marofika].\n5. Wenn Sie Zeitungen lesen wollen, können wir Sie hier nicht brauchen. 6. Wollt Ihr machen das Jahr ins Atelier kommt!\" Es fitt zum Vergnießen! 7. Ende des 1. Aktes."
+    },
+    {
+      "akt_bezeichnung": "2.",
+      "text": "1. Sie Herrpferd — nie find' Sie da, wenn ich Sie brauche! Wo steckt bloß wieder die Marolle?\n2. Sie sollten mich ein wenig bringen, Sie Kanone! 3. Bitte, wir haben Ihre Perlenkette verloren.\n4. Dr. Fehrenberg: 4b - „_Ich möchte bitte.“ 5. Ich habe jetzt ein [Durchgestrichen: ] Kleine — kleine — . 6. Woher kennen wir uns doch, Kleine? 7. Ich komme wegen des Briefes für das rote Kreuz.\n8. Wir wollen Ihnen nur geben Sie eine Rolle übernehmen?\n9. Dommenfelder - reizend! 10. Nach der Aufnahme. 13 oder bekommt eine Rolle. 14 Können Sie die Rolle übernehmen?\n15. Ende des 2. Aktes."
+    },
+    {
+      "akt_bezeichnung": "3.",
+      "text": "1. Wenn Du doch [Durchgestrichen: ] nützlich wärst, o Freund, Garnüstitterei! 2. Ich komme ja viel zu spät ins Atelier.\n3. So [Durchgestrichen: ] ununterbrochene Nacht, die für mich fruchtig. 4. Truur Kulisse, das Abendrot. 5 Es ist angerichtet, Herr Doktor!\n6. Jetzt halte ich immer bei der Tür! 7. Eva Blum in dem Senfschauplatz . [Durchgestrichen: ] Warum zum Glück.\n8. Wollen wir hingehen? 9. Herr und Frau Professor geben fich die Ehre, Herrn Dr. Fehrenberg zu grüßen. 10 Sirene am 25. D. Mits.\neinspularen, u. W . w . g \n10 Ende des 3. Aktes."
+    },
+    {
+      "akt_bezeichnung": "4.",
+      "text": "1. Du würdig ausgekehrt? 2. Haben heute [Durchgestrichen: ] Sie Warum liegt Du mir nicht, daß Du Professor Weinhardts gehört? 4. Du hast also wieder Priorität? 5. Wer war die Dame, mit der Sie neulich sah? 6 Ach, nur ein Zimmersterben.\n7. Es liegt Ihnen ein Todesfall zu. 8. Am nächsten Morgen.\n9. Du bist meiner ja doch überrüsfig. — ich kehre dahin zurück, von wo ich gekommen bin. 10. Ich habe ihn doch da in Lied, Mutter!\n11. Gekommen unter solcher Stellung.\n13. Ich hätte eine Rolle für Sie! 14. Sie werden sich sehr schonen müssen, junge Mutter. 15 Seine . . . Want, fragten Sie? 16. Die Macht brach herein. 17. Am nächsten Morgen. 18. Eva . . .\n19. Armes Zimmermädchenehen_20._ Ende."
+    }
+  ],
+  "ausschnittnote": null,
+  "laengenangaben": {
+    "einzelakte": [
+      {
+        "akt_nummer": "I",
+        "laenge": "385 m"
+      },
+      {
+        "akt_nummer": "II",
+        "laenge": "285 m"
+      },
+      {
+        "akt_nummer": "III",
+        "laenge": "245 m"
+      },
+      {
+        "akt_nummer": "IV",
+        "laenge": "270 m"
+      }
+    ],
+    "gesamtlaenge": "1185 m"
+  },
+  "pruefbescheid": {
+    "filmpruefstelle": "Berlin",
+    "ort": null,
+    "datum": "2. Oktober 1920",
+    "entscheidungstext": "Der Bildstreifen wird zur öffentlichen Vorführung im Deutschen Reiche zugelassen, darf jedoch vor Jugendlichen nicht vorgeführt werden."
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "pruef_nr": "430",
+  "stempel_druck": "Zulassungs-Karten für Bilderzehen und Absend. Urkunden im Sinne des § 267 Reichs-Strafgesetzbuchs. Ohne . Abzug Stempel sind sie ungültig. Abänderungen dürfen nur mit Film-Prüfstelle vorgenommen werden.",
+  "ursprungs_firma": "Messner-Film G. m. b. H.",
+  "titel_des_bildes": "Ein schwaches Weib.",
+  "beschreibung": null,
+  "hergestellt_von": null,
+  "spielleitung": null,
+  "photographie": null,
+  "architektur": null,
+  "personenverzeichnis": [
+    {
+      "rolle": "Graf Holsen",
+      "darsteller": "Erich Kaiser-Litz"
+    },
+    {
+      "rolle": "Gaby",
+      "darsteller": "Erna Moreno"
+    }
+  ],
+  "inhalt": [
+    {
+      "akt_bezeichnung": "1. Akt",
+      "text": "1. Graf Holsen und seine Freundin Gaby. 2. Ein verhängnisvolle Bekanntschaft. 3. Gaby in ihrem Heim. 4. Was mögen Leben eigentlich hier? 5. Vin einem Gesellschaftsabend führt Gaby ihren Verheber als [unsicher: Ober?] Lenz ein. 6 . Graf Lenz.\n7 . Vorbereitungen zu einem Klassenkrieg. 8 . Ende des 1. Aktes."
+    },
+    {
+      "akt_bezeichnung": "2. Akt",
+      "text": "1. Ende des 2. Aktes."
+    },
+    {
+      "akt_bezeichnung": "3. Akt",
+      "text": "1.[Brief] Mein Zustand hat sich verschlimmert.\nIch bin sehr krank und möchte Sie gerne bald sehen\n2_ Gaby verlässt unter einem Vorwand das Zimmer . 3_ Ende des 3. Aktes."
+    },
+    {
+      "akt_bezeichnung": "4. Akt",
+      "text": "1. Hier ist ein Scherz, der Ihre Zukunft sicherstellen wird. 2_ Ende des 4. Akts."
+    }
+  ],
+  "ausschnittnote": null,
+  "laengenangaben": {
+    "einzelakte": [
+      {
+        "akt_nummer": "I",
+        "laenge": "265 m"
+      },
+      {
+        "akt_nummer": "II",
+        "laenge": "298 m"
+      },
+      {
+        "akt_nummer": "III",
+        "laenge": "202 m"
+      },
+      {
+        "akt_nummer": "IV",
+        "laenge": "160 m"
+      }
+    ],
+    "gesamtlaenge": "865 m"
+  },
+  "pruefbescheid": {
+    "filmpruefstelle": "Berlin",
+    "ort": "Berlin",
+    "datum": "16. September 1920",
+    "entscheidungstext": "Der Bildstreifen wird zur öffentlichen Vorführung im Deutschen Reiche zugelassen, darf jedoch vor Jugendlichen nicht vorgeführt werden."
+  }
+}

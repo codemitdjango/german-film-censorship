@@ -1,0 +1,75 @@
+{
+  "pruef_nr": "470",
+  "stempel_druck": "Zulassungs-Karten für Filmstreifen sind billig. Verurteiler im Sinne des § 267 Reichs-Straflichbesuches. [Durchgestrichen: Urheber] Urheber ist ungültig. Veränderungen dürfen nur von der Film-Prüfstelle vorgenommen werden.",
+  "ursprungs_firma": null,
+  "titel_des_bildes": "Staatsanwalt Briand's Abenteuer in 2 Episoden von Helmuth Ostermann.",
+  "beschreibung": "Erste Episode: Die unglückliche Ehe. (Fortsetzung zweite Episode: „Dem Lüllengrab entronnen“)",
+  "hergestellt_von": null,
+  "spielleitung": "Richard Eichberg",
+  "photographie": "Joe Rive",
+  "architektur": "W. A. Herrmann",
+  "personenverzeichnis": [
+    {
+      "rolle": "Violette Napierka.",
+      "darsteller": null
+    },
+    {
+      "rolle": "Lee Parry.",
+      "darsteller": null
+    }
+  ],
+  "inhalt": [
+    {
+      "akt_bezeichnung": "1. Akt",
+      "text": "Die unglückliche Ehe. (Inhalt umfasst Szenen bis zu: „Ende zu 1. Aktre.“)"
+    },
+    {
+      "akt_bezeichnung": "2. Akt",
+      "text": "(Fortsetzung der Geschichte, beinhaltet die Szene des Schiffbruchs und die Verhaftung von Baranos.)"
+    },
+    {
+      "akt_bezeichnung": "3. Akt",
+      "text": null
+    },
+    {
+      "akt_bezeichnung": "4. Akt",
+      "text": null
+    },
+    {
+      "akt_bezeichnung": "5. Akt",
+      "text": "(Enthält Szenen wie die Verhandlung und die Entlassung von Colette.)"
+    }
+  ],
+  "ausschnittnote": "Folgende Teile sind verboten: 1. Im Akt 5 nach Titel 14 die Szene, in welcher Baranos in seiner Zelle den Würter berührt (6 Meter). Die weitere Szene, in er man sieht, wie Baranos mit dem Schlüsselbund die Zelle verläßt, kann gezeigt werden. 2. In Akt 5 nach Titel 26 die Szene, in welcher die Verbrecher die gefesselte Yvonne durch die Düren tragen (3 Meter).",
+  "laengenangaben": {
+    "einzelakte": [
+      {
+        "akt_nummer": "I.",
+        "laenge": "463 m"
+      },
+      {
+        "akt_nummer": "II.",
+        "laenge": "357 m"
+      },
+      {
+        "akt_nummer": "III.",
+        "laenge": "408 m"
+      },
+      {
+        "akt_nummer": "IV.",
+        "laenge": "460 m"
+      },
+      {
+        "akt_nummer": "V.",
+        "laenge": "454 m nach Kürzung 445,00 m"
+      }
+    ],
+    "gesamtlaenge": "2139 m nach Kürzung 2130,00m"
+  },
+  "pruefbescheid": {
+    "filmpruefstelle": "Berlin",
+    "ort": "Berlin",
+    "datum": "21. September 1920",
+    "entscheidungstext": "Der Bildstreifen wird zur öffentlichen Vorführung im Deutschen Reiche zugelassen, darf jedoch vor Jugendfilmen nicht vorgeführt werden."
+  }
+}

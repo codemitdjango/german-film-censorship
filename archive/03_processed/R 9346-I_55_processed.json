@@ -1,0 +1,71 @@
+{
+  "pruef_nr": "302",
+  "stempel_druck": null,
+  "ursprungs_firma": "Wörner-Film, Berlin",
+  "titel_des_bildes": "Die Berliner Range.",
+  "beschreibung": "",
+  "hergestellt_von": null,
+  "spielleitung": null,
+  "photographie": "Kurt Lange",
+  "architektur": "Marichen Voßterman",
+  "personenverzeichnis": [
+    {
+      "rolle": "Herr Bach",
+      "darsteller": "Richard Genius"
+    },
+    {
+      "rolle": "Frau Bach",
+      "darsteller": "Frieda Lehnhoff"
+    },
+    {
+      "rolle": "Lotte, ihre Tochter.",
+      "darsteller": "Hilde Wörner"
+    },
+    {
+      "rolle": "Onkel Tom.",
+      "darsteller": "Hermann Richa"
+    },
+    {
+      "rolle": "Vise, seine Tochter.",
+      "darsteller": "Charlotte Ander"
+    }
+  ],
+  "inhalt": [
+    {
+      "akt_bezeichnung": "1. Akt",
+      "text": "1. Das soll die Offizier-Reife mir billigen, einem ich zu-\nschmierenen 2. --- würde ich evtl. bereit sein, durch die Würde\nmeiner Persönlichkeit aus Ihrer verlotterten Lotte ein tolles Maßerepererplay zu machen, wie es meine Tochter Liese ist. Besten\nGruß Onkel Tom. 3. Mich können Sie nicht versprechen. 4. Wo\nbloß ist Lotte noch wieder bleibt?\" 5. Eine Dame warnt draußen, die\nSache [Durchgestrichen: ] wird das Mal mehr voll! . Morgen\nfährt zur Onkel Tom, den verlangten Personen zu machen. 6a. Ich kenn' den alten Nachtwächter\ndoch auch! 6b. Onkel Tom und [unleserlich] Lotte Liese. 7. (Tele-\ngramm) Lotte heute verlassen . Bach . 8. Zu dem morgen statt-\nfindenden Künstlerfest oder ergeben im Komiteee. 9. Cottes\n10. Du bist wohl vercirkt, geworden, den\nganzen Haushalt einzugehen.\n11. Vorbereitungen zum Kostümfest.\n12. Ende des 1. Aktes."
+    },
+    {
+      "akt_bezeichnung": "2. Akt",
+      "text": "1. Verzeihen Sie, Herr Nachtwächter, können Sie mir\nwohlleicht sagen, wo Herr Stadtrat wohnt? 2. Ich bin\nnächtlich Lotte Bach, die Nichte von Herrn Stadtrat. 3. Ich werde\nSie informieren, ich habe zufällig in [unleserlich] zu tun. 4. Am\nanderen Morgen . 5. Du hast ja alles ausgegesen! 6. Man muß\ndoch leben! . 7. Ende des 2. Aktes."
+    },
+    {
+      "akt_bezeichnung": "3. Akt",
+      "text": "10_ und meinen [unleserlich] wird es sein,\nDicht [Durchgestrichen: ] und Sitte beizubringen. Geht jetzt auf Euer Zimmer\nund [durchgestrichen: ] zum Hausbübel. 2.\n[unleserlich] . 3. Mensch, wie feist Du bloß aus! . 4. So feist Du aus,\nDu Kaiser! 5. Geh' aus meinen Augen, Du Ohrfeigehicht.\n6. Nu oder rauf! . 7. Wo ist Dein Körber? 8. Das ist Dein Merk,\nDu Satan! . 9. Nun können wir wieder nach Hause gehen!\n10. Ende."
+    }
+  ],
+  "ausschnittnote": null,
+  "laengenangaben": {
+    "einzelakte": [
+      {
+        "akt_nummer": "I",
+        "laenge": "315 m"
+      },
+      {
+        "akt_nummer": "II",
+        "laenge": "293 m"
+      },
+      {
+        "akt_nummer": "III",
+        "laenge": "280 m"
+      }
+    ],
+    "gesamtlaenge": "888 m"
+  },
+  "pruefbescheid": {
+    "filmpruefstelle": "Berlin",
+    "ort": null,
+    "datum": "19. August 1920",
+    "entscheidungstext": "Der Bildstreifen wird zur öffentlichen Vorführung im\nDeutschen Reiche zugelassen, darf jedoch vor Jugendlichen nicht\nvorgeführt werden."
+  }
+}

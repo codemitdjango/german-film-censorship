@@ -1,0 +1,95 @@
+{
+  "pruef_nr": "73",
+  "stempel_druck": null,
+  "ursprungs_firma": "Ring-Film G. m. b. H.",
+  "titel_des_bildes": "Der Feuerweiter",
+  "beschreibung": "",
+  "hergestellt_von": "Ring-Film-Gef. m. b.",
+  "spielleitung": "Erik Lund",
+  "photographie": "Kurt Courant",
+  "architektur": null,
+  "personenverzeichnis": [
+    {
+      "rolle": "§1. Ein Filmschauspiel von",
+      "darsteller": ""
+    },
+    {
+      "rolle": "",
+      "darsteller": ""
+    },
+    {
+      "rolle": "\r\nUntertitel 3. Personen:",
+      "darsteller": ""
+    },
+    {
+      "rolle": "Der Vorschulze . . . ",
+      "darsteller": "Gustav Bol"
+    },
+    {
+      "rolle": "Antje, das Durschulzen Töchterlein . . . ",
+      "darsteller": "Käthe Haack"
+    },
+    {
+      "rolle": "Jens Potter . . . ",
+      "darsteller": "Georg John"
+    },
+    {
+      "rolle": "Rüdlf Rissen [Durchgestrichen: Niels] ... ",
+      "darsteller": "Bruno Kassner"
+    },
+    {
+      "rolle": "Niels Mutter [Durchgestrichen: Niels] ... ",
+      "darsteller": "Frieda Richard"
+    },
+    {
+      "rolle": "\r\nDer alte Klaus ........ ",
+      "darsteller": "Wald"
+    }
+  ],
+  "inhalt": [
+    {
+      "akt_bezeichnung": null,
+      "text": ""
+    },
+    {
+      "akt_bezeichnung": "",
+      "text": ""
+    },
+    {
+      "akt_bezeichnung": "",
+      "text": ""
+    },
+    {
+      "akt_bezeichnung": "",
+      "text": ""
+    }
+  ],
+  "ausschnittnote": "1. Iff! 2. Der Feuerweiter ist wieder da! 3. Wenn der erscheint, dann ist das Ende da! - Ich kann nicht lünger schweigen!",
+  "laengenangaben": {
+    "einzelakte": [
+      {
+        "akt_nummer": "I",
+        "laenge": "831 m"
+      },
+      {
+        "akt_nummer": "II",
+        "laenge": "220 m"
+      },
+      {
+        "akt_nummer": "\r\nIII",
+        "laenge": ""
+      },
+      {
+        "akt_nummer": "\r\nIV",
+        "laenge": ""
+      }
+    ],
+    "gesamtlaenge": null
+  },
+  "pruefbescheid": {
+    "filmpruefstelle": "Film-Prühstelle Berlin",
+    "ort": "Berlin",
+    "datum": "7. Juli 1920",
+    "entscheidungstext": "\r\nDer Bildstreifen wird zur öffentlichen Vorführung im\r\nDeutschen Reiche zugelassen, darf jedoch vor Jugendlichen nicht\nvorgeführt werden."
+  }
+}

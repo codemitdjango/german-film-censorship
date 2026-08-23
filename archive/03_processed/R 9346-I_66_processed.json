@@ -1,0 +1,53 @@
+{
+  "pruef_nr": "369",
+  "stempel_druck": null,
+  "ursprungs_firma": "Proj.-Ges. „Palast“",
+  "titel_des_bildes": "Der Fux.",
+  "beschreibung": "",
+  "hergestellt_von": null,
+  "spielleitung": null,
+  "photographie": null,
+  "architektur": null,
+  "personenverzeichnis": [],
+  "inhalt": [
+    {
+      "akt_bezeichnung": null,
+      "text": "1. Ein Märchen. Palast-Film."
+    },
+    {
+      "akt_bezeichnung": null,
+      "text": "2. Die Tochter des Zaubers ist seit Monaten schwermüdig."
+    },
+    {
+      "akt_bezeichnung": null,
+      "text": "3. Der Fux, herr, hart Eures Laufes."
+    },
+    {
+      "akt_bezeichnung": null,
+      "text": "4. Ich vernege Eurer Tochter Name und Hörigkeit niedrigergeben."
+    },
+    {
+      "akt_bezeichnung": null,
+      "text": "5. Wohlan, so zeige Deine Kunst."
+    },
+    {
+      "akt_bezeichnung": null,
+      "text": "6. „Welch“ freudige Luft bringt mir Dein Grant."
+    },
+    {
+      "akt_bezeichnung": null,
+      "text": "7. Kupferberg-Gold."
+    }
+  ],
+  "ausschnittnote": null,
+  "laengenangaben": {
+    "einzelakte": [],
+    "gesamtlaenge": "80 m"
+  },
+  "pruefbescheid": {
+    "filmpruefstelle": "Film-Prüfstelle Berlin",
+    "ort": "Berlin",
+    "datum": "30. August 1920",
+    "entscheidungstext": null
+  }
+}

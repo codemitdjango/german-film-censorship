@@ -1,0 +1,29 @@
+{
+  "pruef_nr": "538",
+  "stempel_druck": "[Stempel: Zulassungs-Karten für Bildstreifen sind öffentl. Urkunden im Sinne des § 267 Reichs-Straiegesetzbuches. Ohne amtlichen Stempel sind sie ungültig. Änderungen dürfen nur von der Film-Prüfstelle vorgenommen werden.]",
+  "ursprungs_firma": "Werbefilm G. m. b. H.",
+  "titel_des_bildes": "Das Ahnenbild.",
+  "beschreibung": null,
+  "hergestellt_von": null,
+  "spielleitung": null,
+  "photographie": null,
+  "architektur": null,
+  "personenverzeichnis": [],
+  "inhalt": [
+    {
+      "akt_bezeichnung": "1. Akt",
+      "text": "Kupferberggold."
+    }
+  ],
+  "ausschnittnote": null,
+  "laengenangaben": {
+    "einzelakte": [],
+    "gesamtlaenge": "52 m"
+  },
+  "pruefbescheid": {
+    "filmpruefstelle": "Berlin",
+    "ort": "Berlin",
+    "datum": "7. Oktober 1920",
+    "entscheidungstext": "Der Bildstreif wird zur öffentlichen Vorführung im Deutschen Reiche, auch vor Jugendlichen, zugelassen."
+  }
+}

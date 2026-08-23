@@ -1,0 +1,42 @@
+{
+  "pruef_nr": "443",
+  "stempel_druck": "Zulassungs-Karten für Bilderreien sind öffentlich. Abzeichen im Sinne des § 256 Reichs-Strafgesetzbuchs. Ohne amtlichen Stempel sind sie ungültig. Änderungen dürfen nur von der Film-Prüfstelle vorgenommen werden.",
+  "ursprungs_firma": "Spiegel der Zeiten.",
+  "titel_des_bildes": "Aus der Werkstatt einer Tänzerin.",
+  "beschreibung": null,
+  "hergestellt_von": null,
+  "spielleitung": null,
+  "photographie": "Freitas_40",
+  "architektur": null,
+  "personenverzeichnis": [
+    {
+      "rolle": "Regie",
+      "darsteller": "Richard Loewenbein"
+    },
+    {
+      "rolle": "Kamera und Beitrag",
+      "darsteller": "M.-G.[unsicher] Kamerawagen"
+    }
+  ],
+  "inhalt": [
+    {
+      "akt_bezeichnung": "1. Akt",
+      "text": "1. Kulturfilm der Deutschen Lichtbild-Gesellschaft G. E. V., Berlin S.W. 19, 2. Regie: Richard Loewenbein.\n3. Kamera und Beitrag: M.-G.[unsicher] Kamerawagen; Photographie:\nFreitas_40 . Die historisch ersten Kostüme stammen aus der Privat-\nsammlung der Hauptwahrtereiin. Musiknote: Barillon. 5. Akt-[\ndeutsch (um 1650). 7. Rokokko um (1970). 8. Rokokko um (1990).\n9. Ende des 1.\nAktes."
+    },
+    {
+      "akt_bezeichnung": "2. Akt",
+      "text": "2. Akt: Empire (1809), 2. Abschied, 3. Wiedermeier (1830).\n4. Anno 1840, 5. Zeitalter Kaiserin Eugenie (1860). 6. 1920.\n7. Z., A., B., S. [unsicher] Spiegel der Zeiten, 9. Ende, 10. D.[unsicher] G."
+    }
+  ],
+  "ausschnittnote": null,
+  "laengenangaben": {
+    "einzelakte": [],
+    "gesamtlaenge": "534 m"
+  },
+  "pruefbescheid": {
+    "filmpruefstelle": "Berlin",
+    "ort": "Berlin",
+    "datum": "15. September 1920",
+    "entscheidungstext": "Der Bildstreifen wird zur öffentlichen Vorführung im\nDeutschen Reiche zugelassen, darf jedoch vor Jugendlichen nicht\nvorgeführt werden."
+  }
+}

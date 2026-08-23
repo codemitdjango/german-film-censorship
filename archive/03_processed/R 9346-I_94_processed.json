@@ -1,0 +1,99 @@
+{
+  "pruef_nr": "482",
+  "stempel_druck": null,
+  "ursprungs_firma": "Carl Wilhelm-Film G. m. b. H.",
+  "titel_des_bildes": "Die Gipsschaft.",
+  "beschreibung": "",
+  "hergestellt_von": "Carl Wilhelm-Film-Ges., Berlin, (Terzo-Konzern)",
+  "spielleitung": null,
+  "photographie": null,
+  "architektur": null,
+  "personenverzeichnis": [
+    {
+      "rolle": "[Handschrift: Orla]",
+      "darsteller": null
+    },
+    {
+      "rolle": "Jenny Koessler",
+      "darsteller": "Hedwig Pauly"
+    },
+    {
+      "rolle": "Josefine Dora",
+      "darsteller": "Jenny Steinmann"
+    },
+    {
+      "rolle": "Hedwig von Lorée",
+      "darsteller": "Emmy Adorae[unsicher]"
+    },
+    {
+      "rolle": "Charles Willy",
+      "darsteller": "Kaiser Johannes Niemann"
+    },
+    {
+      "rolle": "Arthur Geroz [Durchgestrichen: Ernst]",
+      "darsteller": "Carl Platen"
+    }
+  ],
+  "inhalt": [
+    {
+      "akt_bezeichnung": "1. Akt",
+      "text": null
+    },
+    {
+      "akt_bezeichnung": "2. Akt",
+      "text": null
+    },
+    {
+      "akt_bezeichnung": "3. Akt",
+      "text": null
+    },
+    {
+      "akt_bezeichnung": "4. Akt",
+      "text": "Im Akt 4 am Ende nach Titel „Komm“, die Szene, in welcher akt das junge Mädchen aufs Sofa läuft und sich auf sie legt."
+    },
+    {
+      "akt_bezeichnung": "5. Akt",
+      "text": null
+    },
+    {
+      "akt_bezeichnung": "6. Akt",
+      "text": null
+    }
+  ],
+  "ausschnittnote": "",
+  "laengenangaben": {
+    "einzelakte": [
+      {
+        "akt_nummer": "A",
+        "laenge": "408 m"
+      },
+      {
+        "akt_nummer": "B",
+        "laenge": "372 m"
+      },
+      {
+        "akt_nummer": "C",
+        "laenge": "403 m"
+      },
+      {
+        "akt_nummer": "ť＞",
+        "laenge": "346 m nach K࿌rzung 345,0\"m"
+      },
+      {
+        "akt_nummer": "↝",
+        "laenge": "345 m"
+      },
+      {
+        "akt_nummer": "F",
+        "laenge": "320 m"
+      }
+    ],
+    "gesamtlaenge": "2194 m nach K࿌rzung 2193,0\"m"
+  },
+  "pruefbescheid": {
+    "filmpruefstelle": "Berlin",
+    "ort": "Berlin",
+    "datum": "23. September 1920",
+    "entscheidungstext": "Der Bildstreifen wird zur öffentlichen Vorf༝hrung im Deutschen Reiche zugelassen, darf jedoch vor Jugendlichen nicht vorgef༝rt werden. Folgender Teil ist verboten: Im Akt 4 am Ende nach Titel “Komm”, die Szene, in welcher Akt das junge M༝chen aufs Sofa lཿt und sich auf sie legt. -- 1 Meter."
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "pruef_nr": "176",
+  "stempel_druck": null,
+  "ursprungs_firma": "Union-Film",
+  "titel_des_bildes": "Edi und die wilden Bestien",
+  "beschreibung": null,
+  "hergestellt_von": null,
+  "spielleitung": null,
+  "photographie": null,
+  "architektur": null,
+  "personenverzeichnis": [],
+  "inhalt": [
+    {
+      "akt_bezeichnung": "",
+      "text": ""
+    }
+  ],
+  "ausschnittnote": "Scherzzeichnung in 1 Ubr.",
+  "laengenangaben": {
+    "einzelakte": [],
+    "gesamtlaenge": "171 m"
+  },
+  "pruefbescheid": {
+    "filmpruefstelle": "Film-Prüfstelle Berlin",
+    "ort": "Berlin",
+    "datum": "2. August 1920",
+    "entscheidungstext": "Der Bildstreifen wird zur öffentlichen Vorführung im Deutschen Reiche, auch vor Jugendlichen, zugelassen."
+  }
+}

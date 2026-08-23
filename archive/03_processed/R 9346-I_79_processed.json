@@ -1,0 +1,33 @@
+{
+  "pruef_nr": "429",
+  "stempel_druck": "[Stempel: Zulassungs-Karten für Bildstreifen sind öffentl. Urkunden im Sinne des § 307 Reichs-Strafgesetzbuchs. Ohne amtlichen Stempel sind sie ungültig. Änderungen dürfen nur von der Film-Prüfstelle vorgenommen werden.]",
+  "ursprungs_firma": "Krausenstrasse 38/39",
+  "titel_des_bildes": "Die Waffeneinnämmung in Deutschland.",
+  "beschreibung": "Aufgenommen von der Deutschen Lichtbild-Gesellschaft G. B., Berlin.",
+  "hergestellt_von": "Deutsche Lichtbild-Ges. E. V., Berlin",
+  "spielleitung": null,
+  "photographie": null,
+  "architektur": null,
+  "personenverzeichnis": [],
+  "inhalt": [
+    {
+      "akt_bezeichnung": "1.",
+      "text": "Auf dem Wege zur Einsöhnung."
+    },
+    {
+      "akt_bezeichnung": "2.",
+      "text": "Einst geschaffen zum Kriege - jetzt ein Diener des Friedens."
+    }
+  ],
+  "ausschnittnote": null,
+  "laengenangaben": {
+    "einzelakte": [],
+    "gesamtlaenge": "102 m"
+  },
+  "pruefbescheid": {
+    "filmpruefstelle": "Berlin",
+    "ort": "Berlin",
+    "datum": "14. September 1920.",
+    "entscheidungstext": "Der Bildstreifen wird zur öffentlichen Vorführung im Deutschen Reich, auch vor Jugendlichen, zugelassen."
+  }
+}

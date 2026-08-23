@@ -1,0 +1,71 @@
+{
+  "pruef_nr": "436",
+  "stempel_druck": "Decarli-Film-Gesellschaft Berlin SW 68",
+  "ursprungs_firma": null,
+  "titel_des_bildes": "Ariel Kosso.",
+  "beschreibung": "",
+  "hergestellt_von": "Decarli-Film-Kommandit.-Ges.",
+  "spielleitung": "Regie: Ernst Wendt.",
+  "photographie": "Kurt Hoffmann",
+  "architektur": "Heinrich Richter - Berlin",
+  "personenverzeichnis": [
+    {
+      "rolle": "In der Titelrolle",
+      "darsteller": "Bruno Decarli"
+    }
+  ],
+  "inhalt": [
+    {
+      "akt_bezeichnung": "Vorspiel",
+      "text": "Untertitel. Personen des Vorspiels: Der Inquisition-Kardinal, Marquis Vanderstaren, ein reicher Handelsherr aus Amsterdam. Judith, seine Tochter. Ariel Kosso, Martins, Studenten. Manuela, die Tochter von Kossos Witwin. Professoren, Studenten der Universität Salamanca."
+    },
+    {
+      "akt_bezeichnung": "I. Akt",
+      "text": "Ort der Handlung: Amsterdam.\nZeit: 1640.\n\nIn Banderkratens Haus zu Amsterdam. Manasse Banderkraten, Jubilis (seine Tochter), Ben Johach (ihr Verlobter), De Silva (Arzt), Uriel Akosta, Schierer und seine blinde Mutter, Ruben, Jochl, Brüder; [unsicher: Dimer] Akira (Oberrabbiner) und De Santos (Rabbiner).\n\nDie Handlung umfasst Szenen in einem Studentenwohnheim sowie die Interaktionen zwischen den Charakteren. Es werden Dialoge über Verträge, das Buch von Akosta und die Situation der Verfolgung geführt. Die Szene endet mit dem Ausbruch eines Konflikts oder einer dramatischen Wendung: \"Sieg, er wird geleitet! Ende des 1. Aktes.\""
+    },
+    {
+      "akt_bezeichnung": "2. Akt",
+      "text": "Die Handlung setzt sich fort mit der Konfrontation über das Buch und die Identität von Uriel Akosta. Es werden Szenen in einem Untersuchungsraum oder einer ähnlichen Umgebung dargestellt, wobei die Mutter von Akosta eine zentrale Rolle spielt. Die Szene endet mit: \"Und ist ein Sohn, dann lächelt Mutter liebt! Ende des 2. Akts.\""
+    },
+    {
+      "akt_bezeichnung": "3. Akt",
+      "text": "Die Handlung führt die Charaktere durch weitere Verhandlungen und Konfrontationen bezüglich der religiösen Identität und der Verträge. Es werden Szenen in einer Synagoge oder einem ähnlichen Raum gezeigt, in denen Akosta seine Bekenntnisse ablegt.\""
+    },
+    {
+      "akt_bezeichnung": "4. Akt",
+      "text": "Der finale Teil umfasst die abschließenden Konfrontationen und den rasanten Abschluss der Handlung: \"8. Der Gewehr fliegt, zwei Opfer sind gefallen! 9. Nicht, was wir meinen, fliegt, de Santos, nein --- Wie wir es meinen, das nur überwinden! ---\nEnde.\""
+    }
+  ],
+  "ausschnittnote": null,
+  "laengenangaben": {
+    "einzelakte": [
+      {
+        "akt_nummer": "Vorspiel",
+        "laenge": "511 m"
+      },
+      {
+        "akt_nummer": "I",
+        "laenge": "595 m"
+      },
+      {
+        "akt_nummer": "II",
+        "laenge": "274 m"
+      },
+      {
+        "akt_nummer": "III",
+        "laenge": "370 m"
+      },
+      {
+        "akt_nummer": "IV",
+        "laenge": "237 m"
+      }
+    ],
+    "gesamtlaenge": "1987 m"
+  },
+  "pruefbescheid": {
+    "filmpruefstelle": "Berlin",
+    "ort": "Berlin",
+    "datum": "16. September 1930",
+    "entscheidungstext": "Der Bildstreifen wird zur öffentlichen Vorführung im deutschen Reiche zugelassen, darf jedoch vor Jugendlichen nicht vorgeführt werden."
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "pruef_nr": "519",
+  "stempel_druck": null,
+  "ursprungs_firma": "Projektions Akt.-Ges. „Union“",
+  "titel_des_bildes": "Filmserie. (2. Teil).",
+  "beschreibung": null,
+  "hergestellt_von": "G. Riesemer",
+  "spielleitung": null,
+  "photographie": null,
+  "architektur": null,
+  "personenverzeichnis": [
+    {
+      "rolle": "gezeichnet von",
+      "darsteller": "Walter Trier"
+    },
+    {
+      "rolle": "",
+      "darsteller": "Paola Negri — 4. — als Carmen."
+    },
+    {
+      "rolle": "als Madame Dubarry",
+      "darsteller": "Paula Nagel"
+    },
+    {
+      "rolle": "als Armand de Foix",
+      "darsteller": "Harry Liedtke"
+    },
+    {
+      "rolle": "als Ludwig XV.",
+      "darsteller": "Janowitz"
+    },
+    {
+      "rolle": "in der Puppe",
+      "darsteller": "Otto Öswald und Hermann Schmid"
+    },
+    {
+      "rolle": "",
+      "darsteller": "Gunnar Tolkenser „Der Lieblingsmannscher der Frauen.“"
+    },
+    {
+      "rolle": "",
+      "darsteller": "Götte Neumann, Wallenberg, 12 Griff Gott_ tritt ein — bring Glück herein!"
+    }
+  ],
+  "inhalt": [
+    {
+      "akt_bezeichnung": "1. Triers Trickfilm",
+      "text": "gezeichnet von Walter Trier."
+    },
+    {
+      "akt_bezeichnung": null,
+      "text": null
+    }
+  ],
+  "ausschnittnote": null,
+  "laengenangaben": {
+    "einzelakte": [],
+    "gesamtlaenge": "124 m"
+  },
+  "pruefbescheid": {
+    "filmpruefstelle": "Berlin",
+    "ort": "Berlin",
+    "datum": "20. August 1930",
+    "entscheidungstext": "Der Bildstreifen wird zur öffentlichen Vorführung im deutschen Reiche, auch vor Jugendlichen, zugelassen."
+  }
+}

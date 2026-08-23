@@ -1,0 +1,62 @@
+{
+  "pruef_nr": "370",
+  "stempel_druck": "Zulassungs-Karten für Bildstreifen sind gültig, sofern im Sinne des § 267 Reichs-Strafgesetzbuchs. Ohne amtlichen Stempel sind sie ungültig. Änderungen dürfen nur von der Film-Prüffstelle vorgenommen werden.",
+  "ursprungs_firma": "Proj.-Ges. \"Palast\"",
+  "titel_des_bildes": "Unverhofftes Glück.",
+  "beschreibung": null,
+  "hergestellt_von": null,
+  "spielleitung": null,
+  "photographie": null,
+  "architektur": null,
+  "personenverzeichnis": [
+    {
+      "rolle": "Der Herr",
+      "darsteller": "Erwin Wiswander"
+    },
+    {
+      "rolle": "Die Dame",
+      "darsteller": "Käthe Haack"
+    },
+    {
+      "rolle": "Der Oberkellner.",
+      "darsteller": "Fritz Büttner"
+    },
+    {
+      "rolle": "Das Piccolo.",
+      "darsteller": null
+    },
+    {
+      "rolle": "Der Abstellstand [Durchgestrichen: ] Attentand",
+      "darsteller": null
+    }
+  ],
+  "inhalt": [
+    {
+      "akt_bezeichnung": "1. Akt",
+      "text": "2. Bei verödendem Leib, unter Küssen und Rosen, verpackt durch die Zeit."
+    },
+    {
+      "akt_bezeichnung": "2. Akt",
+      "text": "3. Schorsch auf fein."
+    },
+    {
+      "akt_bezeichnung": "3. Akt",
+      "text": "4. Donnerwetter, unsere feiste Marke."
+    },
+    {
+      "akt_bezeichnung": "4. Akt",
+      "text": "5. Kupfer-berg-Gold"
+    }
+  ],
+  "ausschnittnote": null,
+  "laengenangaben": {
+    "einzelakte": [],
+    "gesamtlaenge": "90 m"
+  },
+  "pruefbescheid": {
+    "filmpruefstelle": "Berlin",
+    "ort": "Berlin",
+    "datum": "30. August 1920",
+    "entscheidungstext": "Der Bildstreifen wird zur öffentlichen Vorführung im schlichen Reihe zugelassen, darf jedoch vor Jugendlichen nicht vorgeführt werden."
+  }
+}
