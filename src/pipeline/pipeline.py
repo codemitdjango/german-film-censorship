@@ -2,7 +2,6 @@ import base64
 import json
 import logging
 import os
-import re
 from pathlib import Path
 from dotenv import load_dotenv
 import requests
