@@ -1,13 +1,16 @@
 # german-film-censorship
 
-## Dataset
+## Results
 
+## Dataset
+cannot provide in this repo due to DATENSCHUTZ
 
 
 ## Getting Started
 ### Run Pipeline
-1. set `.env`
+1. configure `.env` (see `.env.example`)
 2. provide data
 3. install packages
-`pip install google-genai`
-4. run `pipeline.py` or `pipeline_google.py`
+4. run `pipeline.py` 
+
+### Run get_data
