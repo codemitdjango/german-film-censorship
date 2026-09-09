@@ -1,0 +1,76 @@
+{
+  "examination_number": "584",
+  "stamp_text": "Zulassungs-Karten für Bildstreifen sind öffent. Urkunden im Sinne des § 267 Reichs-Strafgesetzbuchs. Ohne amtlichen Stempel sind sie ungültig. Änderungen dürfen nur von der Film-Prüfstelle vorgenommen werden.",
+  "origin_company": "Terra-Film A.-G.",
+  "movie_title": "Nudi's stilles Stündchen.",
+  "movie_subtitle": "1. Von Willy Nath.",
+  "produced_by": "Terra-Film",
+  "director": "Nudi Dehler",
+  "cinematography": null,
+  "set_design": null,
+  "cast_list": [
+    {
+      "role": "Nudi Dehler - Hauptspiel.",
+      "actor": "Nudi Dehler",
+      "actor_affiliation": null
+    },
+    {
+      "role": "Petruskaja, seine Frau",
+      "actor": "Maria Foresecu",
+      "actor_affiliation": null
+    },
+    {
+      "role": "Kappio, eine berufslose Schöne",
+      "actor": "Claire Greuth",
+      "actor_affiliation": null
+    },
+    {
+      "role": "Schmalenberg, Kaffeegeschwinder",
+      "actor": "Felix Staert",
+      "actor_affiliation": null
+    }
+  ],
+  "excerpt_note": null,
+  "length_details": {
+    "individual_acts": [
+      {
+        "act_number": "I",
+        "original_length": "350 m",
+        "length_after_cut": null
+      },
+      {
+        "act_number": "II",
+        "original_length": "275 m",
+        "length_after_cut": null
+      }
+    ],
+    "total_length": {
+      "original_length": "625 m",
+      "length_after_cut": null
+    }
+  },
+  "examination_certificate": {
+    "examination_board": "Film-Prüfstelle Berlin",
+    "location": "Berlin",
+    "date": "15. Oktober 1920",
+    "decision_text": "Der Bildstreifen wird zur öffentlichen Vorführung im Deutschen Reiche zugelassen, darf jedoch vor Jugendlichen nicht vorgeführt werden."
+  },
+  "intertitles": [
+    {
+      "act_label": "1. Akt",
+      "text": "3. Nudi im Spiel der Wellen. 4. Die zärtlichen\nGespräche. 5. Er will sein \"stilles Stündchen\" haben. 6. Roll-\nen-Sprech. 7. Er ist ein berufsloser Schöler. 8. Weise auf\neinmal, das ich anrufe! 9. Goldgrube. Du wolltest doch heute\nneues Heim suchen. 10. Ein Favorit schweigt und bleibt.\n11. Unerhört, diese verkehrten Mahlzeiten! Weiße Baumwolle, wenn\njetzt Leute die unaufgereunte Wohnung sehen --- 12. Da"
+    },
+    {
+      "act_label": "Fortsetzung",
+      "text": "liegt der Mädchen. Der Rest — ist nicht mehr zu gebrauchen.\n13. Du willst ein Mann sein? Du längst doch zu deiner erüft-\nhalten Stelle. Ich muß jetzt frei. 14. Frau. Ein Zeitpunkt, machen sie\nzwischen ihren Dummheiten, verstanden? 15 Ich komme sofort;\nich bin schon da. 16. Schloß [unleserlich] natürlich mir\nkein Empfinden geben. 17. (Stillsetzen) Kalypso Alöstein,\nPartiturkarte . 28. Uhr. 18. Fortziel. 19. Ohs Gott!\nMein Brüderchen! 20. Ich Götterfreude. 21. Ich habe\nmorgens prinzgiell einen Abkömml. 22. Lernezu? — Kann ich\ngarnicht. 23. [unleserlich] bei diesem Hausmusik — das geht bei mir\nLag zu haben. 24. Bilder zur Sicht überhaupt nicht\ndiese Dame — komme, Kalypso. 24. Hihi — was heißt hier\nSpielesel? 25. Schau [unleserlich] eine Klute habe ich [unleserlich] „solites Stückchen“.\n26. [unleserlich] sind zu [unleserlich] haben Sie. 26. Betrüberlichen, ich muß zum Doktor.\n27. [unleserlich] auf höher verschiedenen Weise vorgehpon. 27. (Stillset-\nkarte) Kalypso Alöstein, Partiturkarte. 18. Uhr. Ende\ndes 1. Aktes."
+    },
+    {
+      "act_label": "Fortsetzung",
+      "text": "1. J.u. 2. Kinder, ich kann mich für keinen aufheben.\nGründen Sie eine [unleserlich] m. [unleserlich] b. [unleserlich] bei dem Kampf. 3. Oh\nJauel! 4. Haben Sie einen guten [unleserlich] antisiertert? 5. Uhh —\n—auch — anau! 6. Alles doch! — Der [unleserlich] Juhirot!\n7. Oder[unleserlich] [unleserlich] 8. [unleserlich] Du darfst auf der\nfreigewordenen Rollen rechnen. 8. Stirb, elende Dufferlein. Aber\nerst gib mir meinen Mann heraus. 9. Borne steht ein furchz-\nbare Mensch hochposten. 10. Ru—u—di—il! Ich weiß, ob\nDu stehst! Komm heraus, feige Memme, wenn Du ein Mann"
+    },
+    {
+      "act_label": "Fortsetzung",
+      "text": "hust! 11. Meine Frau! Du kriegst die Matten! 12. Wandel --\nDa haben wir die abgeworfene Schlangenhaut. 13. Verzeih,\nTauschungsanleihen. Verzeih die kleine Katze, 14. Fort, törichter\nKnabe! 15. Knabe! -- ich gut. 16. Ich habe mit Ihrem\njugendmutterligen Mann ein besseres Käfigchen zu pflegen. 17. Ich\npflichte mit. 18. Schlange, die ich am Ufern näherte, verlasse\nmein reines Haus. Und Du, elender Wildeweer -- 19. Haus-\nschlüssel raus! Ich werde Deine Liedesfreuden schon kurieren.\n20. Seine Mittel! 21. Ende. Terras-Szene."
+    }
+  ]
+}

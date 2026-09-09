@@ -1,0 +1,38 @@
+{
+  "examination_number": "57104",
+  "stamp_text": "Zulassungskarten für Filme sind öffentliche Urkunden im Sinne des § 267 Reichsstrafgesetzbuchs. Ohne amtl. Stempel sind sie ungültig. Änderungen dürfen nur von der Film-Prüfstelle vorgenommen werden.",
+  "origin_company": "Epoche-Color-Film A.-G.",
+  "movie_title": "Ein Geheimnis mit Carl Napp. (Werbefilm.)",
+  "movie_subtitle": "Ein Film der Epoche für die \"Werbekunst Berlin G. m. b. H.\"",
+  "produced_by": "Berlin-Charlottenburg 2, Joachimsthaler Straße 3",
+  "director": null,
+  "cinematography": null,
+  "set_design": null,
+  "cast_list": [
+    {
+      "role": "Carl Napp",
+      "actor": "Carl Napp",
+      "actor_affiliation": null
+    }
+  ],
+  "excerpt_note": null,
+  "length_details": {
+    "individual_acts": [],
+    "total_length": {
+      "original_length": "64 m",
+      "length_after_cut": null
+    }
+  },
+  "examination_certificate": {
+    "examination_board": "Film-Prüfstelle",
+    "location": "Berlin",
+    "date": "22. April 1942",
+    "decision_text": "Der Film wird zur öffentlichen Vorführung im Deutschen Reiche, auch vor Jugendlichen, zugelassen."
+  },
+  "intertitles": [
+    {
+      "act_label": "Fortsetzung",
+      "text": "Herr Napp, wo waren Sie denn eigentlich solange? 7. Ja,\nHerr Kapellmeister, als mich heute morgen meine Frau\nweckte, da sagte sie doch: \"Carl, sagte sie, ich habe ein\nBedürfnis.\" Und da ... 8.  Nun bitte Sie, das können\nSie doch hier nicht vor allen Leuten erzählen. 9. Wieso,\nnein? Wir sind doch ganz entfernt. Kommt doch mal oder\n'n bisschen näher. Also, hab' ich gesagt, wenn Du gewisser-\nmachen quasi und mir zuzusagen, deinem Wort, sehr, von mir\naus gleich, und dann sind wir gegangen. Und ich muß\nsagen, es hat sich auch gelohnt. 10. Soweit ich auch aus Ihren\nWorten entnehmen kann, haben Sie auf Ihren Gutin\nkäufe gemacht. 11. Sie Tausendsassa, Sie haben es erraten.\n12. Und noch haben Sie genau den Titel \"Bedürfnis\" gemacht, die sich\nso gelohnt haben? 13. Wenn ich ehrlich sein soll, müßte ich\nrügen. Das bleibt mein Geheimnis. 14. Aber Herr Napp,\nIhre Kollegen und ich haben doch auch Frauen, die gern mal\nen einen guten Einkauf machen wollen ... 15. Geben Sie sich\nkeine Mühe, das ist sozusagen mehrumeben Bedürfnis-\ngeheimnis. 16. Na, wenn Sie nicht wollen ... Also, begnihen\nwir. Vom vierten Takt an noch einmal. 17. Na, da ist das\nGeheimnis ja gelüftet. Jetzt wissen wir, wo auch Herr Napp"
+    }
+  ]
+}

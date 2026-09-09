@@ -1,5 +1,7 @@
 logs/
 .env
-data/
 __pycache__/
 archive/
+data/01_raw/
+data/02_ocr/
+data/03_processed/
